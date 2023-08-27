@@ -12,32 +12,32 @@ LC3:
 	.text
 	.globl	_main
 	.def	_main;	.scl	2;	.type	32;	.endef
-_main:
-LFB10:
+_main: ;En este bloque inicia el main del programa 
+LFB10: ;Este bloque da inicio al switch
 	.cfi_startproc
-	pushl	%ebp
+	pushl	%ebp ;Operación de Transferencia de datos
 	.cfi_def_cfa_offset 8
 	.cfi_offset 5, -8
-	movl	%esp, %ebp
+	movl	%esp, %ebp ;Operación de Transferencia de datos
 	.cfi_def_cfa_register 5
-	andl	$-16, %esp
-	subl	$32, %esp
+	andl	$-16, %esp ;Operación Lógica
+	subl	$32, %esp ;Operación Aritmética
 	call	___main
-	movl	$0, 20(%esp)
-	movl	$0, 16(%esp)
-	movl	$0, 28(%esp)
-	leal	24(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$LC0, (%esp)
+	movl	$0, 20(%esp) ;Operación de Transferencia de datos
+	movl	$0, 16(%esp) ;Operación de Transferencia de datos 
+	movl	$0, 28(%esp) ;Operación de Transferencia de datos
+	leal	24(%esp), %eax ;Operación de Transferencia de datos
+	movl	%eax, 4(%esp) ;Operación de Transferencia de datos
+	movl	$LC0, (%esp) ;Operación de Transferencia de datos
 	call	_scanf
-	movl	24(%esp), %eax
+	movl	24(%esp), %eax ;Operación de Transferencia de datos
 	cmpl	$5, %eax
-	ja	L2
-	movl	L4(,%eax,4), %eax
-	jmp	*%eax
+	ja	L2 ;Operación de Control de flujo
+	movl	L4(,%eax,4), %eax ;Operación de Transferencia de datos
+	jmp	*%eax ;Operación de Control de flujo
 	.section .rdata,"dr"
 	.align 4
-L4:
+L4: ; opciones del switch
 	.long	L2
 	.long	L3
 	.long	L5
@@ -45,95 +45,95 @@ L4:
 	.long	L7
 	.long	L8
 	.text
-L3:
-	leal	20(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$LC0, (%esp)
+L3: ;primer caso o case 1 del switch
+	leal	20(%esp), %eax ;Operación de Transferencia de datos
+	movl	%eax, 4(%esp) ;Operación de Transferencia de datos
+	movl	$LC0, (%esp) ;Operación de Transferencia de datos
 	call	_scanf
-	leal	16(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$LC0, (%esp)
+	leal	16(%esp), %eax ;Operación de Transferencia de datos
+	movl	%eax, 4(%esp) ;Operación de Transferencia de datos
+	movl	$LC0, (%esp) ;Operación de Transferencia de datos
 	call	_scanf
-	movl	20(%esp), %edx
-	movl	16(%esp), %eax
-	addl	%edx, %eax
-	movl	%eax, 28(%esp)
-	movl	28(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$LC0, (%esp)
+	movl	20(%esp), %edx ;Operación de Transferencia de datos
+	movl	16(%esp), %eax ;Operación de Transferencia de datos
+	addl	%edx, %eax ;Operación Aritmética
+	movl	%eax, 28(%esp) ;Operación de Transferencia de datos
+	movl	28(%esp), %eax ;Operación de Transferencia de datos
+	movl	%eax, 4(%esp) ;Operación de Transferencia de datos
+	movl	$LC0, (%esp) ;Operación de Transferencia de datos
 	call	_printf
-	jmp	L9
-L5:
-	leal	20(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$LC0, (%esp)
+	jmp	L9 ;Operación de Control de flujo
+L5: ;segundo caso o case 2 del switch
+	leal	20(%esp), %eax ;Operación de Transferencia de datos
+	movl	%eax, 4(%esp) ;Operación de Transferencia de datos
+	movl	$LC0, (%esp) ;Operación de Transferencia de datos
 	call	_scanf
-	leal	16(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$LC0, (%esp)
+	leal	16(%esp), %eax ;Operación de Transferencia de datos
+	movl	%eax, 4(%esp) ;Operación de Transferencia de datos
+	movl	$LC0, (%esp) ;Operación de Transferencia de datos
 	call	_scanf
-	movl	20(%esp), %edx
-	movl	16(%esp), %eax
-	subl	%eax, %edx
-	movl	%edx, %eax
-	movl	%eax, 28(%esp)
-	movl	28(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$LC0, (%esp)
+	movl	20(%esp), %edx ;Operación de Transferencia de datos
+	movl	16(%esp), %eax ;Operación de Transferencia de datos
+	subl	%eax, %edx ;Operación Aritmética
+	movl	%edx, %eax ;Operación de Transferencia de datos
+	movl	%eax, 28(%esp) ;Operación de Transferencia de datos
+	movl	28(%esp), %eax ;Operación de Transferencia de datos
+	movl	%eax, 4(%esp) ;Operación de Transferencia de datos
+	movl	$LC0, (%esp) ;Operación de Transferencia de datos
 	call	_printf
-	jmp	L9
-L6:
-	leal	20(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$LC0, (%esp)
+	jmp	L9 ;Operación de Control de flujo
+L6: ;caso 3 del switch
+	leal	20(%esp), %eax ;Operación de Transferencia de datos
+	movl	%eax, 4(%esp) ;Operación de Transferencia de datos
+	movl	$LC0, (%esp) ;Operación de Transferencia de datos
 	call	_scanf
-	leal	16(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$LC0, (%esp)
+	leal	16(%esp), %eax ;Operación de Transferencia de datos
+	movl	%eax, 4(%esp) ;Operación de Transferencia de datos
+	movl	$LC0, (%esp) ;Operación de Transferencia de datos
 	call	_scanf
-	movl	20(%esp), %edx
-	movl	16(%esp), %eax
-	imull	%edx, %eax
-	movl	%eax, 28(%esp)
-	movl	28(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$LC1, (%esp)
+	movl	20(%esp), %edx ;Operación de Transferencia de datos
+	movl	16(%esp), %eax ;Operación de Transferencia de datos
+	imull	%edx, %eax ;Operación Aritmética
+	movl	%eax, 28(%esp) ;Operación de Transferencia de datos
+	movl	28(%esp), %eax ;Operación de Transferencia de datos
+	movl	%eax, 4(%esp) ;Operación de Transferencia de datos
+	movl	$LC1, (%esp) ;Operación de Transferencia de datos
 	call	_printf
-	jmp	L9
-L7:
-	leal	20(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$LC0, (%esp)
+	jmp	L9 ;Operación de Control de flujo
+L7: ;cuarto caso o case 4 del switch
+	leal	20(%esp), %eax ;Operación de Transferencia de datos
+	movl	%eax, 4(%esp) ;Operación de Transferencia de datos
+	movl	$LC0, (%esp) ;Operación de Transferencia de datos
 	call	_scanf
-	leal	16(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$LC0, (%esp)
+	leal	16(%esp), %eax ;Operación de Transferencia de datos
+	movl	%eax, 4(%esp) ;Operación de Transferencia de datos
+	movl	$LC0, (%esp) ;Operación de Transferencia de datos
 	call	_scanf
-	movl	20(%esp), %eax
-	movl	16(%esp), %ecx
+	movl	20(%esp), %eax ;Operación de Transferencia de datos
+	movl	16(%esp), %ecx ;Operación de Transferencia de datos
 	cltd
-	idivl	%ecx
-	movl	%eax, 28(%esp)
-	movl	28(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$LC1, (%esp)
+	idivl	%ecx ;Operación Aritmética
+	movl	%eax, 28(%esp) ;Operación de Transferencia de datos
+	movl	28(%esp), %eax ;Operación de Transferencia de datos
+	movl	%eax, 4(%esp) ;Operación de Transferencia de datos
+	movl	$LC1, (%esp) ;Operación de Transferencia de datos
 	call	_printf
-	jmp	L9
-L8:
-	movl	$LC2, (%esp)
+	jmp	L9 ;Operación de Control de flujo
+L8: ;quinto caso o case 5 del switch
+	movl	$LC2, (%esp) ;Operación de Transferencia de datos
 	call	_printf
-	jmp	L9
-L2:
-	movl	$LC3, (%esp)
+	jmp	L9 ;Operación de control de flujo
+L2: ;caso default del switch
+	movl	$LC3, (%esp) ;Operación de Transferencia de datos
 	call	_printf
-L9:
-	movl	$0, %eax
+L9: ;aqui se da por terminado el switch
+	movl	$0, %eax ;Operación de Transferencia de datos
 	leave
 	.cfi_restore 5
 	.cfi_def_cfa 4, 4
 	ret
 	.cfi_endproc
-LFE10:
+LFE10: ;aqui se da por terminado el main
 	.ident	"GCC: (MinGW.org GCC-6.3.0-1) 6.3.0"
 	.def	_scanf;	.scl	2;	.type	32;	.endef
 	.def	_printf;	.scl	2;	.type	32;	.endef
