@@ -8,35 +8,33 @@ int main() {
     scanf("%d", &numero);
     switch (numero)
     {
-    case 1:
+    case 1: //suma
         scanf("%d", &a); //a
         scanf("%d", &b);//b
         c = a + b;
         printf("%d", c);
         break;
-    case 2:
+    case 2://resta
         scanf("%d", &a); //a
         scanf("%d", &b);//b
         c = a - b;
         printf("%d", c);
         break;
-    case 3:
+    case 3://mult.
         scanf("%d", &a); //a
         scanf("%d", &b);//b
         c = a * b;
         printf(" %d", c);
         break;
-    case 4:
+    case 4://division
         scanf("%d", &a); //a
         scanf("%d", &b);//b
         c = a / b;
         printf(" %d", c);
         break;
-    case 5:
+    case 5://cadena
         printf("hola mundo");
         break;
-    
-    
     default:
         printf("adios mundo cruel");
     }
