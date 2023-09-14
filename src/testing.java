@@ -46,7 +46,7 @@ public class testing {
 
             if (matcherComentario.matches()) {
                 if (linea.length () > 80){
-                    System.out.println("Exceso de caracteres en: "+linea);
+                    System.out.println("Exceso de caracteres en: " + linea);
                 } else {
                 // Es un comentario
                     System.out.println("Comentario: " + linea);
