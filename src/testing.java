@@ -47,6 +47,7 @@ public class testing {
             if (matcherComentario.matches()) {
                 // Es un comentario
                 System.out.println("Comentario: " + linea);
+                System.out.println("");
             } else if (matcherCodigo.matches()) {
                 // Es una línea de código con etiqueta, código de operación y operando
                 String etiqueta = matcherCodigo.group(1);
@@ -55,22 +56,29 @@ public class testing {
 
                 System.out.println("Etiqueta: " + etiqueta);
                 System.out.println("Código de Operación: " + codigoOperacion);
-                System.out.println("Operando: " + operando);
+                System.out.println("Operando/s: " + operando);
+                System.out.println("");
             } else if(matcherCodigoOperacionOperando.matches()) {
                 // Es una línea con código de operación y operando
                 String codigoOperacion = matcherCodigoOperacionOperando.group(1);
                 String operando = matcherCodigoOperacionOperando.group(2);
 
+                System.out.println("Etiqueta: NULL");
                 System.out.println("Código de Operación: " + codigoOperacion);
-                System.out.println("Operando: " + operando);
+                System.out.println("Operando/s: " + operando);
+                System.out.println("");
             } else if(matcherCodigoOperacion.matches()) {
                 // Es una línea con código de operación y operando
                 String codigoOperacion = matcherCodigoOperacion.group(1);
 
+                System.out.println("Etiqueta: NULL");
                 System.out.println("Código de Operación: " + codigoOperacion);
+                System.out.println("Operando/s: NULL");
+                System.out.println("");
             } else {
                 // No coincide con ninguna de las expresiones regulares
-                System.out.println("Línea no reconocida: " + linea);
+                System.out.println("Error de Sintaxis: " + linea);
+                System.out.println("");
             }
         }
     }
