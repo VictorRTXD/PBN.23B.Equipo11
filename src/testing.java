@@ -46,7 +46,14 @@ public class testing {
 
             if (matcherComentario.matches()) {
                 // Es un comentario
-                System.out.println("Comentario: " + linea);
+                if (linea.length() <80){
+                    System.out.println("comentario: "+ linea);
+                }else{
+                    System.out.println(error);
+                }
+
+
+
             } else if (matcherCodigo.matches()) {
                 // Es una línea de código con etiqueta, código de operación y operando
                 String etiqueta = matcherCodigo.group(1);
