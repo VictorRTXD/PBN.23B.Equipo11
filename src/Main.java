@@ -15,7 +15,7 @@ class Main {
         String regexComentario = "^\\s*;.*$";
 
         // Expresión regular para identificar código de operación y operando
-        String regexCodigoOperacionOperando = "^([A-Z]+)\\s+(.*?)$";
+        String regexCodigoOperacionOperando = "^\\s+([Aa.-Zz]+)\\s+(.*?)$";
 
         // Expresión regular para identificar etiquetas, códigos de operación y operandos
         String regexCodigo = "^\\s*([a-zA-Z0-9]+):\\s*([A-Z]+)\\s+(.*?)$";
