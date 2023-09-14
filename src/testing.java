@@ -23,7 +23,7 @@ public class testing {
         String regexCodigoOperacionOperando = "^([A-Z]+)\\s+(.*?)$";
 
         // Expresión regular para identificar etiquetas, códigos de operación y operandos
-        String regexCodigo = "^\\s*([a-z0-9]+):\\s*([A-Z]+)\\s+(.*?)$";
+        String regexCodigo = "^\\s*([a-zA-Z0-9]+):\\s*([A-Z]+)\\s+(.*?)$";
 
         //Un solo codigo de operacion
         String regexCodigoOperacion = "^\\s*([A-Z])";
