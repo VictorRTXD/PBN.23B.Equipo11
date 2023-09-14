@@ -45,9 +45,12 @@ public class testing {
             Matcher matcherCodigoOperacion= patCodigoOperacion.matcher(linea);
 
             if (matcherComentario.matches()) {
+                if(linea.length()>80){
+                    System.out.println("Exceso de caracteres en: "+linea);
+                }else{
                 // Es un comentario
-                System.out.println("Comentario: " + linea);
-                System.out.println("");
+                    System.out.println("Comentario: " + linea);
+                    System.out.println("");}
             } else if (matcherCodigo.matches()) {
                 // Es una línea de código con etiqueta, código de operación y operando
                 String etiqueta = matcherCodigo.group(1);
