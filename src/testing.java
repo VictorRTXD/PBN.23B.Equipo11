@@ -53,28 +53,37 @@ public class testing {
                 String etiqueta = matcherCodigo.group(1);
                 String codigoOperacion = matcherCodigo.group(2);
                 String operando = matcherCodigo.group(3);
-
-                System.out.println("Etiqueta: " + etiqueta);
-                System.out.println("Código de Operación: " + codigoOperacion);
-                System.out.println("Operando/s: " + operando);
-                System.out.println("");
+                    if(etiqueta.length()>8 || codigoOperacion.length()>5){
+                        System.out.println("Exceso de caracteres en: "+linea);
+                    }else{
+                        System.out.println("Etiqueta: " + etiqueta);
+                        System.out.println("Código de Operación: " + codigoOperacion);
+                        System.out.println("Operando: " + operando);
+                        System.out.println("");}
+                
             } else if(matcherCodigoOperacionOperando.matches()) {
                 // Es una línea con código de operación y operando
                 String codigoOperacion = matcherCodigoOperacionOperando.group(1);
                 String operando = matcherCodigoOperacionOperando.group(2);
-
-                System.out.println("Etiqueta: NULL");
-                System.out.println("Código de Operación: " + codigoOperacion);
-                System.out.println("Operando/s: " + operando);
-                System.out.println("");
+                    if(codigoOperacion.length()>5){
+                        System.out.println("Exceso de caracteres en: "+linea);
+                    }else{
+                        System.out.println("Etiqueta: NULL");
+                        System.out.println("Código de Operación: " + codigoOperacion);
+                        System.out.println("Operando/s: " + operando);
+                        System.out.println("");}
+                
             } else if(matcherCodigoOperacion.matches()) {
                 // Es una línea con código de operación y operando
                 String codigoOperacion = matcherCodigoOperacion.group(1);
-
-                System.out.println("Etiqueta: NULL");
-                System.out.println("Código de Operación: " + codigoOperacion);
-                System.out.println("Operando/s: NULL");
-                System.out.println("");
+                if(codigoOperacion.length()>5){
+                    System.out.println("Exceso de caracteres en: "+linea);
+                }else{
+                    System.out.println("Etiqueta: NULL");
+                    System.out.println("Código de Operación: " + codigoOperacion);
+                    System.out.println("Operando/s: NULL");
+                    System.out.println("");}
+                
             } else {
                 // No coincide con ninguna de las expresiones regulares
                 System.out.println("Error de Sintaxis: " + linea);
