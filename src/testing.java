@@ -23,10 +23,10 @@ public class testing {
         String regexCodigoOperacionOperando = "^([A-Z]+)\\s+(.*?)$";
 
         // Expresión regular para identificar etiquetas, códigos de operación y operandos
-        String regexCodigo = "^\\s*([a-z0-9]+):\\s*([A-Z]+)\\s+(.*?)$";
+        String regexCodigo = "^\\s*([a-zA-Z0-9]+):\\s*([A-Z]+)\\s+(.*?)$";
 
         //Un solo codigo de operacion
-        String regexCodigoOperacion = "^\\s*([A-Z])";
+        String regexCodigoOperacion = "^\\s*([A-Za-z]+)";
 
         // Compilar las expresiones regulares
         Pattern patComentario = Pattern.compile(regexComentario);
@@ -45,39 +45,57 @@ public class testing {
             Matcher matcherCodigoOperacion= patCodigoOperacion.matcher(linea);
 
             if (matcherComentario.matches()) {
+                if (linea.length () > 80){
+                    System.out.println("Exceso de caracteres en: " + linea);
+                } else {
                 // Es un comentario
-                if (linea.length() <80){
-                    System.out.println("comentario: "+ linea);
-                }else{
-                    System.out.println(error);
-                }
-
-
-
+                    System.out.println("Comentario: " + linea);
+                    System.out.println("");}
             } else if (matcherCodigo.matches()) {
                 // Es una línea de código con etiqueta, código de operación y operando
                 String etiqueta = matcherCodigo.group(1);
                 String codigoOperacion = matcherCodigo.group(2);
                 String operando = matcherCodigo.group(3);
-
-                System.out.println("Etiqueta: " + etiqueta);
-                System.out.println("Código de Operación: " + codigoOperacion);
-                System.out.println("Operando: " + operando);
+                    if(etiqueta.length()>8 || codigoOperacion.length()>5){
+                        System.out.println("Exceso de caracteres en: "+linea);
+                    }else{
+                        System.out.println("Etiqueta: " + etiqueta);
+                        System.out.println("Código de Operación: " + codigoOperacion);
+                        System.out.println("Operando: " + operando);
+                        System.out.println("");}
+                
             } else if(matcherCodigoOperacionOperando.matches()) {
                 // Es una línea con código de operación y operando
+                String etiqueta = null;
                 String codigoOperacion = matcherCodigoOperacionOperando.group(1);
                 String operando = matcherCodigoOperacionOperando.group(2);
-
+                if(codigoOperacion.length()>5){
+                    System.out.println("Exceso de caracteres en: "+linea);
+                    System.out.println("");
+                }else{
+                System.out.println("Etiqueta: "+etiqueta);
                 System.out.println("Código de Operación: " + codigoOperacion);
-                System.out.println("Operando: " + operando);
+                System.out.println("Operando/s: " + operando);
+                System.out.println("");}
+                
             } else if(matcherCodigoOperacion.matches()) {
                 // Es una línea con código de operación y operando
+                String etiqueta = null;
                 String codigoOperacion = matcherCodigoOperacion.group(1);
-
+                String operando = null;
+                if(codigoOperacion.length()>5){
+                    System.out.println("Exceso de caracteres en: "+linea);
+                    System.out.println("");
+                }else{
+                System.out.println("Etiqueta: "+etiqueta);
                 System.out.println("Código de Operación: " + codigoOperacion);
+                System.out.println("Operando/s: "+operando);
+                System.out.println("");}
+                
             } else {
                 // No coincide con ninguna de las expresiones regulares
-                System.out.println("Línea no reconocida: " + linea);
+                System.out.println("Error de Sintaxis: " + linea);
+                System.out.println("");
             }
         }
     }
