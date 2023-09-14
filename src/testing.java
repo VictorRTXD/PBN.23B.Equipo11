@@ -23,10 +23,10 @@ public class testing {
         String regexCodigoOperacionOperando = "^([A-Z]+)\\s+(.*?)$";
 
         // Expresión regular para identificar etiquetas, códigos de operación y operandos
-        String regexCodigo = "^\\s*([a-z0-9]+):\\s*([A-Z]+)\\s+(.*?)$";
+        String regexCodigo = "^\\s*([a-zA-Z0-9]+):\\s*([A-Z]+)\\s+(.*?)$";
 
         //Un solo codigo de operacion
-        String regexCodigoOperacion = "^\\s*([A-Z])";
+        String regexCodigoOperacion = "^\\s*([A-Za-z]+)";
 
         // Compilar las expresiones regulares
         Pattern patComentario = Pattern.compile(regexComentario);
@@ -46,7 +46,11 @@ public class testing {
 
             if (matcherComentario.matches()) {
                 // Es un comentario
-                System.out.println("Comentario: " + linea);
+                if (linea.length() < 80) {
+                    System.out.println("Comentario: " + linea);
+                } else {
+                    System.out.println("no sirvo");
+                }
             } else if (matcherCodigo.matches()) {
                 // Es una línea de código con etiqueta, código de operación y operando
                 String etiqueta = matcherCodigo.group(1);
