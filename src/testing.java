@@ -26,7 +26,7 @@ public class testing {
         String regexCodigo = "^\\s*([a-zA-Z0-9]+):\\s*([A-Z]+)\\s+(.*?)$";
 
         //Un solo codigo de operacion
-        String regexCodigoOperacion = "^\\s*([A-Z])";
+        String regexCodigoOperacion = "^\\s*([A-Za-z]+)";
 
         // Compilar las expresiones regulares
         Pattern patComentario = Pattern.compile(regexComentario);
@@ -45,9 +45,9 @@ public class testing {
             Matcher matcherCodigoOperacion= patCodigoOperacion.matcher(linea);
 
             if (matcherComentario.matches()) {
-                if(linea.length()>80){
+                if (linea.length () > 80){
                     System.out.println("Exceso de caracteres en: "+linea);
-                }else{
+                } else {
                 // Es un comentario
                     System.out.println("Comentario: " + linea);
                     System.out.println("");}
