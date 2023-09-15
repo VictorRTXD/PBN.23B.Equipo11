@@ -18,13 +18,13 @@ class Main {
         String regexCodigoOperacionOperando = "^\\s*([Aa.-Zz]+)\\s+(.*?)$";
 
         // Expresión regular para identificar etiquetas, códigos de operación y operandos
-        String regexCodigo = "^\\s*([a-zA-Z0-9]+):\\s*([A-Z]+)\\s+(.*?)$";
+        String regexCodigo = "^\\s*([a-zA-Z0-9]+):\\s*([Aa.-Zz]+)\\s+(.*?)$"; 
 
         //Expresión regular para identificar solo etiqueta y código de operación
-        String regexEtiquetaCodigoOperacion = "^\\s*([a-zA-Z0-9]+):\\s*([Aa-Zz]+)";
+        String regexEtiquetaCodigoOperacion = "^\\s*([a-zA-Z0-9]+):\\s*([Aa.-Zz]+)";
 
         //Un solo codigo de operacion
-        String regexCodigoOperacion = "^\\s*([A-Za-z]+)";
+        String regexCodigoOperacion = "^\\s*([Aa.-Zz]+)";
 
         // Compilar las expresiones regulares
         Pattern patComentario = Pattern.compile(regexComentario);
@@ -111,7 +111,7 @@ class Main {
                     System.out.println("");
                 }
             }
-        }  catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
