@@ -20,6 +20,9 @@ class Main {
         // Expresión regular para identificar etiquetas, códigos de operación y operandos
         String regexCodigo = "^\\s*([a-zA-Z0-9]+):\\s*([A-Z]+)\\s+(.*?)$";
 
+        //Expresión regular para identificar solo etiqueta y código de operación
+        String regexEtiquetaCodigoOperacion = "^\\s*([a-zA-Z0-9]+):\\s*([Aa-Zz]+);
+
         //Un solo codigo de operacion
         String regexCodigoOperacion = "^\\s*([A-Za-z]+)";
 
@@ -28,6 +31,7 @@ class Main {
         Pattern patCodigo = Pattern.compile(regexCodigo);
         Pattern patCodigoOperacionOperando = Pattern.compile(regexCodigoOperacionOperando);
         Pattern patCodigoOperacion = Pattern.compile(regexCodigoOperacion);
+        Pattern patEtiquetaCodigoOperacion = Pattern.compile(regexEtiquetaCodigoOperacion);
 
         /*
         br sirve para leer el contenido del archivo y el while es para leerlo todo usando br.readLIne() y almacenamos cada linea en la variable linea */
@@ -39,6 +43,7 @@ class Main {
                 Matcher matcherCodigo = patCodigo.matcher(linea);
                 Matcher matcherCodigoOperacionOperando = patCodigoOperacionOperando.matcher(linea);
                 Matcher matcherCodigoOperacion= patCodigoOperacion.matcher(linea);
+                Matcher matcherEtiquetaCodigoOperacion = patEtiquetaCodigoOperacion.matcher(linea);
     
                 if (matcherComentario.matches()) {
                     if (linea.length () > 80){
@@ -88,6 +93,19 @@ class Main {
                     System.out.println("Operando/s: "+operando);
                     System.out.println("");}
                     
+                }else if(matcherEtiquetaCodigoOperacion.matches()){
+                    String etiqueta = matcherEtiquetaCodigoOperacion.group(1);
+                    String codigoOperacion = matcherEtiquetaCodigoOperacion.group(2);
+                    String operando = null;
+                    if(etiqueta.length()>8 || codigoOperacion.length()>5){
+                        System.out.println("Exceso de caracteres en: "+linea);
+                        System.out.println("");
+                    }else{
+                        System.out.println("Etiqueta: "+etiqueta);
+                        System.out.println("Código de Operación: " + codigoOperacion);
+                        System.out.println("Operando/s: "+operando);
+                        System.out.println("");}
+                    }
                 } else {
                     // No coincide con ninguna de las expresiones regulares
                     System.out.println("Error de Sintaxis: " + linea);
