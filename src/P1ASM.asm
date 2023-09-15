@@ -5,5 +5,6 @@ dos: LDAA @4732
 SWI
 DS.B %0011000011111100
 ; comentario número 2 ¡Bajo!
-; comentario número 3 -Nivel- Tres: SWI
+; comentario número 3 -Nivel- 
+Tres: SWI
 END
