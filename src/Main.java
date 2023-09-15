@@ -21,7 +21,7 @@ class Main {
         String regexCodigo = "^\\s*([a-zA-Z0-9]+):\\s*([A-Z]+)\\s+(.*?)$";
 
         //Expresión regular para identificar solo etiqueta y código de operación
-        String regexEtiquetaCodigoOperacion = "^\\s*([a-zA-Z0-9]+):\\s*([Aa-Zz]+);
+        String regexEtiquetaCodigoOperacion = "^\\s*([a-zA-Z0-9]+):\\s*([Aa-Zz]+)";
 
         //Un solo codigo de operacion
         String regexCodigoOperacion = "^\\s*([A-Za-z]+)";
@@ -105,14 +105,13 @@ class Main {
                         System.out.println("Código de Operación: " + codigoOperacion);
                         System.out.println("Operando/s: "+operando);
                         System.out.println("");}
-                    }
-                } else {
+                    } else {
                     // No coincide con ninguna de las expresiones regulares
                     System.out.println("Error de Sintaxis: " + linea);
                     System.out.println("");
                 }
             }
-        } catch (IOException e) {
+        }  catch (IOException e) {
             e.printStackTrace();
         }
     }
