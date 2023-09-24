@@ -110,14 +110,9 @@ public class ExcelRead {
                                 System.out.println("Código de Operación: " + codigoOperacion);
                                 System.out.println("Operando: " + operando);
                                 System.out.println("");
+                            //estructura excel
                             
-                            XSSFRow row = sheet.createRow(rowNum++);
-                            XSSFCell cell1 = row.createCell(0);
-                            cell1.setCellValue(etiqueta);
-                            XSSFCell cell2 = row.createCell(1);
-                            cell2.setCellValue(codigoOperacion);
-                            XSSFCell cell3 = row.createCell(2);
-                            cell3.setCellValue(operando); 
+                            rowNum = excelRows(sheet, rowNum,  etiqueta, codigoOperacion, operando);
                             }
 
                     } else if(matcherCodigoOperacionOperando.matches()) {
@@ -132,7 +127,9 @@ public class ExcelRead {
                         System.out.println("Etiqueta: "+etiqueta);
                         System.out.println("Código de Operación: " + codigoOperacion);
                         System.out.println("Operando/s: " + operando);
-                        System.out.println("");}
+                        System.out.println("");
+                        rowNum = excelRows(sheet, rowNum,  etiqueta, codigoOperacion, operando);
+                        }
 
                     } else if(matcherCodigoOperacion.matches()) {
                         // Es una línea con código de operación y operando
@@ -146,7 +143,9 @@ public class ExcelRead {
                         System.out.println("Etiqueta: "+etiqueta);
                         System.out.println("Código de Operación: " + codigoOperacion);
                         System.out.println("Operando/s: "+operando);
-                        System.out.println("");}
+                        System.out.println("");
+                        rowNum = excelRows(sheet, rowNum,  etiqueta, codigoOperacion, operando);
+                        }
 
                     }else if(matcherEtiquetaCodigoOperacion.matches()){
                         String etiqueta = matcherEtiquetaCodigoOperacion.group(1);
@@ -159,7 +158,9 @@ public class ExcelRead {
                             System.out.println("Etiqueta: "+etiqueta);
                             System.out.println("Código de Operación: " + codigoOperacion);
                             System.out.println("Operando/s: "+operando);
-                            System.out.println("");}
+                            System.out.println("");
+                        rowNum = excelRows(sheet, rowNum,  etiqueta, codigoOperacion, operando);
+                        }
                         } else {
                         // No coincide con ninguna de las expresiones regulares
                         System.out.println("Error de Sintaxis: " + linea);
@@ -178,5 +179,22 @@ public class ExcelRead {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    
+        static int excelRows(XSSFSheet sheet, int rowNum, String etiqueta, String codigoOperacion, String operando) {
+        rowNum = rowNum + 1;
+        XSSFRow row = sheet.createRow(rowNum);
+        XSSFCell cell1 = row.createCell(0);
+        cell1.setCellValue(etiqueta);
+        XSSFCell cell2 = row.createCell(1);
+        cell2.setCellValue(codigoOperacion);
+        XSSFCell cell3 = row.createCell(2);
+        cell3.setCellValue(operando); 
+        //XSSFCell cell4 = row.createCell(3);
+        //cell4.setCellValue(addr);
+        //XSSFCell cell5 = row.createCell(4);
+        //cell5.setCellValue(bytes);
+        
+        return rowNum;
     }
 }
