@@ -1,2 +1,5 @@
 *.exe
 *.s.swp
+/MSExcel_In_Java-master/dist/
+/MSExcel_In_Java-master/build/
+/MSExcel_In_Java-master/nbproject/private/
