@@ -26,6 +26,10 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 //import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,7 +44,7 @@ public class ExcelRead {
             Workbook libro1 = new XSSFWorkbook(archivo1);
             Workbook libro2 = new XSSFWorkbook(archivo2);
             Sheet sheet1 = libro1.getSheetAt(0);
-            Sheet sheet2 = libro2.getSheetAt(0);
+            Sheet sheet2 = libro2.getSheetAt(1);
             
             StringBuilder excelData1 = new StringBuilder();
             StringBuilder excelData2 = new StringBuilder();
@@ -53,8 +57,8 @@ public class ExcelRead {
                 excelData1.append("\n"); // Agrega un salto de línea al final de cada fila
             }
             
-            libro1.close();
-            archivo1.close();
+            //libro1.close();
+            //archivo1.close();
 
             String excelDataAsString1 = excelData1.toString();
             System.out.println("Contenido del Excel como String:");
@@ -68,13 +72,43 @@ public class ExcelRead {
                 excelData2.append("\n"); // Agrega un salto de línea al final de cada fila
             }
             
-            libro2.close();
-            archivo2.close();
+            //libro2.close();
+            //archivo2.close();
 
             String excelDataAsString2 = excelData2.toString();
             System.out.println("Contenido del Excel como String:");
             System.out.println(excelDataAsString2);
             
+            
+
+// Ahora, la lista 'coincidencias' contendrá las instrucciones que se parecen entre ambos archivos.
+        //comparando primera archivo1 con archivo2
+            List<String> instruccionesArchivo1 = cargarInstruccionesDesdeExcel("archivo.xlsx");
+            List<String> instruccionesArchivo2 = cargarInstruccionesDesdeExcel("Salvation.Tabop.xlsx");
+            
+            //
+            Map<String, List<String>> coincidencias = new HashMap<>();
+
+        for (String instruccionArchivo1 : instruccionesArchivo1) {
+            for (String instruccionArchivo2 : instruccionesArchivo2) {
+                if (instruccionArchivo2.contains(instruccionArchivo1)) {
+                    coincidencias.computeIfAbsent(instruccionArchivo1, k -> new ArrayList<>()).add(instruccionArchivo2);
+                }
+            }
+        }
+
+        // Procesar y mostrar las coincidencias
+        for (Map.Entry<String, List<String>> entry : coincidencias.entrySet()) {
+            String instruccionArchivo1 = entry.getKey();
+            List<String> coincidenciasArchivo2 = entry.getValue();
+
+            System.out.println("Instrucción del archivo 1: " + instruccionArchivo1);
+            System.out.println("Coincidencias en el archivo 2:");
+            for (String coincidencia : coincidenciasArchivo2) {
+                System.out.println(coincidencia);
+            }
+            System.out.println();
+        }
              
         } catch (IOException e) {
             e.printStackTrace();
@@ -98,4 +132,28 @@ public class ExcelRead {
         
         return rowNum;
     }
+        
+    static public List<String> cargarInstruccionesDesdeExcel(String nombreArchivo) {
+    List<String> instrucciones = new ArrayList<>();
+    try (FileInputStream file = new FileInputStream(new File(nombreArchivo));
+        Workbook workbook = new XSSFWorkbook(file)) {
+        Sheet sheet = workbook.getSheetAt(0);
+        for (Row row : sheet) {
+            Cell etqCell = row.getCell(0);
+            Cell codopCell = row.getCell(1);
+            Cell oprCell = row.getCell(2);
+            if (etqCell != null && codopCell != null && oprCell != null) {
+                String etq = etqCell.getStringCellValue();
+                String codop = codopCell.getStringCellValue();
+                String opr = oprCell.getStringCellValue();
+                // Agregar la instrucción al formato adecuado a la lista
+                String instruccion = etq + " " + codop + " " + opr;
+                instrucciones.add(instruccion);
+            }
+        }
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+    return instrucciones;
+}
 }
