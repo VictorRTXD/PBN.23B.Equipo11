@@ -16,7 +16,7 @@ public class Main {
      */
     static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>();
     public static void main(String[] args) {
-        String fileName = "archivo.xlsx";
+        String fileName = "P1ASM.asm";
 
         // ** Expresiones regulares
 
