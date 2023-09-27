@@ -50,12 +50,22 @@ public class ExcelRead {
             StringBuilder excelData2 = new StringBuilder();
             
             //lectura primer excel
-            for (Row row : sheet1) {
-                for (Cell cell : row) {
-                    excelData1.append(cell.toString()).append("\t"); // Agrega un tabulador entre las celdas
+            for (int rowIndex = 2; rowIndex <= sheet1.getLastRowNum() - 1; rowIndex++) {
+                Row row = sheet1.getRow(rowIndex);
+
+                if (row != null) {
+                    for (int columnIndex = 0; columnIndex < row.getLastCellNum(); columnIndex++) {
+                        Cell cell = row.getCell(columnIndex);
+                        if (cell != null) {
+                            String cellValue = cell.toString();
+                            System.out.print(cellValue + "\t");
+                        }
+                    }
+                    System.out.println(); // Salto de línea después de cada fila
                 }
-                excelData1.append("\n"); // Agrega un salto de línea al final de cada fila
             }
+            
+            
             
             //libro1.close();
             //archivo1.close();
@@ -78,82 +88,8 @@ public class ExcelRead {
             String excelDataAsString2 = excelData2.toString();
             System.out.println("Contenido del Excel como String:");
             System.out.println(excelDataAsString2);
-            
-            
-
-// Ahora, la lista 'coincidencias' contendrá las instrucciones que se parecen entre ambos archivos.
-        //comparando primera archivo1 con archivo2
-            List<String> instruccionesArchivo1 = cargarInstruccionesDesdeExcel("archivo.xlsx");
-            List<String> instruccionesArchivo2 = cargarInstruccionesDesdeExcel("Salvation.Tabop.xlsx");
-            
-            //
-            Map<String, List<String>> coincidencias = new HashMap<>();
-
-        for (String instruccionArchivo1 : instruccionesArchivo1) {
-            for (String instruccionArchivo2 : instruccionesArchivo2) {
-                if (instruccionArchivo2.contains(instruccionArchivo1)) {
-                    coincidencias.computeIfAbsent(instruccionArchivo1, k -> new ArrayList<>()).add(instruccionArchivo2);
-                }
-            }
-        }
-
-        // Procesar y mostrar las coincidencias
-        for (Map.Entry<String, List<String>> entry : coincidencias.entrySet()) {
-            String instruccionArchivo1 = entry.getKey();
-            List<String> coincidenciasArchivo2 = entry.getValue();
-
-            System.out.println("Instrucción del archivo 1: " + instruccionArchivo1);
-            System.out.println("Coincidencias en el archivo 2:");
-            for (String coincidencia : coincidenciasArchivo2) {
-                System.out.println(coincidencia);
-            }
-            System.out.println();
-        }
-             
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    
-    // funcion para crear nuevas filas de info, 
-        static int excelRows(XSSFSheet sheet, int rowNum, String etiqueta, String codigoOperacion, String operando) {
-        rowNum = rowNum + 1;
-        XSSFRow row = sheet.createRow(rowNum);
-        XSSFCell cell1 = row.createCell(0);
-        cell1.setCellValue(etiqueta);
-        XSSFCell cell2 = row.createCell(1);
-        cell2.setCellValue(codigoOperacion);
-        XSSFCell cell3 = row.createCell(2);
-        cell3.setCellValue(operando); 
-        //XSSFCell cell4 = row.createCell(3);
-        //cell4.setCellValue(addr);
-        //XSSFCell cell5 = row.createCell(4);
-        //cell5.setCellValue(bytes);
-        
-        return rowNum;
-    }
-        
-    static public List<String> cargarInstruccionesDesdeExcel(String nombreArchivo) {
-    List<String> instrucciones = new ArrayList<>();
-    try (FileInputStream file = new FileInputStream(new File(nombreArchivo));
-        Workbook workbook = new XSSFWorkbook(file)) {
-        Sheet sheet = workbook.getSheetAt(0);
-        for (Row row : sheet) {
-            Cell etqCell = row.getCell(0);
-            Cell codopCell = row.getCell(1);
-            Cell oprCell = row.getCell(2);
-            if (etqCell != null && codopCell != null && oprCell != null) {
-                String etq = etqCell.getStringCellValue();
-                String codop = codopCell.getStringCellValue();
-                String opr = oprCell.getStringCellValue();
-                // Agregar la instrucción al formato adecuado a la lista
-                String instruccion = etq + " " + codop + " " + opr;
-                instrucciones.add(instruccion);
-            }
-        }
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
-    return instrucciones;
-}
 }
