@@ -128,10 +128,10 @@ public class Main {
     }
     
     static void notacion(String codop, String notacion){
-        String regexOpri="^#[@%$][0-9]+$|^#[0-9]+$";
-        String regexOpra="^[@%$][0-9]+$|^[0-9]+$";
-        String regexRel="^[a-zA-Z0-9]+$|^[ABDXY | SP],[A-Za-z0-9]+$";
-        String regexOprx="^[-]*[@%$]*[0-9]+,(X|Y|SP|PC)$|^[0-9]+,[+-]*(X|Y|SP|PC)[+-]*$|^[AaBbDd]+,(X|Y|SP|PC)$|^(\\[?[@%$]*[0-9]+,(X|Y|SP|PC))\\]?$|^(\\[?[Dd],(X|Y|SP|PC))\\]?|^,(X|Y|SP|PC)$";
+        String regexOpri="^#[@%\\$?][0-9A-F]+$|^#[0-9]+$";
+        String regexOpra="^[@%\\$?][0-9A-F]+$|^[0-9]+$"; // \\$?
+        String regexRel="^[a-zA-Z0-9]+$|^[ABDXY],[a-zA-Z0-9]+$|^[SP],[a-zA-Z0-9]+$";
+        String regexOprx="^[-]*[@%\\$?$]*[0-9A-F]+,(X|Y|SP|PC)$|^[@%\\$?$]*[0-9A-F]+,[+-]*(X|Y|SP|PC)[+-]*$|^[ABD]+,(X|Y|SP|PC)$|^(\\[?[@%\\$?]*[0-9A-F]+,(X|Y|SP|PC))\\]?$|^(\\[?[Dd],(X|Y|SP|PC))\\]?|^,(X|Y|SP|PC)$";
         
          Pattern patOpri = Pattern.compile(regexOpri);
          Pattern patOpra = Pattern.compile(regexOpra);
@@ -261,7 +261,7 @@ public class Main {
                }else if(Character.toString(tem).matches("L")){
                    String key = "rel16";
                    System.out.println(key);
-               }else if(Character.toString(temp2).matches("A | B | D | X | Y | SP")){
+               }else if(Character.toString(temp2).matches("[A | B | D | X | Y | SP]")){
                    String key = "abdxys,rel9";
                    System.out.println(key);
                }else{
@@ -286,10 +286,10 @@ public class Main {
                     separarOperandos(notacion);
                 }else if(Character.toString(tem).matches("[0-9]")){
                     separarOperandos(notacion);
-                }else if(Character.toString(tem).matches("[@$%]")){
+                }else if(Character.toString(tem).matches("[@%\\$?]")){
                     separarOperandos(notacion);
                 }else{
-                    System.out.println("no me encontre :(");
+                    System.out.println("Instruccion no valida");
                 }
             }else{
                 char tem = notacion.charAt(0);
@@ -299,9 +299,7 @@ public class Main {
                 }else{
                     String key = "Error";
                     System.out.println(key);
-                    System.out.println("Me fui al ultimo error :(");
-                    System.out.println(notacion);
-                }
+                    }
             }
     }//Fin del metodo notación
     
@@ -312,7 +310,6 @@ public class Main {
         String operando2 = aOperandos[1];
         
         int idx = operando2.length()-1;
-        System.out.println("longitud "+idx);
         //Comparadores temporales que sirven para encontrar los símbolos de "+-" en un operando
         char tem = operando1.charAt(0);
         char temp3 = operando2.charAt(0);
@@ -320,7 +317,6 @@ public class Main {
         
         if(Character.toString(tem).equals("-")||Character.toString(temp3).equals("-")||Character.toString(temp4).equals("-")){
               char temp2 = operando1.charAt(1);
-            System.out.println("tengo negativos");
              if(Character.toString(temp2).matches("%")){
                  String binario = operando1.substring(2);//Elimina caracteres no deseados
                  int tamaño = Integer.parseInt(binario, 2);
@@ -353,7 +349,7 @@ public class Main {
                      String key = "Error";
                 System.out.println(key);
                 }
-            }else if(Character.toString(temp2).matches("$")){
+            }else if(Character.toString(temp2).equals("$")){
                  String hexa = operando1.substring(2);//Elimina caracteres no deseados
                  int tamaño = Integer.parseInt(hexa, 16);
                  if(tamaño<=16){
@@ -370,7 +366,6 @@ public class Main {
                 System.out.println(key);
                 }
             }else if(Character.toString(temp2).matches("[0-9]")){
-                 System.out.println("entre a decimal");
                 int tamaño = Integer.parseInt(operando1);
                  if(tamaño<=16){
                      String key = "oprx0_xysp";
@@ -390,7 +385,6 @@ public class Main {
                     System.out.println(key);
                 }
         }else{
-            System.out.println("no tengo negativos");
            if(Character.toString(tem).matches("%")){
                  String binario = operando1.substring(1);//Elimina caracteres no deseados
                  int tamaño = Integer.parseInt(binario, 2);
@@ -421,7 +415,7 @@ public class Main {
                     System.out.println(key);
                 }else{//Valor no valido
                      String key = "Error";}
-            }else if(Character.toString(tem).matches("$")){
+            }else if(Character.toString(tem).equals("$")){
                  String hexa = operando1.substring(1);//Elimina caracteres no deseados
                  int tamaño = Integer.parseInt(hexa, 16);
                  if(tamaño<=15){
@@ -438,7 +432,6 @@ public class Main {
                 System.out.println(key);}
                  
             }else if(Character.toString(tem).matches("[0-9]")){
-                System.out.println("entre a decimal");
                 int tamaño = Integer.parseInt(operando1);
                  if(tamaño<=15){
                      String key = "oprx0_xysp";
@@ -453,9 +446,9 @@ public class Main {
                      String key = "Error";
                 System.out.println(key);}
                 }else{
-                System.out.println("no me encontre");
                     String key = "Error";
                     System.out.println(key);
+                    System.out.println("Instruccion no valida");
                 }
             }
         }//Fin del método separar operandos
