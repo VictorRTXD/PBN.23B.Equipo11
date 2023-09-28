@@ -72,7 +72,7 @@ public class ExcelRead {
             //System.out.println(excel2);
             
            // ** chac
-        String fileName = "archivo.xlsx";
+        //String fileName = "archivo.xlsx";
 
         // ** Expresiones regulares
 
@@ -96,83 +96,6 @@ public class ExcelRead {
         Pattern patCodigoOperacionOperando = Pattern.compile(regexCodigoOperacionOperando);
         Pattern patCodigoOperacion = Pattern.compile(regexCodigoOperacion);
         Pattern patEtiquetaCodigoOperacion = Pattern.compile(regexEtiquetaCodigoOperacion);
-
-        /*
-        br sirve para leer el contenido del archivo y el while es para leerlo todo usando br.readLIne() y almacenamos cada linea en la variable linea */
-        /*try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-            String linea;
-            System.out.println("Contenido original del archivo:");
-            while ((linea = br.readLine()) != null){
-                Matcher matcherComentario = patComentario.matcher(linea);
-                Matcher matcherCodigo = patCodigo.matcher(linea);
-                Matcher matcherCodigoOperacionOperando = patCodigoOperacionOperando.matcher(linea);
-                Matcher matcherCodigoOperacion= patCodigoOperacion.matcher(linea);
-                Matcher matcherEtiquetaCodigoOperacion = patEtiquetaCodigoOperacion.matcher(linea);
-                
-                //String etiqueta=null, codigoOperacion=null, operando=null;
-    
-                if (matcherComentario.matches()) {
-                    if (linea.length () > 80){
-                        System.out.println("Exceso de caracteres en: "+linea);
-                    } else {
-                    // Es un comentario
-                        System.out.println("Comentario: " + linea);
-                        System.out.println("");}
-                } else if (matcherCodigo.matches()) {
-                    // Es una línea de código con etiqueta, código de operación y operando
-                    String etiqueta = matcherCodigo.group(1);
-                    String codigoOperacion = matcherCodigo.group(2);
-                    String operando = matcherCodigo.group(3);
-                    //instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, null));
-                        if(etiqueta.length()>8 || codigoOperacion.length()>5){
-                            System.out.println("Exceso de caracteres en: "+linea);
-                        }else{
-                            instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, null));}
-                    
-                } else if(matcherCodigoOperacionOperando.matches()) {
-                    // Es una línea con código de operación y operando
-                    String etiqueta = "-";
-                    String codigoOperacion = matcherCodigoOperacionOperando.group(1);
-                    String operando = matcherCodigoOperacionOperando.group(2);
-                    //instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, null));
-                    if(codigoOperacion.length()>5){
-                        System.out.println("Exceso de caracteres en: "+linea);
-                        System.out.println("");
-                    }else{
-                    instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, null));}
-                    
-                } else if(matcherCodigoOperacion.matches()) {
-                    // Es una línea con código de operación y operando
-                    String etiqueta = "-";
-                    String codigoOperacion = matcherCodigoOperacion.group(1);
-                    String operando = "-";
-                    //instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, null));
-                    if(codigoOperacion.length()>5){
-                        System.out.println("Exceso de caracteres en: "+linea);
-                        System.out.println("");
-                    }else{
-                    instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, null));}
-                    
-                }else if(matcherEtiquetaCodigoOperacion.matches()){
-                    String etiqueta = matcherEtiquetaCodigoOperacion.group(1);
-                    String codigoOperacion = matcherEtiquetaCodigoOperacion.group(2);
-                    String operando = "-";
-                    //instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, null));
-                    if(etiqueta.length()>8 || codigoOperacion.length()>5){
-                        System.out.println("Exceso de caracteres en: "+linea);
-                        System.out.println("");
-                    }else{
-                        instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, null));}
-                    } else {
-                    // No coincide con ninguna de las expresiones regulares
-                    System.out.println("Error de Sintaxis: " + linea);
-                    System.out.println("");
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-*/
         
         String[] lineas = excel1.split("\n");
         for (String linea : lineas) {
@@ -200,7 +123,7 @@ public class ExcelRead {
                         if(etiqueta.length()>8 || codigoOperacion.length()>5){
                             System.out.println("Exceso de caracteres en: "+linea);
                         }else{
-                            instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, null));}
+                            instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, key, null));}
                     
                 } else if(matcherCodigoOperacionOperando.matches()) {
                     // Es una línea con código de operación y operando
@@ -212,7 +135,7 @@ public class ExcelRead {
                         System.out.println("Exceso de caracteres en: "+linea);
                         System.out.println("");
                     }else{
-                    instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, null));}
+                    instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, key, null));}
                     
                 } else if(matcherCodigoOperacion.matches()) {
                     // Es una línea con código de operación y operando
@@ -224,7 +147,7 @@ public class ExcelRead {
                         System.out.println("Exceso de caracteres en: "+linea);
                         System.out.println("");
                     }else{
-                    instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, null));}
+                    instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, key, null));}
                     
                 }else if(matcherEtiquetaCodigoOperacion.matches()){
                     String etiqueta = matcherEtiquetaCodigoOperacion.group(1);
@@ -235,7 +158,7 @@ public class ExcelRead {
                         System.out.println("Exceso de caracteres en: "+linea);
                         System.out.println("");
                     }else{
-                        instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, null));}
+                        instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, key, null));}
                     } else {
                     // No coincide con ninguna de las expresiones regulares
                     System.out.println("Error de Sintaxis: " + linea);
@@ -262,8 +185,6 @@ public class ExcelRead {
         //separarOperandos(instruccion.get(i).getOperando());
         }
     }
-    
-    
     
     static void notacion(String codop, String notacion){
         String regexOpri="^#[@%$][0-9]+$|^[0-9]+$";
@@ -392,7 +313,6 @@ public class ExcelRead {
                     separarOperandos(notacion);
                 }
             }
-         System.out.println(" llave " + key);
     }//Fin del metodo notación
     
     static void separarOperandos(String operandos){
@@ -505,7 +425,6 @@ public class ExcelRead {
                      key = "Error";
                 }
             }
-        System.out.println(" llave " + key);
         }//Fin del método separar operandos
     
     static String lecturaExcel1(Sheet sheet, StringBuilder excelData, String excel) {
