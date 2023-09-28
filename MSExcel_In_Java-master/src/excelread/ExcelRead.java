@@ -44,7 +44,6 @@ import java.util.ArrayList;
 
 public class ExcelRead {
     static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>();
-    static String key = "";
 
     public static void main(String[] args) {
         try {
@@ -75,6 +74,17 @@ public class ExcelRead {
         //String fileName = "archivo.xlsx";
 
         // ** Expresiones regulares
+        String fileName = "P1ASM.asm";
+        
+        String texto = "; comentario número 1 =Programación=\n" + //
+                "ORG %00001111\n" + //
+                "Et1: EQU $FFFF\n" + //
+                "dos: LDAA @4732\n" + //
+                "SWI\n" + //
+                "DS.B %0011000011111100\n" + //
+                "; comentario número 2 ¡Bajo!\n" + //
+                "; comentario número 3 -Nivel- Tres: SWI\n" + //
+                "END";
 
         String regexComentario = "^\\s*;.*$";
 
@@ -97,7 +107,7 @@ public class ExcelRead {
         Pattern patCodigoOperacion = Pattern.compile(regexCodigoOperacion);
         Pattern patEtiquetaCodigoOperacion = Pattern.compile(regexEtiquetaCodigoOperacion);
         
-        String[] lineas = excel1.split("\n");
+        String[] lineas = texto.split("\n");
         for (String linea : lineas) {
             Matcher matcherComentario = patComentario.matcher(linea);
             Matcher matcherCodigo = patCodigo.matcher(linea);
@@ -123,7 +133,7 @@ public class ExcelRead {
                         if(etiqueta.length()>8 || codigoOperacion.length()>5){
                             System.out.println("Exceso de caracteres en: "+linea);
                         }else{
-                            instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, key, null));}
+                            instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, null));}
                     
                 } else if(matcherCodigoOperacionOperando.matches()) {
                     // Es una línea con código de operación y operando
@@ -135,7 +145,7 @@ public class ExcelRead {
                         System.out.println("Exceso de caracteres en: "+linea);
                         System.out.println("");
                     }else{
-                    instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, key, null));}
+                    instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, null));}
                     
                 } else if(matcherCodigoOperacion.matches()) {
                     // Es una línea con código de operación y operando
@@ -147,7 +157,7 @@ public class ExcelRead {
                         System.out.println("Exceso de caracteres en: "+linea);
                         System.out.println("");
                     }else{
-                    instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, key, null));}
+                    instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, null));}
                     
                 }else if(matcherEtiquetaCodigoOperacion.matches()){
                     String etiqueta = matcherEtiquetaCodigoOperacion.group(1);
@@ -158,7 +168,7 @@ public class ExcelRead {
                         System.out.println("Exceso de caracteres en: "+linea);
                         System.out.println("");
                     }else{
-                        instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, key, null));}
+                        instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, null));}
                     } else {
                     // No coincide con ninguna de las expresiones regulares
                     System.out.println("Error de Sintaxis: " + linea);
@@ -178,16 +188,11 @@ public class ExcelRead {
         notacion(instruccion.get(i).getCodop(), instruccion.get(i).getOperando());
         //separarOperandos(instruccion.get(i).getOperando());
         }
-    
-     for(int i=0; i<=instruccion.size()-1; i++){
-        System.out.println(instruccion.get(i).getEtiqueta()+" "+instruccion.get(i).getCodop()+" "+instruccion.get(i).getOperando());
-        notacion(instruccion.get(i).getCodop(), instruccion.get(i).getOperando());
-        //separarOperandos(instruccion.get(i).getOperando());
-        }
     }
     
     static void notacion(String codop, String notacion){
-        String regexOpri="^#[@%$][0-9]+$|^[0-9]+$";
+        System.out.println("entre a notacion");
+        String regexOpri="^#[@%$][0-9]+$|^#[0-9]+$";
         String regexOpra="^[@%$][0-9]+$|^[0-9]+$";
         String regexRel="^[a-zA-Z0-9]+$|^[ABDXY | SP],[A-Za-z0-9]+$";
         String regexOprx="^[-]*[@%$]*[0-9]+,(X|Y|SP|PC)$|^[0-9]+,[+-]*(X|Y|SP|PC)[+-]*$|^[AaBbDd]+,(X|Y|SP|PC)$|^(\\[?[@%$]*[0-9]+,(X|Y|SP|PC))\\]?$|^(\\[?[Dd],(X|Y|SP|PC))\\]?|^,(X|Y|SP|PC)$";
@@ -208,40 +213,53 @@ public class ExcelRead {
                  String binario = notacion.substring(2);//Elimina caracteres no deseados
                  int tamaño = Integer.parseInt(binario, 2);
                  if(tamaño<=255){
-                     key = "#opr8i";
+                    String key = "#opr8i";
+                     System.out.println(key);
+                     
                  }else if(tamaño<=65535){
-                     key = "#opr16i";
+                    String key = "#opr16i";
+                    System.out.println(key);
                 }else{//Valor no valido
-                      key = "Error";
+                    String  key = "Error";
+                    System.out.println(key);
                  }//Fin del binario
              }else if(Character.toString(tem).matches("@")){
                  String octal = notacion.substring(2);
                  int tamaño = Integer.parseInt(octal, 8);
                  if(tamaño<=255){
-                      key = "#opr8i";
+                    String  key = "#opr8i";
+                    System.out.println(key);
                  }else if(tamaño<=65535){
-                      key = "#opr16i";
+                    String  key = "#opr16i";
+                    System.out.println(key);
                 }else{//Valor no valido
-                      key = "Error";
+                    String  key = "Error";
+                    System.out.println(key);
                  }//in del octal
              }else if(Character.toString(tem).matches("$")){
                  String hexa = notacion.substring(2);
                  int tamaño = Integer.parseInt(hexa, 16);
                  if(tamaño<=255){
-                      key = "#opr8i";
+                    String  key = "#opr8i";
+                    System.out.println(key);
                  }else if(tamaño<=65535){
-                      key = "#opr16i";
+                    String  key = "#opr16i";
+                    System.out.println(key);
                 }else{//Valor no valido
-                      key = "Error";
+                    String  key = "Error";
+                    System.out.println(key);
                  }//Fin del octal
                 }else{
                  int tamaño = Integer.parseInt(notacion);
                  if(tamaño<=255){
-                      key = "#opr8i";
+                    String  key = "#opr8i";
+                    System.out.println(key);
                  }else if(tamaño<=65535){
-                      key = "#opr16i";
+                    String  key = "#opr16i";
+                    System.out.println(key);
                 }else{//Valor no valido
-                      key = "Error";
+                    String  key = "Error";
+                    System.out.println(key);
                  }
                 }
             }else if(matcherOpra.matches()){
@@ -250,67 +268,97 @@ public class ExcelRead {
                  String binario = notacion.substring(1);//Elimina caracteres no deseados
                  int tamaño = Integer.parseInt(binario, 2);
                  if(tamaño<=255){
-                      key = "opr8a";
+                    String  key = "opr8a";
+                    System.out.println(key);
                  }else if(tamaño<=65535){
-                      key = "opr16a";
+                    String  key = "opr16a";
+                    System.out.println(key);
                 }else{//Valor no valido
-                      key = "Error";
+                    String  key = "Error";
+                    System.out.println(key);
                  }//Fin del binario
              }else if(Character.toString(tem).matches("@")){
                  String octal = notacion.substring(1);
                  int tamaño = Integer.parseInt(octal, 8);
                  if(tamaño<=255){
-                      key = "opr8a";
+                    String  key = "opr8a";
+                    System.out.println(key);
                  }else if(tamaño<=65535){
-                      key = "opr16a";
+                    String  key = "opr16a";
+                    System.out.println(key);
                 }else{//Valor no valido
-                      key = "Error";
+                    String  key = "Error";
+                    System.out.println(key);
                  }//in del octal
              }else if(Character.toString(tem).matches("$")){
                  String hexa = notacion.substring(1);
                  int tamaño = Integer.parseInt(hexa, 16);
                  if(tamaño<=255){
-                      key = "opr8a";
+                    String  key = "opr8a";
+                    System.out.println(key);
                  }else if(tamaño<=65535){
-                      key = "opr16a";
+                    String  key = "opr16a";
+                    System.out.println(key);
                 }else{//Valor no valido
-                      key = "Error";
+                    String  key = "Error";
+                    System.out.println(key);
                  }//Fin del octal
                 }else{
                  int tamaño = Integer.parseInt(notacion);
                  if(tamaño<=255){
-                      key = "opr8a";
+                    String  key = "opr8a";
+                    System.out.println(key);
                  }else if(tamaño<=65535){
-                      key = "opr16a";
+                    String  key = "opr16a";
+                    System.out.println(key);
                 }else{//Valor no valido
-                      key = "Error";
+                    String  key = "Error";
+                    System.out.println(key);
                  }
                 }
             }else if(matcherRel.matches()){
                char tem = codop.charAt(0);
                char temp2 = notacion.charAt(0);
                if(Character.toString(tem).matches("B")){
-                    key = "rel8";
+                String    key = "rel8";
+                System.out.println(key);
                }else if(Character.toString(tem).matches("L")){
-                    key = "rel16";
+                String    key = "rel16";
+                System.out.println(key);
                }else if(Character.toString(temp2).matches("A | B | D | X | Y | SP")){
-                    key = "abdxys,rel9";
+                String    key = "abdxys,rel9";
+                System.out.println(key);
                }else{
-                    key = "Error";
+                  String  key = "Error";
+                  System.out.println(key);
                }
             }else if(matcherOprx.matches()){
                 char tem = notacion.charAt(0);
                 char temp2 = notacion.charAt(1);
                 if(Character.toString(tem).matches(", | [ABD]")){
-                     key = "oprx0_xysp";
+                    String key = "oprx0_xysp";
+                    System.out.println(key);
                 }else if(Character.toString(tem).matches("\\[?")){
                     if(Character.toString(temp2).matches("D")){
-                         key = "[D,xysp]";
+                        String key = "[D,xysp]";
+                        System.out.println(key);
                     }else{
-                         key = "[oprx16,xysp]";
+                        String key = "[oprx16,xysp]";
+                        System.out.println(key);
                     }
                 }else if(Character.toString(tem).matches("- | [@%$] | [0-9]")){
                     separarOperandos(notacion);
+                }else{
+                    char temporal = notacion.charAt(0);
+                    if(notacion.length() == 1 && Character.toString(temporal).equals("-")){
+                    String key = "-";
+                    System.out.println(key);
+                    }else{
+                    String key = "Error";
+                    System.out.println(key);
+                    System.out.println("Me fui al ultimo error :(");
+                    System.out.println(notacion);
+                    }
                 }
             }
     }//Fin del metodo notación
@@ -333,102 +381,142 @@ public class ExcelRead {
                  String binario = operando1.substring(2);//Elimina caracteres no deseados
                  int tamaño = Integer.parseInt(binario, 2);
                  if(tamaño<=16){
-                      key = "oprx0_xysp";
+                    String  key = "oprx0_xysp";
+                    System.out.println(key);
                  }else if(tamaño<=256){
-                      key = "oprx9,xysp";
+                    String  key = "oprx9,xysp";
+                    System.out.println(key);
                 }else if(tamaño<=32768){
-                     key = "oprx16,xysp";
+                    String key = "oprx16,xysp";
+                    System.out.println(key);
                 }else{//Valor no valido
-                      key = "Error";
+                    String  key = "Error";
+                    System.out.println(key);
                  }
             }else if(Character.toString(temp2).matches("@")){
                  String octal = operando1.substring(2);//Elimina caracteres no deseados
                  int tamaño = Integer.parseInt(octal, 8);
                  if(tamaño<=16){
-                      key = "oprx0_xysp";
+                    String  key = "oprx0_xysp";
+                    System.out.println(key);
                  }else if(tamaño<=256){
-                      key = "oprx9,xysp";
+                    String  key = "oprx9,xysp";
+                    System.out.println(key);
                 }else if(tamaño<=32768){
-                     key = "oprx16,xysp";
+                    String key = "oprx16,xysp";
+                    System.out.println(key);
                 }else{//Valor no valido
-                      key = "Error";}
+                    String  key = "Error";
+                System.out.println(key);
+                }
             }else if(Character.toString(temp2).matches("$")){
                  String hexa = operando1.substring(2);//Elimina caracteres no deseados
                  int tamaño = Integer.parseInt(hexa, 16);
                  if(tamaño<=16){
-                      key = "oprx0_xysp";
+                    String  key = "oprx0_xysp";
+                    System.out.println(key);
                  }else if(tamaño<=256){
-                      key = "oprx9,xysp";
+                    String  key = "oprx9,xysp";
+                    System.out.println(key);
                 }else if(tamaño<=32768){
-                     key = "oprx16,xysp";
+                    String key = "oprx16,xysp";
+                    System.out.println(key);
                 }else{//Valor no valido
-                      key = "Error";}
+                    String  key = "Error";
+                System.out.println(key);
+                }
             }else if(Character.toString(temp2).matches("[0-9]")){
                 int tamaño = Integer.parseInt(operando1);
                  if(tamaño<=16){
-                      key = "oprx0_xysp";
+                    String  key = "oprx0_xysp";
+                    System.out.println(key);
                  }else if(tamaño<=256){
-                      key = "oprx9,xysp";
+                    String  key = "oprx9,xysp";
+                    System.out.println(key);
                 }else if(tamaño<=32768){
-                     key = "oprx16,xysp";
+                    String key = "oprx16,xysp";
+                    System.out.println(key);
                 }else{//Valor no valido
-                      key = "Error";}
+                    String  key = "Error";
+                System.out.println(key);
+                }
                 }else{
-                     key = "Error";
+                    String key = "Error";
+                    System.out.println(key);
                 }
         }else{
            if(Character.toString(tem).matches("%")){
                  String binario = operando1.substring(1);//Elimina caracteres no deseados
                  int tamaño = Integer.parseInt(binario, 2);
                  if(tamaño<=15){
-                      key = "oprx0_xysp";
+                    String  key = "oprx0_xysp";
+                    System.out.println(key);
                  }else if(tamaño<=255){
-                      key = "oprx9,xysp";
+                    String  key = "oprx9,xysp";
+                    System.out.println(key);
                 }else if(tamaño<=65535){
-                     key = "oprx16,xysp";
+                    String key = "oprx16,xysp";
+                    System.out.println(key);
                 }else{//Valor no valido
-                      key = "Error";
+                    String  key = "Error";
+                    System.out.println(key);
                  }
             }else if(Character.toString(tem).matches("@")){
                  String octal = operando1.substring(1);//Elimina caracteres no deseados
                  int tamaño = Integer.parseInt(octal, 8);
                  if(tamaño<=15){
-                      key = "oprx0_xysp";
+                    String  key = "oprx0_xysp";
+                    System.out.println(key);
                  }else if(tamaño<=255){
-                      key = "oprx9,xysp";
+                    String  key = "oprx9,xysp";
+                    System.out.println(key);
                 }else if(tamaño<=65535){
-                     key = "oprx16,xysp";
+                    String key = "oprx16,xysp";
+                    System.out.println(key);
                 }else{//Valor no valido
-                      key = "Error";}
+                    String  key = "Error";
+                System.out.println(key);
+                }
             }else if(Character.toString(tem).matches("$")){
                  String hexa = operando1.substring(1);//Elimina caracteres no deseados
                  int tamaño = Integer.parseInt(hexa, 16);
                  if(tamaño<=15){
-                      key = "oprx0_xysp";
+                    String  key = "oprx0_xysp";
+                    System.out.println(key);
                  }else if(tamaño<=255){
-                      key = "oprx9,xysp";
+                    String  key = "oprx9,xysp";
+                    System.out.println(key);
                 }else if(tamaño<=65535){
-                     key = "oprx16,xysp";
+                    String key = "oprx16,xysp";
+                    System.out.println(key);
                 }else{//Valor no valido
-                      key = "Error";}
+                    String  key = "Error";
+                System.out.println(key);
+                }
             }else if(Character.toString(tem).matches("[0-9]")){
                 int tamaño = Integer.parseInt(operando1);
                  if(tamaño<=15){
-                      key = "oprx0_xysp";
+                    String  key = "oprx0_xysp";
+                    System.out.println(key);
                  }else if(tamaño<=255){
-                      key = "oprx9,xysp";
+                      String key = "oprx9,xysp";
+                      System.out.println(key);
                 }else if(tamaño<=65535){
-                     key = "oprx16,xysp";
+                     String key = "oprx16,xysp";
+                     System.out.println(key);
                 }else{//Valor no valido
-                      key = "Error";}
+                    String  key = "Error";
+                System.out.println(key);
+                }
                 }else{
-                     key = "Error";
+                    String key = "Error";
+                    System.out.println(key);
                 }
             }
         }//Fin del método separar operandos
     
     static String lecturaExcel1(Sheet sheet, StringBuilder excelData, String excel) {
-        for (int rowIndex = 2; rowIndex <= sheet.getLastRowNum() - 1; rowIndex++) {
+        for (int rowIndex = 0; rowIndex <= sheet.getLastRowNum() - 1; rowIndex++) {
                 Row row = sheet.getRow(rowIndex);
 
                 if (row != null) {

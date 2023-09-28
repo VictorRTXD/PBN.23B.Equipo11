@@ -16,7 +16,7 @@ public class Main {
      */
     static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>();
     public static void main(String[] args) {
-        String fileName = "P1ASM.asm";
+        String fileName = "P1ASM1.asm";
 
         // ** Expresiones regulares
 
@@ -128,7 +128,7 @@ public class Main {
     }
     
     static void notacion(String codop, String notacion){
-        String regexOpri="^#[@%$][0-9]+$|^[0-9]+$";
+        String regexOpri="^#[@%$][0-9]+$|^#[0-9]+$";
         String regexOpra="^[@%$][0-9]+$|^[0-9]+$";
         String regexRel="^[a-zA-Z0-9]+$|^[ABDXY | SP],[A-Za-z0-9]+$";
         String regexOprx="^[-]*[@%$]*[0-9]+,(X|Y|SP|PC)$|^[0-9]+,[+-]*(X|Y|SP|PC)[+-]*$|^[AaBbDd]+,(X|Y|SP|PC)$|^(\\[?[@%$]*[0-9]+,(X|Y|SP|PC))\\]?$|^(\\[?[Dd],(X|Y|SP|PC))\\]?|^,(X|Y|SP|PC)$";
@@ -150,39 +150,51 @@ public class Main {
                  int tamaño = Integer.parseInt(binario, 2);
                  if(tamaño<=255){
                      String key = "#opr8i";
+                     System.out.println(key);
                  }else if(tamaño<=65535){
                      String key = "#opr16i";
+                     System.out.println(key);
                 }else{//Valor no valido
                      String key = "Error";
+                     System.out.println(key);
                  }//Fin del binario
              }else if(Character.toString(tem).matches("@")){
                  String octal = notacion.substring(2);
                  int tamaño = Integer.parseInt(octal, 8);
                  if(tamaño<=255){
                      String key = "#opr8i";
+                     System.out.println(key);
                  }else if(tamaño<=65535){
                      String key = "#opr16i";
+                     System.out.println(key);
                 }else{//Valor no valido
                      String key = "Error";
+                     System.out.println(key);
                  }//in del octal
-             }else if(Character.toString(tem).matches("$")){
+             }else if(Character.toString(tem).equals("$")){
                  String hexa = notacion.substring(2);
                  int tamaño = Integer.parseInt(hexa, 16);
                  if(tamaño<=255){
                      String key = "#opr8i";
+                     System.out.println(key);
                  }else if(tamaño<=65535){
                      String key = "#opr16i";
+                     System.out.println(key);
                 }else{//Valor no valido
                      String key = "Error";
+                     System.out.println(key);
                  }//Fin del octal
                 }else{
                  int tamaño = Integer.parseInt(notacion);
                  if(tamaño<=255){
                      String key = "#opr8i";
+                     System.out.println(key);
                  }else if(tamaño<=65535){
                      String key = "#opr16i";
+                     System.out.println(key);
                 }else{//Valor no valido
                      String key = "Error";
+                     System.out.println(key);
                  }
                 }
             }else if(matcherOpra.matches()){
@@ -192,39 +204,51 @@ public class Main {
                  int tamaño = Integer.parseInt(binario, 2);
                  if(tamaño<=255){
                      String key = "opr8a";
+                     System.out.println(key);
                  }else if(tamaño<=65535){
                      String key = "opr16a";
+                     System.out.println(key);
                 }else{//Valor no valido
                      String key = "Error";
+                     System.out.println(key);
                  }//Fin del binario
              }else if(Character.toString(tem).matches("@")){
                  String octal = notacion.substring(1);
                  int tamaño = Integer.parseInt(octal, 8);
                  if(tamaño<=255){
                      String key = "opr8a";
+                     System.out.println(key);
                  }else if(tamaño<=65535){
                      String key = "opr16a";
+                     System.out.println(key);
                 }else{//Valor no valido
                      String key = "Error";
+                     System.out.println(key);
                  }//in del octal
-             }else if(Character.toString(tem).matches("$")){
+             }else if(Character.toString(tem).equals("$")){
                  String hexa = notacion.substring(1);
                  int tamaño = Integer.parseInt(hexa, 16);
                  if(tamaño<=255){
                      String key = "opr8a";
+                     System.out.println(key);
                  }else if(tamaño<=65535){
                      String key = "opr16a";
+                     System.out.println(key);
                 }else{//Valor no valido
                      String key = "Error";
+                     System.out.println(key);
                  }//Fin del octal
                 }else{
                  int tamaño = Integer.parseInt(notacion);
                  if(tamaño<=255){
                      String key = "opr8a";
+                     System.out.println(key);
                  }else if(tamaño<=65535){
                      String key = "opr16a";
+                     System.out.println(key);
                 }else{//Valor no valido
                      String key = "Error";
+                     System.out.println(key);
                  }
                 }
             }else if(matcherRel.matches()){
@@ -232,26 +256,44 @@ public class Main {
                char temp2 = notacion.charAt(0);
                if(Character.toString(tem).matches("B")){
                    String key = "rel8";
+                   System.out.println(key);
                }else if(Character.toString(tem).matches("L")){
                    String key = "rel16";
+                   System.out.println(key);
                }else if(Character.toString(temp2).matches("A | B | D | X | Y | SP")){
                    String key = "abdxys,rel9";
+                   System.out.println(key);
                }else{
                    String key = "Error";
+                   System.out.println(key);
                }
             }else if(matcherOprx.matches()){
                 char tem = notacion.charAt(0);
                 char temp2 = notacion.charAt(1);
                 if(Character.toString(tem).matches(", | [ABD]")){
                     String key = "oprx0_xysp";
+                    System.out.println(key);
                 }else if(Character.toString(tem).matches("\\[?")){
                     if(Character.toString(temp2).matches("D")){
                         String key = "[D,xysp]";
+                        System.out.println(key);
                     }else{
                         String key = "[oprx16,xysp]";
+                        System.out.println(key);
                     }
                 }else if(Character.toString(tem).matches("- | [@%$] | [0-9]")){
                     separarOperandos(notacion);
+                }
+            }else{
+                char tem = notacion.charAt(0);
+                if(notacion.length() == 1 && Character.toString(tem).equals("-")){
+                    String key = "-";
+                    System.out.println(key);
+                }else{
+                    String key = "Error";
+                    System.out.println(key);
+                    System.out.println("Me fui al ultimo error :(");
+                    System.out.println(notacion);
                 }
             }
     }//Fin del metodo notación
@@ -275,47 +317,67 @@ public class Main {
                  int tamaño = Integer.parseInt(binario, 2);
                  if(tamaño<=16){
                      String key = "oprx0_xysp";
+                     System.out.println(key);
                  }else if(tamaño<=256){
                      String key = "oprx9,xysp";
+                     System.out.println(key);
                 }else if(tamaño<=32768){
                     String key = "oprx16,xysp";
+                    System.out.println(key);
                 }else{//Valor no valido
                      String key = "Error";
+                     System.out.println(key);
                  }
             }else if(Character.toString(temp2).matches("@")){
                  String octal = operando1.substring(2);//Elimina caracteres no deseados
                  int tamaño = Integer.parseInt(octal, 8);
                  if(tamaño<=16){
                      String key = "oprx0_xysp";
+                     System.out.println(key);
                  }else if(tamaño<=256){
                      String key = "oprx9,xysp";
+                     System.out.println(key);
                 }else if(tamaño<=32768){
                     String key = "oprx16,xysp";
+                    System.out.println(key);
                 }else{//Valor no valido
-                     String key = "Error";}
+                     String key = "Error";
+                System.out.println(key);
+                }
             }else if(Character.toString(temp2).matches("$")){
                  String hexa = operando1.substring(2);//Elimina caracteres no deseados
                  int tamaño = Integer.parseInt(hexa, 16);
                  if(tamaño<=16){
                      String key = "oprx0_xysp";
+                     System.out.println(key);
                  }else if(tamaño<=256){
                      String key = "oprx9,xysp";
+                     System.out.println(key);
                 }else if(tamaño<=32768){
                     String key = "oprx16,xysp";
+                    System.out.println(key);
                 }else{//Valor no valido
-                     String key = "Error";}
+                     String key = "Error";
+                System.out.println(key);
+                }
             }else if(Character.toString(temp2).matches("[0-9]")){
                 int tamaño = Integer.parseInt(operando1);
                  if(tamaño<=16){
                      String key = "oprx0_xysp";
+                     System.out.println(key);
                  }else if(tamaño<=256){
                      String key = "oprx9,xysp";
+                     System.out.println(key);
                 }else if(tamaño<=32768){
                     String key = "oprx16,xysp";
+                    System.out.println(key);
                 }else{//Valor no valido
-                     String key = "Error";}
+                     String key = "Error";
+                    System.out.println(key);                
+                }
                 }else{
                     String key = "Error";
+                    System.out.println(key);
                 }
         }else{
            if(Character.toString(tem).matches("%")){
@@ -323,22 +385,29 @@ public class Main {
                  int tamaño = Integer.parseInt(binario, 2);
                  if(tamaño<=15){
                      String key = "oprx0_xysp";
+                     System.out.println(key);
                  }else if(tamaño<=255){
                      String key = "oprx9,xysp";
+                     System.out.println(key);
                 }else if(tamaño<=65535){
                     String key = "oprx16,xysp";
+                    System.out.println(key);
                 }else{//Valor no valido
                      String key = "Error";
+                     System.out.println(key);
                  }
             }else if(Character.toString(tem).matches("@")){
                  String octal = operando1.substring(1);//Elimina caracteres no deseados
                  int tamaño = Integer.parseInt(octal, 8);
                  if(tamaño<=15){
                      String key = "oprx0_xysp";
+                     System.out.println(key);
                  }else if(tamaño<=255){
                      String key = "oprx9,xysp";
+                     System.out.println(key);
                 }else if(tamaño<=65535){
                     String key = "oprx16,xysp";
+                    System.out.println(key);
                 }else{//Valor no valido
                      String key = "Error";}
             }else if(Character.toString(tem).matches("$")){
@@ -346,10 +415,13 @@ public class Main {
                  int tamaño = Integer.parseInt(hexa, 16);
                  if(tamaño<=15){
                      String key = "oprx0_xysp";
+                     System.out.println(key);
                  }else if(tamaño<=255){
                      String key = "oprx9,xysp";
+                     System.out.println(key);
                 }else if(tamaño<=65535){
                     String key = "oprx16,xysp";
+                    System.out.println(key);
                 }else{//Valor no valido
                      String key = "Error";}
             }else if(Character.toString(tem).matches("[0-9]")){

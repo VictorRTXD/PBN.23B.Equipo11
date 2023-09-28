@@ -1,10 +1,25 @@
-; comentario número 1 =Programación=
-ORG #%00001111
-Et1: EQU $FFFF
-dos: LDAA @4732
-SWI
-DS.B %0011000011111100
-; comentario número 2 ¡Bajo!
-; comentario número 3 -Nivel- 
-Tres: SWI
-END
+ETQ	CODOP	OPR
+	ORG	$4040
+dos:	EORA	5
+	EORA	@5
+	EORA	%111
+	EORA	$6
+	EORA	300
+	EORA	$FFF
+	EORA	#5
+	EORA	#@5
+	EORA	#1500
+	EORA	1,X
+Uno:	EORA	255,X
+	EORA	32768,X
+	EORA	1,+PC
+	EORA	A,X
+	EORA	254,X
+	EORA	6444,X
+	EORA	[1,X]
+	EORA	[6444,X]
+	EORA	[D,X]
+	BLT	UNO
+	LBLT	UNO
+	IBNE	A,UNO
+	END	
