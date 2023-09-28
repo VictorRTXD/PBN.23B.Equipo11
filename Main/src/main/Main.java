@@ -185,7 +185,8 @@ public class Main {
                      System.out.println(key);
                  }//Fin del octal
                 }else{
-                 int tamaño = Integer.parseInt(notacion);
+                 String dec = notacion.substring(1);
+                 int tamaño = Integer.parseInt(dec);
                  if(tamaño<=255){
                      String key = "#opr8i";
                      System.out.println(key);
@@ -281,8 +282,14 @@ public class Main {
                         String key = "[oprx16,xysp]";
                         System.out.println(key);
                     }
-                }else if(Character.toString(tem).matches("- | [@%$] | [0-9]")){
+                }else if(Character.toString(tem).equals("-")){
                     separarOperandos(notacion);
+                }else if(Character.toString(tem).matches("[0-9]")){
+                    separarOperandos(notacion);
+                }else if(Character.toString(tem).matches("[@$%]")){
+                    separarOperandos(notacion);
+                }else{
+                    System.out.println("no me encontre :(");
                 }
             }else{
                 char tem = notacion.charAt(0);
@@ -304,14 +311,16 @@ public class Main {
         String operando1 = aOperandos[0];
         String operando2 = aOperandos[1];
         
+        int idx = operando2.length()-1;
+        System.out.println("longitud "+idx);
         //Comparadores temporales que sirven para encontrar los símbolos de "+-" en un operando
         char tem = operando1.charAt(0);
-        char temp2 = operando1.charAt(1);
         char temp3 = operando2.charAt(0);
-        char temp4 = operando2.charAt(2);
-        char temp5 = operando2.charAt(3);
+        char temp4 = operando2.charAt(idx);
         
-        if(Character.toString(tem).matches("-")||Character.toString(temp3).matches("-")||Character.toString(temp4).matches("-")||Character.toString(temp5).matches("-")){
+        if(Character.toString(tem).equals("-")||Character.toString(temp3).equals("-")||Character.toString(temp4).equals("-")){
+              char temp2 = operando1.charAt(1);
+            System.out.println("tengo negativos");
              if(Character.toString(temp2).matches("%")){
                  String binario = operando1.substring(2);//Elimina caracteres no deseados
                  int tamaño = Integer.parseInt(binario, 2);
@@ -361,6 +370,7 @@ public class Main {
                 System.out.println(key);
                 }
             }else if(Character.toString(temp2).matches("[0-9]")){
+                 System.out.println("entre a decimal");
                 int tamaño = Integer.parseInt(operando1);
                  if(tamaño<=16){
                      String key = "oprx0_xysp";
@@ -380,6 +390,7 @@ public class Main {
                     System.out.println(key);
                 }
         }else{
+            System.out.println("no tengo negativos");
            if(Character.toString(tem).matches("%")){
                  String binario = operando1.substring(1);//Elimina caracteres no deseados
                  int tamaño = Integer.parseInt(binario, 2);
@@ -423,19 +434,28 @@ public class Main {
                     String key = "oprx16,xysp";
                     System.out.println(key);
                 }else{//Valor no valido
-                     String key = "Error";}
+                     String key = "Error";
+                System.out.println(key);}
+                 
             }else if(Character.toString(tem).matches("[0-9]")){
+                System.out.println("entre a decimal");
                 int tamaño = Integer.parseInt(operando1);
                  if(tamaño<=15){
                      String key = "oprx0_xysp";
+                     System.out.println(key);
                  }else if(tamaño<=255){
                      String key = "oprx9,xysp";
+                     System.out.println(key);
                 }else if(tamaño<=65535){
                     String key = "oprx16,xysp";
+                    System.out.println(key);
                 }else{//Valor no valido
-                     String key = "Error";}
+                     String key = "Error";
+                System.out.println(key);}
                 }else{
+                System.out.println("no me encontre");
                     String key = "Error";
+                    System.out.println(key);
                 }
             }
         }//Fin del método separar operandos
