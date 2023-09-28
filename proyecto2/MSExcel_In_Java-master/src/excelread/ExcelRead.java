@@ -20,22 +20,7 @@ public class ExcelRead {
     static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>();
     static int contador = 0;
     public static void main(String[] args) throws IOException {
-        //estructura de los 2 archivos
-            FileInputStream archivo1 = new FileInputStream("Salvation.Tabop.xlsx");
-            
-            Workbook libro1 = new XSSFWorkbook(archivo1);
-            Sheet sheet1 = libro1.getSheetAt(1);
-            
-            StringBuilder excelData1 = new StringBuilder();
-            
-            String excel1 = "";
-
-            //lectura segundo excel
-            excel1 = lecturaExcel1(sheet1, excelData1, excel1);
-            //System.out.println(excel1);
-        
-           // ** chac
-           String fileName = "P1ASM1.asm";
+        String fileName = "P1ASM1.asm";
 
         // ** Expresiones regulares
 
@@ -143,8 +128,6 @@ public class ExcelRead {
         contador = i;
         System.out.println(instruccion.get(i).getEtiqueta()+" "+instruccion.get(i).getCodop()+" "+instruccion.get(i).getOperando());
         notacion(instruccion.get(i).getCodop(), instruccion.get(i).getOperando());
-        //separarOperandos(instruccion.get(i).getOperando());
-        
         }
     }
     
@@ -344,24 +327,7 @@ public class ExcelRead {
                     System.out.println(key);
                     }
             }
-    } // fin main
-    
-    static String lecturaExcel1(Sheet sheet, StringBuilder excelData, String excel) {
-        for (int rowIndex = 0; rowIndex <= sheet.getLastRowNum() - 1; rowIndex++) {
-                Row row = sheet.getRow(rowIndex);
-
-                if (row != null) {
-                    for (int columnIndex = 0; columnIndex < row.getLastCellNum(); columnIndex++) {
-                        Cell cell = row.getCell(columnIndex);
-                        if (cell != null) {
-                            excelData.append(cell.toString()).append("\t");
-                        }
-                    }
-                    excelData.append("\n"); // Salto de línea después de cada fila
-                }
-            }
-                return excelData.toString();
-    }
+    } 
     
     static void separarOperandos(String operandos){
         //String operandosOriginal = operandos;
@@ -565,8 +531,11 @@ public class ExcelRead {
                 if (codop.equals(codopEnFila) && key.equals(keyEnFila)) {
                     // Suponemos que el peso total en bytes está en la columna 6
                     Cell pesoTotalCell = row.getCell(6);
+                    Cell addrCell = row.getCell(3);
                     double pesoTotal = pesoTotalCell.getNumericCellValue();
                     System.out.println("Peso total en bytes: " + pesoTotal);
+                    System.out.println("Direccionamiento: " + addrCell);
+                    System.out.println("");
                     // Puedes almacenar este valor o hacer lo que necesites con él
                     break; // Puedes romper el bucle una vez que encuentres la coincidencia deseada
                 }
