@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class Main {
+class Main { 
     public static void main(String[] args) {
         String fileName = "P1ASM.asm";
 
