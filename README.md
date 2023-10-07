@@ -9,3 +9,5 @@ símbolos.
 Toma en consideración lo realizado en la Parte 2 para incorporar la validación de las 
 directivas, el cálculo del contador de localidades según la instrucción y la generación de 
 archivos auxiliares. 
+
+https://drive.google.com/file/d/1eKo8xRkVZzhlGpI2VqJ-f9bUEX3UyleI/view?usp=sharing
