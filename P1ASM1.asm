@@ -1,26 +1,64 @@
-ETQ CODOP OPR
-ORG $4040
-Et1: SWI
-dos: EORA 5
-EORA @5
-EORA %111
-EORA $6
-EORA 300
-EORA $F
-EORA #5
-EORA #@5
-EORA #1500
-EORA 1,X
-Uno: EORA 255,X
-EORA 32768,X
-EORA $1,+PC
-EORA A,X
-EORA 254,X
-EORA 6444,X
-EORA [1,X]
-EORA [6444,X]
-EORA [D,X]
-BLT UNO
-LBLT UNO
-IBNE A,UNO
-END
+- ETQ CODOP OPR
+- ORG $4040
+Et1 SWI -
+Peso total: 2.0
+Direccionamiento: DIR
+dos EORA 5
+Peso total: 2.0
+Direccionamiento: DIR
+- EORA @5
+Peso total: 2.0
+Direccionamiento: DIR
+- EORA %111
+Peso total: 2.0
+Direccionamiento: DIR
+- EORA $6
+Peso total: 3.0
+Direccionamiento: EXT
+- EORA 300
+Peso total: 2.0
+Direccionamiento: DIR
+- EORA $F
+Peso total: 2.0
+Direccionamiento: IMM
+- EORA #5
+Peso total: 2.0
+Direccionamiento: IMM
+- EORA #@5
+- EORA #1500
+Peso total: 2.0
+Direccionamiento: IDX
+- EORA 1,X
+Peso total: 3.0
+Direccionamiento: IDX1
+Uno EORA 255,X
+Peso total: 4.0
+Direccionamiento: IDX2
+- EORA 32768,X
+Peso total: 2.0
+Direccionamiento: IDX
+- EORA $1,+PC
+- EORA A,X
+Peso total: 3.0
+Direccionamiento: IDX1
+- EORA 254,X
+Peso total: 4.0
+Direccionamiento: IDX2
+- EORA 6444,X
+Peso total: 4.0
+Direccionamiento: [IDX2]
+- EORA [1,X]
+Peso total: 4.0
+Direccionamiento: [IDX2]
+- EORA [6444,X]
+Peso total: 2.0
+Direccionamiento: [D,IDX]
+- EORA [D,X]
+Peso total: 2.0
+Direccionamiento: REL
+- BLT UNO
+Peso total: 4.0
+Direccionamiento: REL
+- LBLT UNO
+- IBNE A,UNO
+- END -
