@@ -75,7 +75,7 @@ public class ExcelRead {
                         if(etiqueta.length()>8 || codigoOperacion.length()>5){
                             System.out.println("Exceso de caracteres en: "+linea);
                         }else{
-                            instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, null));}
+                            instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, 0));}
                     
                 } else if(matcherCodigoOperacionOperando.matches()) {
                     // Es una línea con código de operación y operando
@@ -87,7 +87,7 @@ public class ExcelRead {
                         System.out.println("Exceso de caracteres en: "+linea);
                         System.out.println("");
                     }else{
-                    instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, null));}
+                    instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, 0));}
                     
                 } else if(matcherCodigoOperacion.matches()) {
                     // Es una línea con código de operación y operando
@@ -99,7 +99,7 @@ public class ExcelRead {
                         System.out.println("Exceso de caracteres en: "+linea);
                         System.out.println("");
                     }else{
-                    instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, null));}
+                    instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, 0));}
                     
                 }else if(matcherEtiquetaCodigoOperacion.matches()){
                     String etiqueta = matcherEtiquetaCodigoOperacion.group(1);
@@ -110,7 +110,7 @@ public class ExcelRead {
                         System.out.println("Exceso de caracteres en: "+linea);
                         System.out.println("");
                     }else{
-                        instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, null));}
+                        instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, 0));}
                     } else {
                     // No coincide con ninguna de las expresiones regulares
                     System.out.println("Error de Sintaxis: " + linea);
@@ -121,6 +121,12 @@ public class ExcelRead {
             e.printStackTrace();
         }
        mostrarArray(fileOutputStream, printStream); 
+
+        System.out.println(instruccion.get(5).codop);
+        System.out.println(instruccion.get(5).direc);
+        System.out.println(instruccion.get(5).peso);
+        System.out.println(instruccion.get(5).operando);
+        System.out.println(instruccion.get(5).etiqueta);
     }
 
     // ************************************************************ seccion de funciones *********************************************************************************
@@ -544,11 +550,15 @@ public class ExcelRead {
                     Cell pesoTotalCell = row.getCell(6);
                     Cell addrCell = row.getCell(3);
                     double pesoTotal = pesoTotalCell.getNumericCellValue();
+
+                    instruccion.get(contador - 1).direc = addrCell.toString();
+                    instruccion.get(contador - 1).peso = pesoTotal;
                     
                     System.out.println("Peso total en bytes: " + pesoTotal);
                     printStream.println("Peso total: " + pesoTotal);
                     System.out.println("Direccionamiento: " + addrCell);
                     printStream.println("Direccionamiento: " + addrCell);
+
                     System.out.println("");
                     // Puedes almacenar este valor o hacer lo que necesites con él
                     break; // Puedes romper el bucle una vez que encuentres la coincidencia deseada
