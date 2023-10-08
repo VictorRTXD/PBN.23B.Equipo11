@@ -122,16 +122,17 @@ public class ExcelRead {
         }
        mostrarArray(fileOutputStream, printStream); 
 
-        System.out.println(instruccion.get(5).codop);
-        System.out.println(instruccion.get(5).direc);
-        System.out.println(instruccion.get(5).peso);
-        System.out.println(instruccion.get(5).operando);
-        System.out.println(instruccion.get(5).etiqueta);
+       // proyecto 3
+
     }
 
     // ************************************************************ seccion de funciones *********************************************************************************
-    
-    static void mostrarArray(FileOutputStream fileOutputStream, PrintStream printStream){ //no imprime bytes ni addr
+    /**
+     * Descripcion: imprime el array list instruccion
+     * @param fileOutputStream
+     * @param printStream 
+     */
+    static void mostrarArray(FileOutputStream fileOutputStream, PrintStream printStream){ 
         for (int i = 0; i < instruccion.size(); i++) {
             contador = i;
             String linea = instruccion.get(i).getEtiqueta() + " " + instruccion.get(i).getCodop() + " " + instruccion.get(i).getOperando();
@@ -143,11 +144,15 @@ public class ExcelRead {
             // Guardar en el archivo
             printStream.println(linea);
         }
-   
-        // Cerrar el archivo
-        //printStream.close();
     } 
 
+    /**
+     * Descripcion: obtiene el tipo de operacion que es
+     * @param codop
+     * @param notacion
+     * @param printStream
+     * @param fileOutputStream
+     */
     static void notacion(String codop, String notacion, PrintStream printStream, FileOutputStream fileOutputStream){
         String regexOpri="^#[@%\\$?][0-9A-F]+$|^#[0-9]+$";
         String regexOpra="^[@%\\$?][0-9A-F]+$|^[0-9]+$"; // \\$?
@@ -346,6 +351,12 @@ public class ExcelRead {
             }
     } 
     
+    /**
+     * Descripcion: saber el tipo de dato que tiene y su tipo de operandos y los almacena en key
+     * @param operandos
+     * @param printStream
+     * @param fileOutputStream
+     */
     static void separarOperandos(String operandos, PrintStream printStream, FileOutputStream fileOutputStream){
         //String operandosOriginal = operandos;
         String[] aOperandos = operandos.split(",");
@@ -520,6 +531,13 @@ public class ExcelRead {
             }
         }//Fin del método separar operandos
     
+        /**
+         * Descripcion: compara el codop y key (los opr) obtenidos con la salvacion para obtener el peso y addr
+         * @param codop
+         * @param key
+         * @param printStream
+         * @param fileOutputStream
+         */
     static void comparadorExcel(String codop, String key, PrintStream printStream, FileOutputStream fileOutputStream) {
         try {
             // Ruta del archivo Excel
