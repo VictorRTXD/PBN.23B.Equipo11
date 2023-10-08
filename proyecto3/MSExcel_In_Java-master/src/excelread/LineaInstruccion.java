@@ -10,7 +10,8 @@ package excelread;
  * @author Isaac
  */
 public class LineaInstruccion {
-   String etiqueta, codop, operando, direc, peso;
+   String etiqueta, codop, operando, direc;
+   double peso;
 
     public String getEtiqueta() {
         return etiqueta;
@@ -44,15 +45,15 @@ public class LineaInstruccion {
         this.direc = direc;
     }
 
-    public String getPeso() {
+    public double getPeso() {
         return peso;
     }
 
-    public void setPeso(String peso) {
+    public void setPeso(double peso) {
         this.peso = peso;
     }
 
-    public LineaInstruccion(String etiqueta, String codop, String operando, String direc, String peso) {
+    public LineaInstruccion(String etiqueta, String codop, String operando, String direc, double peso) {
         this.etiqueta = etiqueta;
         this.codop = codop;
         this.operando = operando;
