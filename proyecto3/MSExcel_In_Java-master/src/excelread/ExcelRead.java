@@ -6,11 +6,14 @@ import java.io.FileReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.HashMap;
 
 public class ExcelRead {
     static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>();
@@ -122,16 +125,21 @@ public class ExcelRead {
         }
        mostrarArray(fileOutputStream, printStream); 
 
-        System.out.println(instruccion.get(5).codop);
-        System.out.println(instruccion.get(5).direc);
-        System.out.println(instruccion.get(5).peso);
-        System.out.println(instruccion.get(5).operando);
-        System.out.println(instruccion.get(5).etiqueta);
+        // proyecto 3
+
+        //archivo .lst
+        insertarDatosList(printStream, fileOutputStream);
+        //archivo TABSIM.txt
+        insertarDatosTabism();
     }
 
     // ************************************************************ seccion de funciones *********************************************************************************
-    
-    static void mostrarArray(FileOutputStream fileOutputStream, PrintStream printStream){ //no imprime bytes ni addr
+    /**
+     * Descripcion: imprime el array list instruccion
+     * @param fileOutputStream
+     * @param printStream 
+     */
+    static void mostrarArray(FileOutputStream fileOutputStream, PrintStream printStream){ 
         for (int i = 0; i < instruccion.size(); i++) {
             contador = i;
             String linea = instruccion.get(i).getEtiqueta() + " " + instruccion.get(i).getCodop() + " " + instruccion.get(i).getOperando();
@@ -143,11 +151,15 @@ public class ExcelRead {
             // Guardar en el archivo
             printStream.println(linea);
         }
-   
-        // Cerrar el archivo
-        //printStream.close();
     } 
 
+    /**
+     * Descripcion: obtiene el tipo de operacion que es
+     * @param codop
+     * @param notacion
+     * @param printStream
+     * @param fileOutputStream
+     */
     static void notacion(String codop, String notacion, PrintStream printStream, FileOutputStream fileOutputStream){
         String regexOpri="^#[@%\\$?][0-9A-F]+$|^#[0-9]+$";
         String regexOpra="^[@%\\$?][0-9A-F]+$|^[0-9]+$"; // \\$?
@@ -346,6 +358,12 @@ public class ExcelRead {
             }
     } 
     
+    /**
+     * Descripcion: saber el tipo de dato que tiene y su tipo de operandos y los almacena en key
+     * @param operandos
+     * @param printStream
+     * @param fileOutputStream
+     */
     static void separarOperandos(String operandos, PrintStream printStream, FileOutputStream fileOutputStream){
         //String operandosOriginal = operandos;
         String[] aOperandos = operandos.split(",");
@@ -520,6 +538,13 @@ public class ExcelRead {
             }
         }//Fin del método separar operandos
     
+        /**
+         * Descripcion: compara el codop y key (los opr) obtenidos con la salvacion para obtener el peso y addr
+         * @param codop
+         * @param key
+         * @param printStream
+         * @param fileOutputStream
+         */
     static void comparadorExcel(String codop, String key, PrintStream printStream, FileOutputStream fileOutputStream) {
         try {
             // Ruta del archivo Excel
@@ -565,6 +590,58 @@ public class ExcelRead {
                 }
             } 
             } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 
+     * @param printStream
+     * @param fileOutputStream
+     * @throws FileNotFoundException
+     */
+    static void insertarDatosList(PrintStream printStream, FileOutputStream fileOutputStream){
+        try {
+            FileOutputStream programList = new FileOutputStream("P1ASM1.lst");
+            PrintStream p1List = new PrintStream(programList);
+            
+
+            for (int i = 0; i < instruccion.size(); i++) {
+                contador = i;
+
+                //p1List.println(instruccion.get(contador).tipo);
+                //p1List.println(instruccion.get(contador).contloc);
+                p1List.println("etiqueta: " + instruccion.get(contador).etiqueta);
+                p1List.println("codop: " + instruccion.get(contador).codop);
+                p1List.println("operando: " + instruccion.get(contador).operando);
+            }
+
+            p1List.close();
+        }  catch (Exception e) {
+            // TODO: handle exception
+        }
+    }
+
+    static void insertarDatosTabism() {
+        FileOutputStream programTabsim;
+        HashMap<String, Boolean> validadorSimbolo = new HashMap<>();
+        try {
+            programTabsim = new FileOutputStream("TABSIM.txt");
+            PrintStream tabsim = new PrintStream(programTabsim);
+    
+            for (int i = 0; i < instruccion.size(); i++) {
+                contador = i;
+    
+                // Verifica si la etiqueta ya existe en el HashMap
+                if (validadorSimbolo.containsKey(instruccion.get(contador).etiqueta)) {
+                    // La etiqueta ya existe
+                } else {
+                    validadorSimbolo.put(instruccion.get(contador).etiqueta, true);
+                    tabsim.println("etiqueta: " + instruccion.get(contador).etiqueta);
+                }
+            }
+            tabsim.close();
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
