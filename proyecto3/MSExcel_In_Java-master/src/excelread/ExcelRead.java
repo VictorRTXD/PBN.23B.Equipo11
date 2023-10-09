@@ -6,11 +6,14 @@ import java.io.FileReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.HashMap;
 
 public class ExcelRead {
     static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>();
@@ -122,8 +125,12 @@ public class ExcelRead {
         }
        mostrarArray(fileOutputStream, printStream); 
 
-       // proyecto 3
+        // proyecto 3
 
+        //archivo .lst
+        insertarDatosList(printStream, fileOutputStream);
+        //archivo TABSIM.txt
+        insertarDatosTabism();
     }
 
     // ************************************************************ seccion de funciones *********************************************************************************
@@ -583,6 +590,58 @@ public class ExcelRead {
                 }
             } 
             } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 
+     * @param printStream
+     * @param fileOutputStream
+     * @throws FileNotFoundException
+     */
+    static void insertarDatosList(PrintStream printStream, FileOutputStream fileOutputStream){
+        try {
+            FileOutputStream programList = new FileOutputStream("P1ASM1.lst");
+            PrintStream p1List = new PrintStream(programList);
+            
+
+            for (int i = 0; i < instruccion.size(); i++) {
+                contador = i;
+
+                //p1List.println(instruccion.get(contador).tipo);
+                //p1List.println(instruccion.get(contador).contloc);
+                p1List.println("etiqueta: " + instruccion.get(contador).etiqueta);
+                p1List.println("codop: " + instruccion.get(contador).codop);
+                p1List.println("operando: " + instruccion.get(contador).operando);
+            }
+
+            p1List.close();
+        }  catch (Exception e) {
+            // TODO: handle exception
+        }
+    }
+
+    static void insertarDatosTabism() {
+        FileOutputStream programTabsim;
+        HashMap<String, Boolean> validadorSimbolo = new HashMap<>();
+        try {
+            programTabsim = new FileOutputStream("TABSIM.txt");
+            PrintStream tabsim = new PrintStream(programTabsim);
+    
+            for (int i = 0; i < instruccion.size(); i++) {
+                contador = i;
+    
+                // Verifica si la etiqueta ya existe en el HashMap
+                if (validadorSimbolo.containsKey(instruccion.get(contador).etiqueta)) {
+                    // La etiqueta ya existe
+                } else {
+                    validadorSimbolo.put(instruccion.get(contador).etiqueta, true);
+                    tabsim.println("etiqueta: " + instruccion.get(contador).etiqueta);
+                }
+            }
+            tabsim.close();
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
