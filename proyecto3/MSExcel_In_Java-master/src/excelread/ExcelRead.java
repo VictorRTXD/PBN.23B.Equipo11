@@ -304,11 +304,11 @@ public class ExcelRead {
             }else if(matcherRel.matches()){
                char tem = codop.charAt(0);
                char temp2 = notacion.charAt(0);
-               if(Character.toString(tem).matches("B")){
+               if(Character.toString(tem).equals("B")){
                    String key = "rel8";
                    System.out.println(key);
                    comparadorExcel(instruccion.get(contador).getCodop(), key, printStream, fileOutputStream);
-               }else if(Character.toString(tem).matches("L")){
+               }else if(Character.toString(tem).equals("L")){
                    String key = "rel16";
                    System.out.println(key);
                    comparadorExcel(instruccion.get(contador).getCodop(), key, printStream, fileOutputStream);
