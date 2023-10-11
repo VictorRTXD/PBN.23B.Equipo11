@@ -1,9 +1,8 @@
-Registro: DIR_INIC
-contloc: $4040
 etiqueta: -
 codop: ORG
 operando: $4040
-Registro: CONTLOC
+Registro: DIR_INIC
+contloc: $4040
 
 etiqueta: Et1
 codop: SWI

@@ -74,7 +74,7 @@ public class ExcelRead {
                         if(etiqueta.length()>8 || codigoOperacion.length()>5){
                             System.out.println("Exceso de caracteres en: "+linea);
                         }else{
-                            instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, null));}
+                            instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, 0));}
                     
                 } else if(matcherCodigoOperacionOperando.matches()) {
                     // Es una línea con código de operación y operando
@@ -86,7 +86,7 @@ public class ExcelRead {
                         System.out.println("Exceso de caracteres en: "+linea);
                         System.out.println("");
                     }else{
-                    instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, null));}
+                    instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, 0));}
                     
                 } else if(matcherCodigoOperacion.matches()) {
                     // Es una línea con código de operación y operando
@@ -98,7 +98,7 @@ public class ExcelRead {
                         System.out.println("Exceso de caracteres en: "+linea);
                         System.out.println("");
                     }else{
-                    instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, null));}
+                    instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, 0));}
                     
                 }else if(matcherEtiquetaCodigoOperacion.matches()){
                     String etiqueta = matcherEtiquetaCodigoOperacion.group(1);
@@ -109,7 +109,7 @@ public class ExcelRead {
                         System.out.println("Exceso de caracteres en: "+linea);
                         System.out.println("");
                     }else{
-                        instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, null));}
+                        instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, 0));}
                     } else {
                     // No coincide con ninguna de las expresiones regulares
                     System.out.println("Error de Sintaxis: " + linea);

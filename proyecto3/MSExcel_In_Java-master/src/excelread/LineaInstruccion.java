@@ -21,6 +21,7 @@ public class LineaInstruccion {
     public void setContloc(int contloc) {
         this.contloc = contloc;
     }
+   
 
     public String getEtiqueta() {
         return etiqueta;
