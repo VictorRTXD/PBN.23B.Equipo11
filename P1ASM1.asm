@@ -61,4 +61,6 @@ Peso total: 4.0
 Direccionamiento: REL
 - LBLT UNO
 - IBNE A,UNO
+Tres EQU %111 
+- DS.B %001101010010101011
 - END -

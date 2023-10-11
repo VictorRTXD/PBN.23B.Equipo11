@@ -13,7 +13,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.HashMap;
 
 public class ExcelRead {
     static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>();
@@ -304,11 +303,11 @@ public class ExcelRead {
             }else if(matcherRel.matches()){
                char tem = codop.charAt(0);
                char temp2 = notacion.charAt(0);
-               if(Character.toString(tem).matches("B")){
+               if(Character.toString(tem).equals("B")){
                    String key = "rel8";
                    System.out.println(key);
                    comparadorExcel(instruccion.get(contador).getCodop(), key, printStream, fileOutputStream);
-               }else if(Character.toString(tem).matches("L")){
+                }else if(Character.toString(tem).equals("L")){
                    String key = "rel16";
                    System.out.println(key);
                    comparadorExcel(instruccion.get(contador).getCodop(), key, printStream, fileOutputStream);
@@ -601,48 +600,71 @@ public class ExcelRead {
      * @throws FileNotFoundException
      */
     static void insertarDatosList(PrintStream printStream, FileOutputStream fileOutputStream){
-        try {
-            FileOutputStream programList = new FileOutputStream("P1ASM1.lst");
-            PrintStream p1List = new PrintStream(programList);
-            
+       try {
+           FileOutputStream programList = new FileOutputStream("P1ASM1.lst");
+           PrintStream p1List = new PrintStream(programList);
+           String[] registros = {"DIR_INIC", "CONTLOC", "VALOR"};
 
-            for (int i = 0; i < instruccion.size(); i++) {
-                contador = i;
+           String org = instruccion.get(1).codop + " " + instruccion.get(1).operando;
+           String regexOrg = "ORG \\$[0-9A-Fa-f]+";
 
-                //p1List.println(instruccion.get(contador).tipo);
-                //p1List.println(instruccion.get(contador).contloc);
-                p1List.println("etiqueta: " + instruccion.get(contador).etiqueta);
-                p1List.println("codop: " + instruccion.get(contador).codop);
-                p1List.println("operando: " + instruccion.get(contador).operando);
-            }
+           Pattern patternOrg = Pattern.compile(regexOrg);
 
-            p1List.close();
-        }  catch (Exception e) {
-            // TODO: handle exception
-        }
-    }
+           Matcher matcherOrg = patternOrg.matcher(org);
 
-    static void insertarDatosTabism() {
-        FileOutputStream programTabsim;
-        HashMap<String, Boolean> validadorSimbolo = new HashMap<>();
-        try {
-            programTabsim = new FileOutputStream("TABSIM.txt");
-            PrintStream tabsim = new PrintStream(programTabsim);
-    
-            for (int i = 0; i < instruccion.size(); i++) {
-                contador = i;
-    
-                // Verifica si la etiqueta ya existe en el HashMap
-                if (validadorSimbolo.containsKey(instruccion.get(contador).etiqueta)) {
-                    // La etiqueta ya existe
-                } else {
-                    validadorSimbolo.put(instruccion.get(contador).etiqueta, true);
-                    tabsim.println("etiqueta: " + instruccion.get(contador).etiqueta);
-                }
-            }
-            tabsim.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
+           if (matcherOrg.find()) { // procesa la instruccion org
+               // Se encontró una coincidencia
+               String matchedText = matcherOrg.group();
+               p1List.println("Registro: " + registros[0]);
+               String operator = matchedText.substring(4); // Para eliminar "ORG $"
+               p1List.println("contloc: " + operator);
+               operator = matchedText.substring(5); // Para eliminar "ORG $"
+               instruccion.get(0).contloc = Integer.parseInt(operator);
+           }           
+
+           for (int i = 1; i < instruccion.size(); i++) {
+               p1List.println("etiqueta: " + instruccion.get(i).etiqueta);
+               p1List.println("codop: " + instruccion.get(i).codop);
+               p1List.println("operando: " + instruccion.get(i).operando);
+
+
+               if (instruccion.get(i).codop.equals("EQU")) {
+                   //p1List.println(instruccion.get(i).contloc);
+                   p1List.println("Registro: " + registros[2]);
+               } else {
+                   //p1List.println(instruccion.get(i).contloc);
+                   p1List.println("Registro: " + registros[1]);
+               }
+               p1List.println("");
+           }
+           p1List.close();
+       }  catch (Exception e) {
+           // TODO: handle exception
+       }
+   }
+
+   static void insertarDatosTabism() {
+       FileOutputStream programTabsim;
+       HashMap<String, Boolean> validadorSimbolo = new HashMap<>();
+       try {
+           programTabsim = new FileOutputStream("TABSIM.txt");
+           PrintStream tabsim = new PrintStream(programTabsim);
+  
+           for (int i = 0; i < instruccion.size(); i++) {
+               contador = i;
+  
+               // Verifica si la etiqueta ya existe en el HashMap
+               if (validadorSimbolo.containsKey(instruccion.get(contador).etiqueta)) {
+                   // La etiqueta ya existe
+               } else {
+                   validadorSimbolo.put(instruccion.get(contador).etiqueta, true);
+                   tabsim.println("etiqueta: " + instruccion.get(contador).etiqueta);
+                   tabsim.println("");
+               }
+           }
+           tabsim.close();
+       } catch (FileNotFoundException e) {
+           e.printStackTrace();
+       }
+   }
 }

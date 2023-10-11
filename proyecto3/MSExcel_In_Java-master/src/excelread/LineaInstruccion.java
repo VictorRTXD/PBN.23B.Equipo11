@@ -12,6 +12,15 @@ package excelread;
 public class LineaInstruccion {
    String etiqueta, codop, operando, direc;
    double peso;
+   int contloc;
+
+    public int getContloc() {
+        return contloc;
+    }
+
+    public void setContloc(int contloc) {
+        this.contloc = contloc;
+    }
 
     public String getEtiqueta() {
         return etiqueta;

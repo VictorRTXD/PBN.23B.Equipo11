@@ -1,78 +1,137 @@
-etiqueta: -
-codop: ETQ
-operando: CODOP OPR
+Registro: DIR_INIC
+contloc: $4040
 etiqueta: -
 codop: ORG
 operando: $4040
+Registro: CONTLOC
+
 etiqueta: Et1
 codop: SWI
 operando: -
+Registro: CONTLOC
+
 etiqueta: dos
 codop: EORA
 operando: 5
+Registro: CONTLOC
+
 etiqueta: -
 codop: EORA
 operando: @5
+Registro: CONTLOC
+
 etiqueta: -
 codop: EORA
 operando: %111
+Registro: CONTLOC
+
 etiqueta: -
 codop: EORA
 operando: $6
+Registro: CONTLOC
+
 etiqueta: -
 codop: EORA
 operando: 300
+Registro: CONTLOC
+
 etiqueta: -
 codop: EORA
 operando: $F
+Registro: CONTLOC
+
 etiqueta: -
 codop: EORA
 operando: #5
+Registro: CONTLOC
+
 etiqueta: -
 codop: EORA
 operando: #@5
+Registro: CONTLOC
+
 etiqueta: -
 codop: EORA
 operando: #1500
+Registro: CONTLOC
+
 etiqueta: -
 codop: EORA
 operando: 1,X
+Registro: CONTLOC
+
 etiqueta: Uno
 codop: EORA
 operando: 255,X
+Registro: CONTLOC
+
 etiqueta: -
 codop: EORA
 operando: 32768,X
+Registro: CONTLOC
+
 etiqueta: -
 codop: EORA
 operando: $1,+PC
+Registro: CONTLOC
+
 etiqueta: -
 codop: EORA
 operando: A,X
+Registro: CONTLOC
+
 etiqueta: -
 codop: EORA
 operando: 254,X
+Registro: CONTLOC
+
 etiqueta: -
 codop: EORA
 operando: 6444,X
+Registro: CONTLOC
+
 etiqueta: -
 codop: EORA
 operando: [1,X]
+Registro: CONTLOC
+
 etiqueta: -
 codop: EORA
 operando: [6444,X]
+Registro: CONTLOC
+
 etiqueta: -
 codop: EORA
 operando: [D,X]
+Registro: CONTLOC
+
 etiqueta: -
 codop: BLT
 operando: UNO
+Registro: CONTLOC
+
 etiqueta: -
 codop: LBLT
 operando: UNO
+Registro: CONTLOC
+
 etiqueta: -
 codop: IBNE
 operando: A,UNO
+Registro: CONTLOC
+
+etiqueta: Tres
+codop: EQU
+operando: %111 
+Registro: VALOR
+
+etiqueta: -
+codop: DS.B
+operando: %001101010010101011
+Registro: CONTLOC
+
 etiqueta: -
 codop: END
 operando: -
+Registro: CONTLOC
+
