@@ -349,7 +349,48 @@ public class ExcelRead {
                 }else{
                     System.out.println("Instruccion no valida");
                 }
-            }else{
+            }else if(matcherDirectiva.matches()){ //Si hace match con directiva
+                if(codop.equals("DC.B")){//compara que el codop sea DC.B
+                    char tem = notacion.charAt(0);//crea un caracter temporal para comparar
+                    if(Character.toString(tem).equals("\"")){//en caso de que inicie con comillas
+                        String aux = notacion.replace("\"", ""); //elimina las comillas
+                        
+                        int pesoBytes = aux.length(); //Saca la longitud del conjunto de elementos y le asigna un byte
+                        
+                        System.out.println(pesoBytes); //imprimir para confirmar
+                    }else{//Si no inicia con comillas
+                        String[] elementos = notacion.split(",");//separa los elementos por comillas y los guarda en un arreglo
+                        int pesoBytes = elementos.length;//el peso en bytes es igual al tamaño del arreglo
+                        
+                        System.out.println(pesoBytes);//imprimir para confirmar
+                    }
+                }else if(codop.equals("DC.W")){//En todo caso confirma si el codop es un DC.W
+                    
+                    char tem = notacion.charAt(0);//crea un caracter temporal para comparar
+                    if(Character.toString(tem).equals("\"")){//en caso de que inicie con comillas
+                        String aux = notacion.replace("\"", "");//elimina las comillas
+                        
+                        int pesoBytes = (aux.length()*2);//el peso es igual al doble del numero de elementos
+                        
+                        System.out.println(pesoBytes);//imprimir para confirmar
+                    }else{//si no inicia con comillas
+                        String[] elementos = notacion.split(",");//separa los elementos por comillas y los guarda en un arreglo
+                        int pesoBytes = (elementos.length*2);//el peso es igual a 2 veces la longitud del arreglo
+                        
+                        System.out.println(pesoBytes);//imprimir para confirmar
+                    }
+                }else if(codop.equals("DS.B")){//En todo caso confirma si el codop es un DS.B
+                    int pesoBytes = Integer.parseInt(notacion);//el peso será igual al número específico del operando
+                    
+                    System.out.println(pesoBytes);//imprimir para confirmar
+                }else if(codop.equals("DS.W")){//En todo caso confirma si el codop es un DS.W
+                    int pesoBytes = (Integer.parseInt(notacion)*2);//el peso será igual a 2 veces el operando especificado
+                    
+                    System.out.println(pesoBytes);//imprimir para confirmar
+                }else{//caso de error
+                    System.out.println("Directiva no valida");//mensaje de error
+                }
+            else{
                 char tem = notacion.charAt(0);
                 if(notacion.length() == 1 && Character.toString(tem).equals("-")){
                     String key = "-";
