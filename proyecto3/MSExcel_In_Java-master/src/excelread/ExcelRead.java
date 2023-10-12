@@ -350,8 +350,9 @@ public class ExcelRead {
                     System.out.println("Instruccion no valida");
                 }
             }else if(matcherDirectiva.matches()){ //Si hace match con directiva
+                char tem = notacion.charAt(0);//crea un caracter temporal para comparar
+                
                 if(codop.equals("DC.B")){//compara que el codop sea DC.B
-                    char tem = notacion.charAt(0);//crea un caracter temporal para comparar
                     if(Character.toString(tem).equals("\"")){//en caso de que inicie con comillas
                         String aux = notacion.replace("\"", ""); //elimina las comillas
                         
@@ -366,7 +367,6 @@ public class ExcelRead {
                     }
                 }else if(codop.equals("DC.W")){//En todo caso confirma si el codop es un DC.W
                     
-                    char tem = notacion.charAt(0);//crea un caracter temporal para comparar
                     if(Character.toString(tem).equals("\"")){//en caso de que inicie con comillas
                         String aux = notacion.replace("\"", "");//elimina las comillas
                         
@@ -379,11 +379,11 @@ public class ExcelRead {
                         
                         System.out.println(pesoBytes);//imprimir para confirmar
                     }
-                }else if(codop.equals("DS.B")){//En todo caso confirma si el codop es un DS.B
+                }else if(codop.equals("DS.B") && Character.toString(tem).matches("[1-9]")){//En todo caso confirma si el codop es un DS.B
                     int pesoBytes = Integer.parseInt(notacion);//el peso será igual al número específico del operando
                     
                     System.out.println(pesoBytes);//imprimir para confirmar
-                }else if(codop.equals("DS.W")){//En todo caso confirma si el codop es un DS.W
+                }else if(codop.equals("DS.W") && Character.toString(tem).matches("[1-9]")){//En todo caso confirma si el codop es un DS.W
                     int pesoBytes = (Integer.parseInt(notacion)*2);//el peso será igual a 2 veces el operando especificado
                     
                     System.out.println(pesoBytes);//imprimir para confirmar
