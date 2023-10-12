@@ -394,6 +394,7 @@ public class ExcelRead {
                 char tem = notacion.charAt(0);
                 if(notacion.length() == 1 && Character.toString(tem).equals("-")){
                     String key = "-";
+                    comparadorExcel(instruccion.get(contador).getCodop(), key, printStream, fileOutputStream);
                     System.out.println(key);
                 }else{
                     String key = "Error";
