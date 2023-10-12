@@ -371,7 +371,6 @@ public class ExcelRead {
                         String aux = notacion.replace("\"", "");//elimina las comillas
                         
                         int pesoBytes = (aux.length()*2);//el peso es igual al doble del numero de elementos
-                        
                         System.out.println(pesoBytes);//imprimir para confirmar
                     }else{//si no inicia con comillas
                         String[] elementos = notacion.split(",");//separa los elementos por comillas y los guarda en un arreglo
@@ -390,7 +389,7 @@ public class ExcelRead {
                 }else{//caso de error
                     System.out.println("Directiva no valida");//mensaje de error
                 }
-            else{
+            }else{
                 char tem = notacion.charAt(0);
                 if(notacion.length() == 1 && Character.toString(tem).equals("-")){
                     String key = "-";
