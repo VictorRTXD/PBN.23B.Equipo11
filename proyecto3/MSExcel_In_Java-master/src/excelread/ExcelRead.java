@@ -165,16 +165,19 @@ public class ExcelRead {
         String regexOpra="^[@%\\$?][0-9A-F]+$|^[0-9]+$"; // \\$?
         String regexRel="^[a-zA-Z0-9]+$|^[ABDXY],[a-zA-Z0-9]+$|^[SP],[a-zA-Z0-9]+$";
         String regexOprx="^[-]*[@%\\$?$]*[0-9A-F]+,(X|Y|SP|PC)$|^[@%\\$?$]*[0-9A-F]+,[+-]*(X|Y|SP|PC)[+-]*$|^[ABD]+,(X|Y|SP|PC)$|^(\\[?[@%\\$?]*[0-9A-F]+,(X|Y|SP|PC))\\]?$|^(\\[?[Dd],(X|Y|SP|PC))\\]?|^,(X|Y|SP|PC)$";
+        String regexDirectiva=" ^DC.B$ | ^DC.W$ | ^DS.B$ | ^DS.W$ ";
         
          Pattern patOpri = Pattern.compile(regexOpri);
          Pattern patOpra = Pattern.compile(regexOpra);
          Pattern patRel = Pattern.compile(regexRel);
          Pattern patOprx = Pattern.compile(regexOprx);
+         Pattern patDirectiva = Pattern.compile(regexDirectiva);
          
          Matcher matcherOpri = patOpri.matcher(notacion);
          Matcher matcherOpra = patOpra.matcher(notacion);
          Matcher matcherRel = patRel.matcher(notacion);
          Matcher matcherOprx = patOprx.matcher(notacion);
+         Matcher matcherDirectiva = patDirectiva.matcher(codop);
          
          if(matcherOpri.matches()){
              char tem = notacion.charAt(1);//Crea un caracter para comparar
