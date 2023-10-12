@@ -600,6 +600,7 @@ public class ExcelRead {
        //inicio deteccion de etiquetas repetidas
        FileOutputStream programTabsim;
        HashMap<String, Boolean> validadorSimbolo = new HashMap<>();
+       String[] Tipo = {"Relativa", "Absoluta"};
        
        try {
            programTabsim = new FileOutputStream("TABSIM.txt");
@@ -615,6 +616,11 @@ public class ExcelRead {
                    validadorSimbolo.put(instruccion.get(contador).etiqueta, true);
                    tabsim.println("etiqueta: " + instruccion.get(contador).etiqueta);
                    tabsim.println("");
+               } 
+               if (instruccion.get(i).codop.equals("EQU")) {
+                   tabsim.println("Tipo: " + Tipo[1]);
+               } else{
+                    tabsim.println("Tipo " + Tipo[0]);
                }
            }
            tabsim.close();
