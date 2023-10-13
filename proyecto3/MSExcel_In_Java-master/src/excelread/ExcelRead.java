@@ -357,6 +357,8 @@ public class ExcelRead {
                         String aux = notacion.replace("\"", ""); //elimina las comillas
                         
                         int pesoBytes = aux.length(); //Saca la longitud del conjunto de elementos y le asigna un byte
+                        double pesoDouble = (double) pesoBytes;
+                        instruccion.setPeso(pesoDouble);
                         
                         System.out.println(pesoBytes); //imprimir para confirmar
                     }else{//Si no inicia con comillas
@@ -371,20 +373,26 @@ public class ExcelRead {
                         String aux = notacion.replace("\"", "");//elimina las comillas
                         
                         int pesoBytes = (aux.length()*2);//el peso es igual al doble del numero de elementos
+                        double pesoDouble = (double) pesoBytes;
+                        instruccion.setPeso(pesoDouble);
                         System.out.println(pesoBytes);//imprimir para confirmar
                     }else{//si no inicia con comillas
                         String[] elementos = notacion.split(",");//separa los elementos por comillas y los guarda en un arreglo
                         int pesoBytes = (elementos.length*2);//el peso es igual a 2 veces la longitud del arreglo
+                        double pesoDouble = (double) pesoBytes;
+                        instruccion.setPeso(pesoDouble);
                         
                         System.out.println(pesoBytes);//imprimir para confirmar
                     }
                 }else if(codop.equals("DS.B") && Character.toString(tem).matches("[1-9]")){//En todo caso confirma si el codop es un DS.B
                     int pesoBytes = Integer.parseInt(notacion);//el peso será igual al número específico del operando
-                    
+                    double pesoDouble = (double) pesoBytes;
+                    instruccion.setPeso(pesoDouble);
                     System.out.println(pesoBytes);//imprimir para confirmar
                 }else if(codop.equals("DS.W") && Character.toString(tem).matches("[1-9]")){//En todo caso confirma si el codop es un DS.W
                     int pesoBytes = (Integer.parseInt(notacion)*2);//el peso será igual a 2 veces el operando especificado
-                    
+                    double pesoDouble = (double) pesoBytes;
+                    instruccion.setPeso(pesoDouble);
                     System.out.println(pesoBytes);//imprimir para confirmar
                 }else{//caso de error
                     System.out.println("Directiva no valida");//mensaje de error
