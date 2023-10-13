@@ -648,6 +648,88 @@ public class ExcelRead {
         }
     }
 
+    static void calcularContloc(){//inicio del método calcular contloc
+         for(int i=0; i<=instruccion.size()-1; i++){//for para recorrer todo el arrayList
+             
+             int dirCont = i+1;//variable de apoyo
+             LineaInstruccion auxiliar = instruccion.get(dirCont);//auxiliar nos da acceso al objeto que sigue 
+             LineaInstruccion auxiliar2 = instruccion.get(i);//auxiliar 2 nos da acceso al objeto actual
+            if(instruccion.get(i).codop.equals("ORG")){//Si nuestro codop es un ORG entra
+                char tem = instruccion.get(i).operando.charAt(0);//variable temporal para comparar
+                if(Character.toString(tem).matches("#")){//si el primer digito es un #
+                    char tem2 = instruccion.get(i).operando.charAt(1);//variable temporal para comparar
+                    if(Character.toString(tem2).matches("%")){//si el segundodigito es un %
+                 String binario = instruccion.get(i).operando.substring(2);//Elimina caracteres no deseados
+                 int numero = Integer.parseInt(binario, 2); //convierte el binario a decimal
+                 String contloc = Integer.toHexString(numero); //luego lo cambia a hexadecimal y lo guarda en un string
+                 auxiliar.setContloc(contloc); //guarda el contloc en la siguiente linea
+               }else if(Character.toString(tem2).equals("@")){
+                 String octal = instruccion.get(i).operando.substring(2);//Elimina caracteres no deseados
+                 int numero = Integer.parseInt(octal, 8); //convierte el octal a decimal
+                 String contloc = Integer.toHexString(numero);//luego lo cambia a hexadecimal y lo guarda en un string
+                 auxiliar.setContloc(contloc);//guarda el contloc en la siguiente linea
+               }else if(Character.toString(tem2).equals("$")){
+                 String hexa = instruccion.get(i).operando.substring(2);//Elimina caracteres no deseados
+                 auxiliar.setContloc(hexa); //guarda el valor en la siguiente linea
+                }else{
+                 String decimal = instruccion.get(i).operando.substring(1);//Elimina caracteres no deseados
+                 int numero = Integer.parseInt(decimal); //convierte el valor a tipo int
+                 String contloc = Integer.toHexString(numero); //luego lo convierte a hexadecimal y lo gurda en un string
+                 auxiliar.setContloc(contloc);//guarda el contloc en la siguiente linea
+                }
+                }else{
+                    if(Character.toString(tem).matches("%")){
+                 String binario = instruccion.get(i).operando.substring(1);//Elimina caracteres no deseados
+                 int numero = Integer.parseInt(binario, 2);//convierte el binario a decimal
+                 String contloc = Integer.toHexString(numero);//luego lo cambia a hexadecimal y lo guarda en un string
+                 auxiliar.setContloc(contloc);//guarda el contloc en la siguiente linea
+               }else if(Character.toString(tem).equals("@")){
+                 String octal = instruccion.get(i).operando.substring(1);//Elimina caracteres no deseados
+                 int numero = Integer.parseInt(octal, 8);//convierte el octal a decimal
+                 String contloc = Integer.toHexString(numero);//luego lo cambia a hexadecimal y lo guarda en un string
+                 auxiliar.setContloc(contloc);//guarda el contloc en la siguiente linea
+               }else if(Character.toString(tem).equals("$")){
+                 String hexa = instruccion.get(i).operando.substring(1);//Elimina caracteres no deseados
+                 auxiliar.setContloc(hexa);//guarda el contloc en la siguiente linea
+                }else{
+                 String decimal = instruccion.get(i).operando;//Elimina caracteres no deseados
+                 int numero = Integer.parseInt(decimal);//convierte el valor a tipo int
+                 String contloc = Integer.toHexString(numero);//luego lo convierte a hexadecimal y lo gurda en un string
+                 auxiliar.setContloc(contloc);//guarda el contloc en la siguiente linea
+                }
+                }
+        }else if(instruccion.get(i).codop.equals("EQU")){//si la instruccion es un EQU
+            char tem = instruccion.get(i).operando.charAt(0);//variable temporal para comparar 
+            if(Character.toString(tem).matches("%")){
+                 String binario = instruccion.get(i).operando.substring(1);//Elimina caracteres no deseados
+                 int numero = Integer.parseInt(binario, 2);//convierte el binario a decimal
+                 String contloc = Integer.toHexString(numero);//luego lo cambia a hexadecimal y lo guarda en un string
+                 auxiliar2.setContloc(contloc);//guarda el contloc en la linea actual
+               }else if(Character.toString(tem).equals("@")){
+                 String octal = instruccion.get(i).operando.substring(1);//Elimina caracteres no deseados
+                 int numero = Integer.parseInt(octal, 8);//convierte el octal a decimal
+                 String contloc = Integer.toHexString(numero);//luego lo cambia a hexadecimal y lo guarda en un string
+                 auxiliar2.setContloc(contloc);//guarda el contloc en la linea actual
+               }else if(Character.toString(tem).equals("$")){
+                 String hexa = instruccion.get(i).operando.substring(1);//Elimina caracteres no deseados
+                 auxiliar2.setContloc(hexa);//guarda el contloc en la linea actual
+                }else{
+                 String decimal = instruccion.get(i).operando;//Elimina caracteres no deseados
+                 int numero = Integer.parseInt(decimal);//convierte el string a int decimal
+                 String contloc = Integer.toHexString(numero);//luego lo cambia a hexadecimal y lo guarda en un string
+                 auxiliar2.setContloc(contloc);//guarda el contloc en la linea actual
+                }
+        }else if (instruccion.get(i).codop.equals("END")){
+                System.out.println("no hacer nada");    
+        }else{
+            int cont = Integer.parseInt(auxiliar2.getContloc(), 16);//conseguimos el contloc de la linea actual en decimal
+            int peso = (int) auxiliar2.getPeso();//conseguimos el peso de la linea actual en decimal
+            int suma = cont+peso;//simamos los valores
+            String nextCont = Integer.toHexString(suma); //los convertimos a hexadecimal y los convertimos a string
+            auxiliar.setContloc(nextCont); //guardamos el valor en el contloc de la linea siguiente
+            }
+    }
+    }
     /**
      * 
      * @param printStream
