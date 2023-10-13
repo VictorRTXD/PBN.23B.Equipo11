@@ -1,7 +1,3 @@
-etiqueta: -
-Tipo: Relativa
-ti: 4040
-
 etiqueta: Et1
 Tipo: Relativa
 ti: 4040
