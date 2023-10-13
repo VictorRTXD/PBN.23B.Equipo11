@@ -679,20 +679,32 @@ public class ExcelRead {
     static void insertarDatosTabism() {//¿Hace falta algo del Tabsim?
         FileOutputStream programTabsim;
         HashMap<String, Boolean> validadorSimbolo = new HashMap<>();
+        String [] Tipo = {"Relativa", "Absoluta"};
+
+
         try {
             programTabsim = new FileOutputStream("TABSIM.txt");
             PrintStream tabsim = new PrintStream(programTabsim);
+            //String [] Tipo = {"Relativa", "Absoluta"};
     
             for (int i = 0; i < instruccion.size(); i++) {
                 contador = i;
-    
+
+
                 // Verifica si la etiqueta ya existe en el HashMap
                 if (validadorSimbolo.containsKey(instruccion.get(contador).etiqueta)) {
                     // La etiqueta ya existe
                 } else {
                     validadorSimbolo.put(instruccion.get(contador).etiqueta, true);
                     tabsim.println("etiqueta: " + instruccion.get(contador).etiqueta);
+                    tabsim.println("");
                 }
+                if(instruccion.get(i).codop.equals("EQU")){
+                    tabsim.println("Tipo: " + Tipo [1]);
+                }else{
+                    tabism.println("Tipo: " + Tipo [0]);
+                }
+
             }
             tabsim.close();
         } catch (FileNotFoundException e) {
