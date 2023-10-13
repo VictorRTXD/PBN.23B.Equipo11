@@ -298,6 +298,7 @@ public class ExcelRead {
                if(Character.toString(tem).equals("B")){
                    String key = "rel8";
                    System.out.println(key);
+                 
                    comparadorExcel(instruccion.get(contador).getCodop(), key);
                }else if(Character.toString(tem).equals("L")){
                    String key = "rel16";
