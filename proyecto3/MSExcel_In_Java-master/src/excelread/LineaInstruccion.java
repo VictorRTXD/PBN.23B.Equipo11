@@ -12,13 +12,13 @@ package excelread;
 public class LineaInstruccion {
    String etiqueta, codop, operando, direc;
    double peso;
-   int contloc;
+   String contloc;
 
-    public int getContloc() {
+    public String getContloc() {
         return contloc;
     }
 
-    public void setContloc(int contloc) {
+    public void setContloc(String contloc) {
         this.contloc = contloc;
     }
    
@@ -63,11 +63,12 @@ public class LineaInstruccion {
         this.peso = peso;
     }
 
-    public LineaInstruccion(String etiqueta, String codop, String operando, String direc, double peso) {
+    public LineaInstruccion(String etiqueta, String codop, String operando, String direc, double peso, String contloc) {
         this.etiqueta = etiqueta;
         this.codop = codop;
         this.operando = operando;
         this.direc = direc;
         this.peso = peso;
+        this.contloc = contloc;
     }
 }
