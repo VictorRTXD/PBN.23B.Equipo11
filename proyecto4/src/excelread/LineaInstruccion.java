@@ -10,15 +10,23 @@ package excelread;
  * @author Isaac
  */
 public class LineaInstruccion {
-   String etiqueta, codop, operando, direc, contloc, postByte;
-   double peso;
+   String etiqueta, codop, operando, direc, contloc, forma, postByte;
 
     public String getPostByte() {
-    return postByte;
+        return postByte;
+    }
+
+    public void setPostByte(String postByte) {
+        this.postByte = postByte;
+    }
+   double peso;
+
+    public String getForma() {
+    return forma;
 }
 
-public void setPostByte(String postByte) {
-    this.postByte = postByte;
+public void setForma(String forma) {
+    this.forma = forma;
 }
 
     public String getContloc() {
@@ -70,12 +78,14 @@ public void setPostByte(String postByte) {
         this.peso = peso;
     }
 
-    public LineaInstruccion(String etiqueta, String codop, String operando, String direc, double peso, String contloc) {
+    public LineaInstruccion(String etiqueta, String codop, String operando, String direc, double peso, String contloc, String forma, String postByte) {
         this.etiqueta = etiqueta;
         this.codop = codop;
         this.operando = operando;
         this.direc = direc;
         this.peso = peso;
         this.contloc = contloc;
+        this.forma = forma;
+        this.postByte = postByte;
     }
 }
