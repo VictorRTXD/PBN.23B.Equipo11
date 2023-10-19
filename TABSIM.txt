@@ -1,16 +1,16 @@
-etiqueta: -
+si: -
 Tipo: Relativa
 ti: 4040
 
-etiqueta: Et1
+si: Et1
 Tipo: Relativa
 ti: 4040
 
-etiqueta: dos
+si: dos
 Tipo: Relativa
 ti: 4041
 
-etiqueta: Uno
+si: Uno
 Tipo: Relativa
 ti: 4054
 

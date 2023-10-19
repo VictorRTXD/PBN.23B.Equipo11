@@ -612,7 +612,6 @@ public class ExcelRead {
 
                     System.out.println("Peso total en bytes: " + pesoTotal);
                     System.out.println("Direccionamiento: " + addrCell);
-                    System.out.println("");
 
                     instruccion.get(contador).peso = pesoTotal;
                     instruccion.get(contador).direc = addrCell.toString();
@@ -627,8 +626,9 @@ public class ExcelRead {
 
                     if (codop.equals(codopEnFila) && instruccion.get(contador).direc.equals(dirFila)) {
                         instruccion.get(contador).postByte = postFila;
-                        System.out.println(instruccion.get(contador).postByte);
+                        System.out.println("postbyte: " + instruccion.get(contador).postByte);
                     }
+                    System.out.println("");
                     // Puedes almacenar este valor o hacer lo que necesites con él
                     break; // Puedes romper el bucle una vez que encuentres la coincidencia deseada
                 }
