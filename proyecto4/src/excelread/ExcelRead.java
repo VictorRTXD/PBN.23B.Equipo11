@@ -183,10 +183,12 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                      comparador = "esInmediato8";
                      System.out.println(key);
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
+                     calcPostByte(comparador,actual,tamaño);
                  }else if(tamaño<=65535){
                      String key = "#opr16i";
                      comparador = "esInmediato16";
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
+                     calcPostByte(comparador,actual,tamaño);
                      System.out.println(key);
                 }else{//Valor no valido
                      String key = "Error";
@@ -200,10 +202,12 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                      comparador = "esInmediato8";
                      System.out.println(key);
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
+                     calcPostByte(comparador,actual,tamaño);
                  }else if(tamaño<=65535){
                      String key = "#opr16i";
                      comparador = "esInmediato16";
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
+                     calcPostByte(comparador,actual,tamaño);
                      System.out.println(key);
                 }else{//Valor no valido
                      String key = "Error";
@@ -217,11 +221,13 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                      comparador = "esInmediato8";
                      System.out.println(key);
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
+                     calcPostByte(comparador,actual,tamaño);
                  }else if(tamaño<=65535){
                      String key = "#opr16i";
                      comparador = "esInmediato16";
                      System.out.println(key);
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
+                     calcPostByte(comparador,actual,tamaño);
                 }else{//Valor no valido
                      String key = "Error";
                      System.out.println(key);
@@ -234,11 +240,14 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                      comparador = "esInmediato8";
                      System.out.println(key);
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
+                     calcPostByte(comparador,actual,tamaño);
+
                  }else if(tamaño<=65535){
                      String key = "#opr16i";
                      comparador = "esInmediato16";
                      System.out.println(key);
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
+                     calcPostByte(comparador,actual,tamaño);
                 }else{//Valor no valido
                      String key = "Error";
                      System.out.println(key);
@@ -253,10 +262,13 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                  if(tamaño<=255){
                      String key = "opr8a";
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
+                     calcPostByte(comparador,actual,tamaño);
+
                      System.out.println(key);
                  }else if(tamaño<=65535){
                      String key = "opr16a";
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
+                     calcPostByte(comparador,actual,tamaño);
                      System.out.println(key);
                 }else{//Valor no valido
                      String key = "Error";
@@ -269,10 +281,12 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                      String key = "opr8a";
                      System.out.println(key);
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
+                     calcPostByte(comparador,actual,tamaño);
                  }else if(tamaño<=65535){
                      String key = "opr16a";
                      System.out.println(key);
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
+                     calcPostByte(comparador,actual,tamaño);
                 }else{//Valor no valido
                      String key = "Error";
                      System.out.println(key);
@@ -284,10 +298,12 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                      String key = "opr8a";
                      System.out.println(key);
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
+                     calcPostByte(comparador,actual,tamaño);
                  }else if(tamaño<=65535){
                      String key = "opr16a";
                      System.out.println(key);
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
+                     calcPostByte(comparador,actual,tamaño);
                 }else{//Valor no valido
                      String key = "Error";
                      System.out.println(key);
@@ -298,10 +314,12 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                      String key = "opr8a";
                      System.out.println(key);
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
+                     calcPostByte(comparador,actual,tamaño);
                  }else if(tamaño<=65535){
                      String key = "opr16a";
                      System.out.println(key);
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
+                     calcPostByte(comparador,actual,tamaño);
                 }else{//Valor no valido
                      String key = "Error";
                      System.out.println(key);
@@ -822,10 +840,10 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
            auxiliar.setContloc(nextCont); //guardamos el valor en el contloc de la linea siguiente
        }
    
+     }
    }
-   }
-    
-    static void calcPostByte(String comparador, LineaInstruccion actual, int valor){
+
+   static void calcPostByte(String comparador, LineaInstruccion actual, int valor){
         String hexa = Integer.toHexString(valor);
         switch(comparador){
             case "esInherente":// Si es inherente
@@ -835,8 +853,6 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
             break;//break del caso inherente
             
             case "esInmediato8":
-                
-                
                 
                 if(hexa.length()==1){
                     String nuevo = "0"+hexa;
@@ -915,6 +931,5 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                 
                 break;//fin de los extendidos  
         }
-    
     }
 }
