@@ -874,6 +874,46 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                 }
                 
             break;
+
+            case "esDirecto":// si el comparador es directo
+                
+                 if(hexa.length()==1){ //verifica la longitud del operando y si es = 1
+                    String nuevo = "0"+hexa;// completa con 0 y lo guarda en nuevo
+                    String cambio = actual.getForma().replace("dd", nuevo);// reemplaza los valores en la forma
+                    actual.setPostByte(cambio);//guarda el cambio y lo agrega en el objeto parte postByte
+                    
+                }else{//si es par entonces
+                    String cambio = actual.getForma().replace("dd", hexa);// reemplaza los valores en la forma
+                    actual.setPostByte(cambio); //guarda el cambio y lo agrega en el objeto parte postByte
+                }
+                
+                break;//Fin de los directos
+                
+            case "esExtendido"://si es extendido es porque el operando 16 bits
+                
+                if(hexa.length()==3){ //si tiene 3 caracteres solo
+                    
+                    String nuevo = "0"+hexa; //agrega un cero a la izquierda y lo guarda en nuevo
+                    String hh = nuevo.substring(2, 4); //elimina los valores en low
+                    String ll = nuevo.substring(0, 2); //elimina los valores e high
+                    
+                    String cambio = actual.getForma().replace("hh", hh); //reemplaza el hh y lo guarda en cambio
+                    String cambio2 = cambio.replace("ll", ll); // ahora reemplaza el ll y lo guarda en cambio 2
+                    
+                    actual.setPostByte(cambio2); //cambio 2 es nuestro postByte asi que lo guardamos en el objeto
+                    
+                }else{
+                    
+                    String hh = hexa.substring(2, 4);
+                    String ll = hexa.substring(0, 2);
+                    
+                    String cambio = actual.getForma().replace("hh", hh);
+                    String cambio2 = cambio.replace("ll", ll);
+                    
+                    actual.setPostByte(cambio2);
+                }
+                
+                break;//fin de los extendidos  
         }
     
     }
