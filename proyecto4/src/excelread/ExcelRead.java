@@ -20,7 +20,7 @@ import java.io.PrintStream;
 import java.util.HashMap;
 
 public class ExcelRead {
-    static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>();
+static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>();
     static int contador = 0;
     public static void main(String[] args) throws IOException {
         String fileName = "P1ASM.asm";
@@ -78,7 +78,7 @@ public class ExcelRead {
                         if(etiqueta.length()>8 || codigoOperacion.length()>5){
                             System.out.println("Exceso de caracteres en: "+linea);
                         }else{
-                        instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, 0, "0", "0", "0"));}
+                            instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, 0, "0", "0", "0"));}
                     
                 } else if(matcherCodigoOperacionOperando.matches()) {
                     // Es una línea con código de operación y operando
@@ -153,10 +153,12 @@ public class ExcelRead {
     }
     
     static void notacion(String codop, String notacion){
+        LineaInstruccion actual = instruccion.get(contador);
+        String comparador;
         String regexOpri="^#[@%\\$?][0-9A-F]+$|^#[0-9]+$";
         String regexOpra="^[@%\\$?][0-9A-F]+$|^[0-9]+$"; // \\$?
         String regexRel="^[a-zA-Z0-9]+$|^[ABDXY],[a-zA-Z0-9]+$|^[SP],[a-zA-Z0-9]+$";
-        String regexOprx="^[-]*[@%\\$?$]*[0-9A-F]+,(X|Y|SP|PC)$|^[@%\\$?$]*[0-9A-F]+,[+-]*(X|Y|SP|PC)[+-]*$|^[ABD]+,(X|Y|SP|PC)$|^(\\[?[@%\\$?]*[0-9A-F]+,(X|Y|SP|PC))\\]?$|^(\\[?[Dd],(X|Y|SP|PC))\\]?|^,(X|Y|SP|PC)$";
+        String regexOprx="^[-][@%\\$?$][0-9A-F]+,(X|Y|SP|PC)$|^[@%\\$?$][0-9A-F]+,[+-](X|Y|SP|PC)[+-]$|^[ABD]+,(X|Y|SP|PC)$|^(\\[?[@%\\$?][0-9A-F]+,(X|Y|SP|PC))\\]?$|^(\\[?[Dd],(X|Y|SP|PC))\\]?|^,(X|Y|SP|PC)$";
         String regexDirectiva=" ^DC.B$ | ^DC.W$ | ^DS.B$ | ^DS.W$ ";
         
          Pattern patOpri = Pattern.compile(regexOpri);
@@ -178,10 +180,12 @@ public class ExcelRead {
                  int tamaño = Integer.parseInt(binario, 2);
                  if(tamaño<=255){
                      String key = "#opr8i";
+                     comparador = "esInmediato8";
                      System.out.println(key);
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
                  }else if(tamaño<=65535){
                      String key = "#opr16i";
+                     comparador = "esInmediato16";
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
                      System.out.println(key);
                 }else{//Valor no valido
@@ -193,10 +197,12 @@ public class ExcelRead {
                  int tamaño = Integer.parseInt(octal, 8);
                  if(tamaño<=255){
                      String key = "#opr8i";
+                     comparador = "esInmediato8";
                      System.out.println(key);
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
                  }else if(tamaño<=65535){
                      String key = "#opr16i";
+                     comparador = "esInmediato16";
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
                      System.out.println(key);
                 }else{//Valor no valido
@@ -208,10 +214,12 @@ public class ExcelRead {
                  int tamaño = Integer.parseInt(hexa, 16);
                  if(tamaño<=255){
                      String key = "#opr8i";
+                     comparador = "esInmediato8";
                      System.out.println(key);
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
                  }else if(tamaño<=65535){
                      String key = "#opr16i";
+                     comparador = "esInmediato16";
                      System.out.println(key);
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
                 }else{//Valor no valido
@@ -223,10 +231,12 @@ public class ExcelRead {
                  int tamaño = Integer.parseInt(dec);
                  if(tamaño<=255){
                      String key = "#opr8i";
+                     comparador = "esInmediato8";
                      System.out.println(key);
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
                  }else if(tamaño<=65535){
                      String key = "#opr16i";
+                     comparador = "esInmediato16";
                      System.out.println(key);
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
                 }else{//Valor no valido
@@ -235,6 +245,7 @@ public class ExcelRead {
                  }
                 }
             }else if(matcherOpra.matches()){
+                comparador = "esDirExt";
             char tem = notacion.charAt(0);//Crea un caracter para comparar
              if(Character.toString(tem).matches("%")){
                  String binario = notacion.substring(1);//Elimina caracteres no deseados
@@ -297,6 +308,7 @@ public class ExcelRead {
                  }
                 }
             }else if(matcherRel.matches()){
+                comparador = "esRelativo";
                char tem = codop.charAt(0);
                char temp2 = notacion.charAt(0);
                if(Character.toString(tem).equals("B")){
@@ -316,6 +328,7 @@ public class ExcelRead {
                    System.out.println(key);
                }
             }else if(matcherOprx.matches()){
+                comparador = "esIndexado";
                 char tem = notacion.charAt(0);
                 char temp2 = notacion.charAt(1);
                 if(Character.toString(tem).matches(", | [ABD]")){
@@ -333,15 +346,16 @@ public class ExcelRead {
                         comparadorExcel(instruccion.get(contador).getCodop(), key);
                     }
                 }else if(Character.toString(tem).equals("-")){
-                    separarOperandos(notacion);
+                    separarOperandos(notacion, comparador);
                 }else if(Character.toString(tem).matches("[0-9]")){
-                    separarOperandos(notacion);
+                    separarOperandos(notacion, comparador);
                 }else if(Character.toString(tem).matches("[@%\\$?]")){
-                    separarOperandos(notacion);
+                    separarOperandos(notacion, comparador);
                 }else{
                     System.out.println("Instruccion no valida");
                 }
             }else if(matcherDirectiva.matches()){ //Si hace match con directiva
+                comparador = "esDirectiva";
                 char tem = notacion.charAt(0);//crea un caracter temporal para comparar
 
                 if(codop.equals("DC.B")){//compara que el codop sea DC.B
@@ -350,7 +364,7 @@ public class ExcelRead {
 
                         int pesoBytes = aux.length(); //Saca la longitud del conjunto de elementos y le asigna un byte
                         double pesoDouble = (double) pesoBytes;
-                        instruccion.get(contador).peso = pesoDouble; //atencion aqui ***************************************
+                        instruccion.get(contador).peso = pesoDouble; //atencion aqui *************
 
                         System.out.println(pesoBytes); //imprimir para confirmar
                     }else{//Si no inicia con comillas
@@ -393,6 +407,7 @@ public class ExcelRead {
                     System.out.println("Directiva no valida");//mensaje de error
                 }
             }else{
+                comparador = "esInherente";
                 char tem = notacion.charAt(0);
                 if(notacion.length() == 1 && Character.toString(tem).equals("-")){
                     String key = "-";
@@ -405,7 +420,7 @@ public class ExcelRead {
             }
     } 
     
-    static void separarOperandos(String operandos){
+    static void separarOperandos(String operandos, String comparador){
         //String operandosOriginal = operandos;
         String[] aOperandos = operandos.split(",");
         String operando1 = aOperandos[0];
@@ -612,6 +627,7 @@ public class ExcelRead {
 
                     System.out.println("Peso total en bytes: " + pesoTotal);
                     System.out.println("Direccionamiento: " + addrCell);
+                    System.out.println("");
 
                     instruccion.get(contador).peso = pesoTotal;
                     instruccion.get(contador).direc = addrCell.toString();
@@ -625,10 +641,9 @@ public class ExcelRead {
                     String postFila = postcell.getStringCellValue();
 
                     if (codop.equals(codopEnFila) && instruccion.get(contador).direc.equals(dirFila)) {
-                        instruccion.get(contador).postByte = postFila;
-                        System.out.println("postbyte: " + instruccion.get(contador).postByte);
+                        instruccion.get(contador).forma = postFila;
+                        System.out.println(instruccion.get(contador).forma);
                     }
-                    System.out.println("");
                     // Puedes almacenar este valor o hacer lo que necesites con él
                     break; // Puedes romper el bucle una vez que encuentres la coincidencia deseada
                 }
@@ -809,11 +824,57 @@ public class ExcelRead {
    
    }
    }
-
-   //funcion proyecto 4
-
-   /**
-    * Descripcion: 
-    */
-  
+    
+    static void calcPostByte(String comparador, LineaInstruccion actual, int valor){
+        String hexa = Integer.toHexString(valor);
+        switch(comparador){
+            case "esInherente":// Si es inherente
+                
+                actual.setPostByte(actual.getForma());//el postbyte lo da la forma
+                
+            break;//break del caso inherente
+            
+            case "esInmediato8":
+                
+                
+                
+                if(hexa.length()==1){
+                    String nuevo = "0"+hexa;
+                    String cambio = actual.getForma().replace("ii", nuevo);
+                    actual.setPostByte(cambio);
+                    
+                }else{
+                    String cambio = actual.getForma().replace("ii", hexa);
+                    actual.setPostByte(cambio);
+                }
+                
+            break;// break es inmediato
+            
+            case "esInmediato16":
+                
+                if(hexa.length()==3){
+                    
+                    String nuevo = "0"+hexa;
+                    String jj = nuevo.substring(2, 4);
+                    String kk = nuevo.substring(0, 2);
+                    
+                    String cambio = actual.getForma().replace("jj", jj);
+                    String cambio2 = cambio.replace("kk", kk);
+                    
+                    actual.setPostByte(cambio2);
+                }else{
+                    
+                    String jj = hexa.substring(2, 4);
+                    String kk = hexa.substring(0, 2);
+                    
+                    String cambio = actual.getForma().replace("jj", jj);
+                    String cambio2 = cambio.replace("kk", kk);
+                    
+                    actual.setPostByte(cambio2);
+                }
+                
+            break;
+        }
+    
+    }
 }
