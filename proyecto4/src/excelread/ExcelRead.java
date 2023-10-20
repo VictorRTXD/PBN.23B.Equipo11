@@ -645,7 +645,6 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
 
                     System.out.println("Peso total en bytes: " + pesoTotal);
                     System.out.println("Direccionamiento: " + addrCell);
-                    System.out.println("");
 
                     instruccion.get(contador).peso = pesoTotal;
                     instruccion.get(contador).direc = addrCell.toString();
@@ -660,8 +659,9 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
 
                     if (codop.equals(codopEnFila) && instruccion.get(contador).direc.equals(dirFila)) {
                         instruccion.get(contador).forma = postFila;
-                        System.out.println(instruccion.get(contador).forma);
+                        System.out.println("forma: " + instruccion.get(contador).forma);
                     }
+                    System.out.println("");
                     // Puedes almacenar este valor o hacer lo que necesites con él
                     break; // Puedes romper el bucle una vez que encuentres la coincidencia deseada
                 }

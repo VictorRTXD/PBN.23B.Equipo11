@@ -70,3 +70,10 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+/proyecto3/MSExcel_In_Java-master/nbproject/private/
+/proyecto3/MSExcel_In_Java-master/build/
+/proyecto4/nbproject/private/
+/proyecto4/build/
+/proyecto2/MSExcel_In_Java-master/dist/
+/proyecto3/MSExcel_In_Java-master/dist/
+/proyecto4/dist/

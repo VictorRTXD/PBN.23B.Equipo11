@@ -19,7 +19,7 @@ public class ExcelRead {
     static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>();
     static int contador = 0;
     public static void main(String[] args) throws IOException {
-        String fileName = "P1ASM1.asm";
+        String fileName = "P1ASM.asm";
 
         // ** Expresiones regulares
 

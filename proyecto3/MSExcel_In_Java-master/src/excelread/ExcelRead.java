@@ -127,13 +127,6 @@ public class ExcelRead {
        
        // proyecto 3
         calcularContloc();
-
-        for (int i = 0; i < instruccion.size(); i++) {
-            System.out.println("soy el peso " + instruccion.get(i).peso);
-            System.out.println(" ");
-            System.out.println("soy el contloc " + instruccion.get(i).contloc);
-            System.out.println(" ");
-        }
         //archivo .lst
         insertarDatosList();
         //archivo TABSIM.txt
