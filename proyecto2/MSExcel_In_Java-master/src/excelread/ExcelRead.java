@@ -64,7 +64,7 @@ public class ExcelRead {
                     } else {
                     // Es un comentario
                         System.out.println("Comentario: " + linea);
-                        System.out.println("");}
+                    }
                 } else if (matcherCodigo.matches()) {
                     // Es una línea de código con etiqueta, código de operación y operando
                     String etiqueta = matcherCodigo.group(1);
@@ -119,14 +119,17 @@ public class ExcelRead {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.println("ETIQUETA CODOP OPERANDO KEY PESO ");
        mostrarArray(); 
     }
     
     static void mostrarArray(){
     for(int i=0; i<=instruccion.size()-1; i++){
         contador = i;
-        System.out.println(instruccion.get(i).getEtiqueta()+" "+instruccion.get(i).getCodop()+" "+instruccion.get(i).getOperando());
+        System.out.print(instruccion.get(i).getEtiqueta()+"  "+instruccion.get(i).getCodop()+"  "+instruccion.get(i).getOperando() + "  ");
         notacion(instruccion.get(i).getCodop(), instruccion.get(i).getOperando());
+        System.out.println("");
+        System.out.println("----------------------");
         }
     }
     
@@ -153,60 +156,60 @@ public class ExcelRead {
                  int tamaño = Integer.parseInt(binario, 2);
                  if(tamaño<=255){
                      String key = "#opr8i";
-                     System.out.println(key);
+                     System.out.print(key + "  ");
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
                  }else if(tamaño<=65535){
                      String key = "#opr16i";
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
-                     System.out.println(key);
+                     System.out.print(key + "  ");
                 }else{//Valor no valido
                      String key = "Error";
-                     System.out.println(key);
+                     System.out.print(key + "  ");
                  }//Fin del binario
              }else if(Character.toString(tem).matches("@")){
                  String octal = notacion.substring(2);
                  int tamaño = Integer.parseInt(octal, 8);
                  if(tamaño<=255){
                      String key = "#opr8i";
-                     System.out.println(key);
+                     System.out.print(key + "  ");
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
                  }else if(tamaño<=65535){
                      String key = "#opr16i";
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
-                     System.out.println(key);
+                     System.out.print(key + "  ");
                 }else{//Valor no valido
                      String key = "Error";
-                     System.out.println(key);
+                     System.out.print(key + "  ");
                  }//in del octal
              }else if(Character.toString(tem).equals("$")){
                  String hexa = notacion.substring(2);
                  int tamaño = Integer.parseInt(hexa, 16);
                  if(tamaño<=255){
                      String key = "#opr8i";
-                     System.out.println(key);
+                     System.out.print(key + "  ");
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
                  }else if(tamaño<=65535){
                      String key = "#opr16i";
-                     System.out.println(key);
+                     System.out.print(key + "  ");
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
                 }else{//Valor no valido
                      String key = "Error";
-                     System.out.println(key);
+                     System.out.print(key + "  ");
                  }//Fin del octal
                 }else{
                  String dec = notacion.substring(1);
                  int tamaño = Integer.parseInt(dec);
                  if(tamaño<=255){
                      String key = "#opr8i";
-                     System.out.println(key);
+                     System.out.print(key + "  ");
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
                  }else if(tamaño<=65535){
                      String key = "#opr16i";
-                     System.out.println(key);
+                     System.out.print(key + "  ");
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
                 }else{//Valor no valido
                      String key = "Error";
-                     System.out.println(key);
+                     System.out.print(key + "  ");
                  }
                 }
             }else if(matcherOpra.matches()){
@@ -217,58 +220,58 @@ public class ExcelRead {
                  if(tamaño<=255){
                      String key = "opr8a";
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
-                     System.out.println(key);
+                     System.out.print(key + "  ");
                  }else if(tamaño<=65535){
                      String key = "opr16a";
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
-                     System.out.println(key);
+                     System.out.print(key + "  ");
                 }else{//Valor no valido
                      String key = "Error";
-                     System.out.println(key);
+                     System.out.print(key + "  ");
                  }//Fin del binario
              }else if(Character.toString(tem).matches("@")){
                  String octal = notacion.substring(1);
                  int tamaño = Integer.parseInt(octal, 8);
                  if(tamaño<=255){
                      String key = "opr8a";
-                     System.out.println(key);
+                     System.out.print(key + "  ");
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
                  }else if(tamaño<=65535){
                      String key = "opr16a";
-                     System.out.println(key);
+                     System.out.print(key + "  ");
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
                 }else{//Valor no valido
                      String key = "Error";
-                     System.out.println(key);
+                     System.out.print(key + "  ");
                  }//in del octal
              }else if(Character.toString(tem).equals("$")){
                  String hexa = notacion.substring(1);
                  int tamaño = Integer.parseInt(hexa, 16);
                  if(tamaño<=255){
                      String key = "opr8a";
-                     System.out.println(key);
+                     System.out.print(key + "  ");
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
                  }else if(tamaño<=65535){
                      String key = "opr16a";
-                     System.out.println(key);
+                     System.out.print(key + "  ");
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
                 }else{//Valor no valido
                      String key = "Error";
-                     System.out.println(key);
+                     System.out.print(key + "  ");
                  }//Fin del octal
                 }else{
                  int tamaño = Integer.parseInt(notacion);
                  if(tamaño<=255){
                      String key = "opr8a";
-                     System.out.println(key);
+                     System.out.print(key + "  ");
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
                  }else if(tamaño<=65535){
                      String key = "opr16a";
-                     System.out.println(key);
+                     System.out.print(key + "  ");
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
                 }else{//Valor no valido
                      String key = "Error";
-                     System.out.println(key);
+                     System.out.print(key + "  ");
                  }
                 }
             }else if(matcherRel.matches()){
@@ -276,35 +279,35 @@ public class ExcelRead {
                char temp2 = notacion.charAt(0);
                if(Character.toString(tem).equals("B")){
                    String key = "rel8";
-                   System.out.println(key);
+                   System.out.print(key + "  ");
                    comparadorExcel(instruccion.get(contador).getCodop(), key);
                }else if(Character.toString(tem).equals("L")){
                    String key = "rel16";
-                   System.out.println(key);
+                   System.out.print(key + "  ");
                    comparadorExcel(instruccion.get(contador).getCodop(), key);
                }else if(Character.toString(temp2).matches("[A | B | D | X | Y | SP]")){
                    String key = "abdxys,rel9";
-                   System.out.println(key);
+                   System.out.print(key + "  ");
                    comparadorExcel(instruccion.get(contador).getCodop(), key);
                }else{
                    String key = "Error";
-                   System.out.println(key);
+                   System.out.print(key + "  ");
                }
             }else if(matcherOprx.matches()){
                 char tem = notacion.charAt(0);
                 char temp2 = notacion.charAt(1);
                 if(Character.toString(tem).matches(", | [ABD]")){
                     String key = "oprx0_xysp";
-                    System.out.println(key);
+                    System.out.print(key + "  ");
                     comparadorExcel(instruccion.get(contador).getCodop(), key);
                 }else if(Character.toString(tem).matches("\\[?")){
                     if(Character.toString(temp2).matches("D")){
                         String key = "[D,xysp]";
-                        System.out.println(key);
+                        System.out.print(key + "  ");
                         comparadorExcel(instruccion.get(contador).getCodop(), key);
                     }else{
                         String key = "[oprx16,xysp]";
-                        System.out.println(key);
+                        System.out.print(key + "  ");
                         comparadorExcel(instruccion.get(contador).getCodop(), key);
                     }
                 }else if(Character.toString(tem).equals("-")){
@@ -320,10 +323,10 @@ public class ExcelRead {
                 char tem = notacion.charAt(0);
                 if(notacion.length() == 1 && Character.toString(tem).equals("-")){
                     String key = "-";
-                    System.out.println(key);
+                    System.out.print(key + "  ");
                 }else{
                     String key = "Error";
-                    System.out.println(key);
+                    System.out.print(key + "  ");
                     }
             }
     } 
@@ -347,79 +350,79 @@ public class ExcelRead {
                  int tamaño = Integer.parseInt(binario, 2);
                  if(tamaño<=16){
                      String key = "oprx0_xysp";
-                     System.out.println(key);
+                     System.out.print(key + "  ");
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
                  }else if(tamaño<=256){
                      String key = "oprx9,xysp";
-                     System.out.println(key);
+                     System.out.print(key + "  ");
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
                 }else if(tamaño<=32768){
                     String key = "oprx16,xysp";
-                    System.out.println(key);
+                    System.out.print(key + "  ");
                     comparadorExcel(instruccion.get(contador).getCodop(), key);
                 }else{//Valor no valido
                      String key = "Error";
-                     System.out.println(key);
+                     System.out.print(key + "  ");
                  }
             }else if(Character.toString(temp2).matches("@")){
                  String octal = operando1.substring(2);//Elimina caracteres no deseados
                  int tamaño = Integer.parseInt(octal, 8);
                  if(tamaño<=16){
                      String key = "oprx0_xysp";
-                     System.out.println(key);
+                     System.out.print(key + "  ");
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
                  }else if(tamaño<=256){
                      String key = "oprx9,xysp";
-                     System.out.println(key);
+                     System.out.print(key + "  ");
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
                 }else if(tamaño<=32768){
                     String key = "oprx16,xysp";
-                    System.out.println(key);
+                    System.out.print(key + "  ");
                     comparadorExcel(instruccion.get(contador).getCodop(), key);
                 }else{//Valor no valido
                      String key = "Error";
-                System.out.println(key);
+                System.out.print(key + "  ");
                 }
             }else if(Character.toString(temp2).equals("$")){
                  String hexa = operando1.substring(2);//Elimina caracteres no deseados
                  int tamaño = Integer.parseInt(hexa, 16);
                  if(tamaño<=16){
                      String key = "oprx0_xysp";
-                     System.out.println(key);
+                     System.out.print(key + "  ");
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
                  }else if(tamaño<=256){
                      String key = "oprx9,xysp";
-                     System.out.println(key);
+                     System.out.print(key + "  ");
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
                 }else if(tamaño<=32768){
                     String key = "oprx16,xysp";
-                    System.out.println(key);
+                    System.out.print(key + "  ");
                     comparadorExcel(instruccion.get(contador).getCodop(), key);
                 }else{//Valor no valido
                      String key = "Error";
-                System.out.println(key);
+                System.out.print(key + "  ");
                 }
             }else if(Character.toString(temp2).matches("[0-9]")){
                 int tamaño = Integer.parseInt(operando1);
                  if(tamaño<=16){
                      String key = "oprx0_xysp";
-                     System.out.println(key);
+                     System.out.print(key + "  ");
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
                  }else if(tamaño<=256){
                      String key = "oprx9,xysp";
-                     System.out.println(key);
+                     System.out.print(key + "  ");
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
                 }else if(tamaño<=32768){
                     String key = "oprx16,xysp";
-                    System.out.println(key);
+                    System.out.print(key + "  ");
                     comparadorExcel(instruccion.get(contador).getCodop(), key);
                 }else{//Valor no valido
                      String key = "Error";
-                    System.out.println(key);                
+                    System.out.print(key + "  ");                
                 }
                 }else{
                     String key = "Error";
-                    System.out.println(key);
+                    System.out.print(key + "  ");
                 }
         }else{
            if(Character.toString(tem).matches("%")){
@@ -427,34 +430,34 @@ public class ExcelRead {
                  int tamaño = Integer.parseInt(binario, 2);
                  if(tamaño<=15){
                      String key = "oprx0_xysp";
-                     System.out.println(key);
+                     System.out.print(key + "  ");
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
                  }else if(tamaño<=255){
                      String key = "oprx9,xysp";
-                     System.out.println(key);
+                     System.out.print(key + "  ");
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
                 }else if(tamaño<=65535){
                     String key = "oprx16,xysp";
-                    System.out.println(key);
+                    System.out.print(key + "  ");
                     comparadorExcel(instruccion.get(contador).getCodop(), key);
                 }else{//Valor no valido
                      String key = "Error";
-                     System.out.println(key);
+                     System.out.print(key + "  ");
                  }
             }else if(Character.toString(tem).matches("@")){
                  String octal = operando1.substring(1);//Elimina caracteres no deseados
                  int tamaño = Integer.parseInt(octal, 8);
                  if(tamaño<=15){
                      String key = "oprx0_xysp";
-                     System.out.println(key);
+                     System.out.print(key + "  ");
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
                  }else if(tamaño<=255){
                      String key = "oprx9,xysp";
-                     System.out.println(key);
+                     System.out.print(key + "  ");
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
                 }else if(tamaño<=65535){
                     String key = "oprx16,xysp";
-                    System.out.println(key);
+                    System.out.print(key + "  ");
                     comparadorExcel(instruccion.get(contador).getCodop(), key);
                 }else{//Valor no valido
                      String key = "Error";}
@@ -463,40 +466,40 @@ public class ExcelRead {
                  int tamaño = Integer.parseInt(hexa, 16);
                  if(tamaño<=15){
                      String key = "oprx0_xysp";
-                     System.out.println(key);
+                     System.out.print(key + "  ");
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
                  }else if(tamaño<=255){
                      String key = "oprx9,xysp";
-                     System.out.println(key);
+                     System.out.print(key + "  ");
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
                 }else if(tamaño<=65535){
                     String key = "oprx16,xysp";
-                    System.out.println(key);
+                    System.out.print(key + "  ");
                     comparadorExcel(instruccion.get(contador).getCodop(), key);
                 }else{//Valor no valido
                      String key = "Error";
-                System.out.println(key);}
+                System.out.print(key + "  ");}
                  
             }else if(Character.toString(tem).matches("[0-9]")){
                 int tamaño = Integer.parseInt(operando1);
                  if(tamaño<=15){
                      String key = "oprx0_xysp";
-                     System.out.println(key);
+                     System.out.print(key + "  ");
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
                  }else if(tamaño<=255){
                      String key = "oprx9,xysp";
-                     System.out.println(key);
+                     System.out.print(key + "  ");
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
                 }else if(tamaño<=65535){
                     String key = "oprx16,xysp";
-                    System.out.println(key);
+                    System.out.print(key + "  ");
                     comparadorExcel(instruccion.get(contador).getCodop(), key);
                 }else{//Valor no valido
                      String key = "Error";
-                System.out.println(key);}
+                System.out.print(key + "  ");}
                 }else{
                     String key = "Error";
-                    System.out.println(key);
+                    System.out.print(" " + key + "  ");
                     System.out.println("Instruccion no valida");
                 }
             }
@@ -532,9 +535,8 @@ public class ExcelRead {
                     Cell pesoTotalCell = row.getCell(6);
                     Cell addrCell = row.getCell(3);
                     double pesoTotal = pesoTotalCell.getNumericCellValue();
-                    System.out.println("Peso total en bytes: " + pesoTotal);
-                    System.out.println("Direccionamiento: " + addrCell);
-                    System.out.println("");
+                    System.out.print(" " + pesoTotal + "  ");
+                    System.out.print(" " + addrCell + "  ");
                     // Puedes almacenar este valor o hacer lo que necesites con él
                     break; // Puedes romper el bucle una vez que encuentres la coincidencia deseada
                 }

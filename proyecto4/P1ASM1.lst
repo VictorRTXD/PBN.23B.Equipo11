@@ -1,156 +1,53 @@
-etiqueta: -
-codop: ORG
-operando: $4040
-Registro: DIR_INIC
-contloc: $4040
-
-etiqueta: Et1
-codop: SWI
-operando: -
-Registro: CONTLOC
-valor: 4040
-
-etiqueta: dos
-codop: EORA
-operando: 5
-Registro: CONTLOC
-valor: 4041
-
-etiqueta: -
-codop: EORA
-operando: @5
-Registro: CONTLOC
-valor: 4043
-
-etiqueta: -
-codop: EORA
-operando: %111
-Registro: CONTLOC
-valor: 4045
-
-etiqueta: -
-codop: EORA
-operando: $6
-Registro: CONTLOC
-valor: 4047
-
-etiqueta: -
-codop: EORA
-operando: 300
-Registro: CONTLOC
-valor: 4049
-
-etiqueta: -
-codop: EORA
-operando: $F
-Registro: CONTLOC
-valor: 404c
-
-etiqueta: -
-codop: EORA
-operando: #5
-Registro: CONTLOC
-valor: 404e
-
-etiqueta: -
-codop: EORA
-operando: #@5
-Registro: CONTLOC
-valor: 4050
-
-etiqueta: -
-codop: EORA
-operando: #1500
-Registro: CONTLOC
-valor: 4052
-
-etiqueta: -
-codop: EORA
-operando: 1,X
-Registro: CONTLOC
-valor: 4052
-
-etiqueta: Uno
-codop: EORA
-operando: 255,X
-Registro: CONTLOC
-valor: 4052
-
-etiqueta: -
-codop: EORA
-operando: 32768,X
-Registro: CONTLOC
-valor: 4052
-
-etiqueta: -
-codop: EORA
-operando: $1,+PC
-Registro: CONTLOC
-valor: 4052
-
-etiqueta: -
-codop: EORA
-operando: A,X
-Registro: CONTLOC
-valor: 4052
-
-etiqueta: -
-codop: EORA
-operando: 254,X
-Registro: CONTLOC
-valor: 4052
-
-etiqueta: -
-codop: EORA
-operando: 6444,X
-Registro: CONTLOC
-valor: 4052
-
-etiqueta: -
-codop: EORA
-operando: [1,X]
-Registro: CONTLOC
-valor: 4052
-
-etiqueta: -
-codop: EORA
-operando: [6444,X]
-Registro: CONTLOC
-valor: 4052
-
-etiqueta: -
-codop: EORA
-operando: [D,X]
-Registro: CONTLOC
-valor: 4052
-
-etiqueta: -
-codop: BLT
-operando: UNO
-Registro: CONTLOC
-valor: 4054
-
-etiqueta: -
-codop: LBLT
-operando: UNO
-Registro: CONTLOC
-valor: 4056
-
-etiqueta: -
-codop: IBNE
-operando: A,UNO
-Registro: CONTLOC
-valor: 405a
-
-etiqueta: -
-codop: DS.B
-operando: %001101010010101011
-Registro: CONTLOC
-valor: 405a
-
-etiqueta: -
-codop: END
-operando: -
-Registro: CONTLOC
-valor: 405a
-
+ETIQUETA CODOP OPERANDO REGISTRO CONTLOC
+-  ORG  $4040  DIR_INIC $4040 
+----------------
+Et1  SWI  -  CONTLOC 4040  
+----------------
+dos  EORA  5  CONTLOC 4041  
+----------------
+-  EORA  @5  CONTLOC 4043  
+----------------
+-  EORA  %111  CONTLOC 4045  
+----------------
+-  EORA  $6  CONTLOC 4047  
+----------------
+-  EORA  300  CONTLOC 4049  
+----------------
+-  EORA  $F  CONTLOC 404c  
+----------------
+-  EORA  #5  CONTLOC 404e  
+----------------
+-  EORA  #@5  CONTLOC 4050  
+----------------
+-  EORA  #1500  CONTLOC 4052  
+----------------
+-  EORA  1,X  CONTLOC 4052  
+----------------
+Uno  EORA  255,X  CONTLOC 4052  
+----------------
+-  EORA  32768,X  CONTLOC 4052  
+----------------
+-  EORA  $1,+PC  CONTLOC 4052  
+----------------
+-  EORA  A,X  CONTLOC 4052  
+----------------
+-  EORA  254,X  CONTLOC 4052  
+----------------
+-  EORA  6444,X  CONTLOC 4052  
+----------------
+-  EORA  [1,X]  CONTLOC 4052  
+----------------
+-  EORA  [6444,X]  CONTLOC 4052  
+----------------
+-  EORA  [D,X]  CONTLOC 4052  
+----------------
+-  BLT  UNO  CONTLOC 4054  
+----------------
+-  LBLT  UNO  CONTLOC 4056  
+----------------
+-  IBNE  A,UNO  CONTLOC 405a  
+----------------
+-  DS.B  %001101010010101011  CONTLOC 405a  
+----------------
+-  END  -  CONTLOC 405a  
+----------------
