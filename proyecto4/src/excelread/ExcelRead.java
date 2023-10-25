@@ -157,10 +157,11 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
     static void notacion(String codop, String notacion){
         LineaInstruccion actual = instruccion.get(contador);
         String comparador;
+
         String regexOpri="^#[@%\\$?][0-9A-F]+$|^#[0-9]+$";
         String regexOpra="^[@%\\$?][0-9A-F]+$|^[0-9]+$"; // \\$?
         String regexRel="^[a-zA-Z0-9]+$|^[ABDXY],[a-zA-Z0-9]+$|^[SP],[a-zA-Z0-9]+$";
-        String regexOprx="^[-][@%\\$?$][0-9A-F]+,(X|Y|SP|PC)$|^[@%\\$?$][0-9A-F]+,[+-](X|Y|SP|PC)[+-]$|^[ABD]+,(X|Y|SP|PC)$|^(\\[?[@%\\$?][0-9A-F]+,(X|Y|SP|PC))\\]?$|^(\\[?[Dd],(X|Y|SP|PC))\\]?|^,(X|Y|SP|PC)$";
+        String regexOprx="^[-]*[@%\\$?$]*[0-9A-F]+,(X|Y|SP|PC)$|^[@%\\$?$]*[0-9A-F]+,[+-]*(X|Y|SP|PC)[+-]*$|^[ABD]+,(X|Y|SP|PC)$|^(\\[?[@%\\$?]*[0-9A-F]+,(X|Y|SP|PC))\\]?$|^(\\[?[Dd],(X|Y|SP|PC))\\]?|^,(X|Y|SP|PC)$";
         String regexDirectiva=" ^DC.B$ | ^DC.W$ | ^DS.B$ | ^DS.W$ ";
         
          Pattern patOpri = Pattern.compile(regexOpri);
@@ -238,12 +239,11 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                  String dec = notacion.substring(1);
                  int tamaño = Integer.parseInt(dec);
                  if(tamaño<=255){
-                     String key = "#opr8i";
+                    String key = "#opr8i";
                      comparador = "esInmediato8";
                      System.out.print(key + "  ");
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
                      calcPostByte(comparador,actual,tamaño);
-
                  }else if(tamaño<=65535){
                      String key = "#opr16i";
                      comparador = "esInmediato16";
@@ -262,11 +262,10 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                  String binario = notacion.substring(1);//Elimina caracteres no deseados
                  int tamaño = Integer.parseInt(binario, 2);
                  if(tamaño<=255){
-                     String key = "opr8a";
+                     String key = "#opr8a";
+                     System.out.print(key + "  ");
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
                      calcPostByte(comparador,actual,tamaño);
-
-                     System.out.print(key + "  ");
                  }else if(tamaño<=65535){
                      String key = "opr16a";
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
@@ -328,7 +327,7 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                  }
                 }
             }else if(matcherRel.matches()){
-                comparador = "esRelativo";
+               comparador = "esRelativo";
                char tem = codop.charAt(0);
                char temp2 = notacion.charAt(0);
                if(Character.toString(tem).equals("B")){
@@ -364,7 +363,7 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                         String key = "[oprx16,xysp]";
                         System.out.print(key + "  ");
                         comparadorExcel(instruccion.get(contador).getCodop(), key);
-                    }
+                    } //atencion aqui ****************************************************************************************
                 }else if(Character.toString(tem).equals("-")){
                     separarOperandos(notacion, comparador);
                 }else if(Character.toString(tem).matches("[0-9]")){
@@ -384,7 +383,7 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
 
                         int pesoBytes = aux.length(); //Saca la longitud del conjunto de elementos y le asigna un byte
                         double pesoDouble = (double) pesoBytes;
-                        instruccion.get(contador).peso = pesoDouble; //atencion aqui *************
+                        instruccion.get(contador).peso = pesoDouble; //atencion aqui ***************************************
 
                         System.out.print(pesoBytes + "  "); //imprimir para confirmar
                     }else{//Si no inicia con comillas
@@ -438,7 +437,7 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                     System.out.print(key + "  ");
                     }
             }
-    } 
+    }
     
     static void separarOperandos(String operandos, String comparador){
         //String operandosOriginal = operandos;

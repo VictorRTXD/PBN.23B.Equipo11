@@ -123,7 +123,7 @@ public class ExcelRead {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("ETIQUETA CODOP OPERANDO KEY PESO ADDRESS FORM_POSTBYTE");
+        System.out.println("ETIQUETA CODOP OPERANDO KEY PESO ADDRESS");
        mostrarArray(); 
        
        // proyecto 3
