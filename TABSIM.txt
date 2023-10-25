@@ -1,12 +1,5 @@
-etiqueta: Et1
+si: -
 Tipo: Relativa
 ti: 4040
 
-etiqueta: dos
-Tipo: Relativa
-ti: 4041
-
-etiqueta: Uno
-Tipo: Relativa
-ti: 4054
-
+si: Et1

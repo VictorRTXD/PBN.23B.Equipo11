@@ -1,0 +1,53 @@
+ETIQUETA CODOP OPERANDO REGISTRO CONTLOC
+-  ORG  $4040  DIR_INIC $4040 
+----------------
+Et1  SWI  -  CONTLOC 4040  
+----------------
+dos  EORA  5  CONTLOC 4041  
+----------------
+-  EORA  @5  CONTLOC 4043  
+----------------
+-  EORA  %111  CONTLOC 4045  
+----------------
+-  EORA  $6  CONTLOC 4045  
+----------------
+-  EORA  300  CONTLOC 4047  
+----------------
+-  EORA  $F  CONTLOC 404a  
+----------------
+-  EORA  #5  CONTLOC 404c  
+----------------
+-  EORA  #@5  CONTLOC 404e  
+----------------
+-  EORA  #1500  CONTLOC 4050  
+----------------
+-  EORA  1,X  CONTLOC 4050  
+----------------
+Uno  EORA  255,X  CONTLOC 4052  
+----------------
+-  EORA  32768,X  CONTLOC 4055  
+----------------
+-  EORA  $1,+PC  CONTLOC 4059  
+----------------
+-  EORA  A,X  CONTLOC 405b  
+----------------
+-  EORA  254,X  CONTLOC 405b  
+----------------
+-  EORA  6444,X  CONTLOC 405e  
+----------------
+-  EORA  [1,X]  CONTLOC 4062  
+----------------
+-  EORA  [6444,X]  CONTLOC 4066  
+----------------
+-  EORA  [D,X]  CONTLOC 406a  
+----------------
+-  BLT  UNO  CONTLOC 406c  
+----------------
+-  LBLT  UNO  CONTLOC 406e  
+----------------
+-  IBNE  A,UNO  CONTLOC 4072  
+----------------
+-  DS.B  %001101010010101011  CONTLOC 4072  
+----------------
+-  END  -  CONTLOC 4072  
+----------------
