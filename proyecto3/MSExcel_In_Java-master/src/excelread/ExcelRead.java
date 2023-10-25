@@ -686,7 +686,7 @@ static void mostrarArray(){
 
 
                 // Verifica si la etiqueta ya existe en el HashMap
-                if (validadorSimbolo.containsKey(instruccion.get(contador).etiqueta)) {
+                if (validadorSimbolo.containsKey(instruccion.get(contador).etiqueta) || instruccion.get(i).etiqueta == "-") {
                     // La etiqueta ya existe
                 } else {
                     validadorSimbolo.put(instruccion.get(contador).etiqueta, true);

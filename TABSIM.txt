@@ -3,14 +3,3 @@ Tipo: Relativa
 ti: 4040
 
 si: Et1
-Tipo: Relativa
-ti: 4040
-
-si: dos
-Tipo: Relativa
-ti: 4041
-
-si: Uno
-Tipo: Relativa
-ti: 4054
-
