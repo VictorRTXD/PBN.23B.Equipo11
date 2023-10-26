@@ -947,6 +947,19 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                     actual.setPostByte(cambio);
                 }
                 break;
+
+            case "esIndexado9Bits":
+                if (hexa.length() == 3) {
+                    String nuevo = "0" + hexa;
+                    String ii = nuevo.substring(1, 3);
+                    String cambio = actual.getForma().replace("ii", ii);
+                    actual.setPostByte(cambio);
+            } else {
+                    String ii = hexa.substring(1, 3);
+                    String cambio = actual.getForma().replace("ii", ii);
+                    actual.setPostByte(cambio);
+                }
+                break;
         }
     }
 }
