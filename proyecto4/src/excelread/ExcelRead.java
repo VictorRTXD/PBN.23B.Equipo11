@@ -940,10 +940,10 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
             case "esIndexado5Bits":
                 if (hexa.length() == 1) {
                     String nuevo = "0" + hexa;
-                    String cambio = actual.getForma().replace("ii", nuevo);
+                    String cambio = actual.getForma().replace("xb", nuevo);
                     actual.setPostByte(cambio);
                 } else {
-                    String cambio = actual.getForma().replace("ii", hexa);
+                    String cambio = actual.getForma().replace("xb", hexa);
                     actual.setPostByte(cambio);
                 }
                 break;
@@ -951,13 +951,38 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
             case "esIndexado9Bits":
                 if (hexa.length() == 3) {
                     String nuevo = "0" + hexa;
-                    String ii = nuevo.substring(1, 3);
-                    String cambio = actual.getForma().replace("ii", ii);
-                    actual.setPostByte(cambio);
+                    String xb = nuevo.substring(2, 4);
+                    String ff = nuevo.substring(0, 2);
+                    String cambio = actual.getForma().replace("xb", xb);
+                    String cambio2 = cambio.replace("ff", ff);
+                    actual.setPostByte(cambio2);
+                } else {
+                    String xb = hexa.substring(2, 4);
+                    String ff = hexa.substring(0, 2);
+                    String cambio = actual.getForma().replace("xb", xb);
+                    String cambio2 = cambio.replace("ff", ff);
+                    actual.setPostByte(cambio2);
+                }
+                break;
+                
+            case "esIndexado16Bits":
+                if (hexa.length() == 5) {
+                    String nuevo = "0" + hexa;
+                    String xb = nuevo.substring(4, 6);
+                    String ee = nuevo.substring(2, 4);
+                    String ff = nuevo.substring(0, 2);
+                    String cambio = actual.getForma().replace("xb", xb);
+                    String cambio2 = cambio.replace("ee", ee);
+                    String cambio3 = cambio.replace("ff", ff);
+                    actual.setPostByte(cambio3);
             } else {
-                    String ii = hexa.substring(1, 3);
-                    String cambio = actual.getForma().replace("ii", ii);
-                    actual.setPostByte(cambio);
+                    String xb = hexa.substring(4, 6);
+                    String ee = hexa.substring(2, 4);
+                    String ff = hexa.substring(0, 2);
+                    String cambio = actual.getForma().replace("xb", xb);
+                    String cambio2 = cambio.replace("ee", ee);
+                    String cambio3 = cambio.replace("ff", ff);
+                    actual.setPostByte(cambio3);
                 }
                 break;
         }
