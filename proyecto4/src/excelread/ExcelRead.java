@@ -936,6 +936,17 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                 }
                 
                 break;//fin de los extendidos  
+
+            case "esIndexado5Bits":
+                if (hexa.length() == 1) {
+                    String nuevo = "0" + hexa;
+                    String cambio = actual.getForma().replace("ii", nuevo);
+                    actual.setPostByte(cambio);
+                } else {
+                    String cambio = actual.getForma().replace("ii", hexa);
+                    actual.setPostByte(cambio);
+                }
+                break;
         }
     }
 }
