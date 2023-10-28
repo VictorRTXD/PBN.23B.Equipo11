@@ -369,7 +369,7 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                 }else if(Character.toString(tem).matches("[0-9]")){
                     separarOperandos(notacion, comparador);
                 }else if(Character.toString(tem).matches("[@%\\$?]")){
-                    separarOperandos(notacion, comparador);
+                    separarOperandos(notacion, comparador); // *********************************************************************
                 }else{
                     System.out.println("Instruccion no valida");
                 }
@@ -440,6 +440,7 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
     }
     
     static void separarOperandos(String operandos, String comparador){
+        System.out.print("Entré a separa operandos");
         //String operandosOriginal = operandos;
         String[] aOperandos = operandos.split(",");
         String operando1 = aOperandos[0];
@@ -451,7 +452,7 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
         char temp3 = operando2.charAt(0);
         char temp4 = operando2.charAt(idx);
         
-        if(Character.toString(tem).equals("-")||Character.toString(temp3).equals("-")||Character.toString(temp4).equals("-")){
+        if(Character.toString(tem).equals("-")){
               char temp2 = operando1.charAt(1);
              if(Character.toString(temp2).matches("%")){
                  String binario = operando1.substring(2);//Elimina caracteres no deseados
@@ -532,10 +533,91 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                     String key = "Error";
                     System.out.print(key + "  ");
                 }
-        }else if(Character.toString(tem).equals("+")||Character.toString(temp3).equals("+")||Character.toString(temp4).equals("+")){
-              char temp2 = operando1.charAt(1);
+        }else if(Character.toString(temp3).equals("-")||Character.toString(temp4).equals("-")){
+            char temp2 = operando1.charAt(0);
              if(Character.toString(temp2).matches("%")){
-                 String binario = operando1.substring(2);//Elimina caracteres no deseados
+                 String binario = operando1.substring(1);//Elimina caracteres no deseados
+                 int tamaño = Integer.parseInt(binario, 2);
+                 if(tamaño<=16){
+                     String key = "oprx0_xysp";
+                     System.out.print(key + "  ");
+                     comparadorExcel(instruccion.get(contador).getCodop(), key);
+                 }else if(tamaño<=256){
+                     String key = "oprx9,xysp";
+                     System.out.print(key + "  ");
+                     comparadorExcel(instruccion.get(contador).getCodop(), key);
+                }else if(tamaño<=32768){
+                    String key = "oprx16,xysp";
+                    System.out.print(key + "  ");
+                    comparadorExcel(instruccion.get(contador).getCodop(), key);
+                }else{//Valor no valido
+                     String key = "Error";
+                     System.out.print(key + "  ");
+                 }
+            }else if(Character.toString(temp2).matches("@")){
+                 String octal = operando1.substring(1);//Elimina caracteres no deseados
+                 int tamaño = Integer.parseInt(octal, 8);
+                 if(tamaño<=16){
+                     String key = "oprx0_xysp";
+                     System.out.print(key + "  ");
+                     comparadorExcel(instruccion.get(contador).getCodop(), key);
+                 }else if(tamaño<=256){
+                     String key = "oprx9,xysp";
+                     System.out.print(key + "  ");
+                     comparadorExcel(instruccion.get(contador).getCodop(), key);
+                }else if(tamaño<=32768){
+                    String key = "oprx16,xysp";
+                    System.out.print(key + "  ");
+                    comparadorExcel(instruccion.get(contador).getCodop(), key);
+                }else{//Valor no valido
+                     String key = "Error";
+                System.out.print(key + "  ");
+                }
+            }else if(Character.toString(temp2).equals("$")){
+                 String hexa = operando1.substring(1);//Elimina caracteres no deseados
+                 int tamaño = Integer.parseInt(hexa, 16);
+                 if(tamaño<=16){
+                     String key = "oprx0_xysp";
+                     System.out.print(key + "  ");
+                     comparadorExcel(instruccion.get(contador).getCodop(), key);
+                 }else if(tamaño<=256){
+                     String key = "oprx9,xysp";
+                     System.out.print(key + "  ");
+                     comparadorExcel(instruccion.get(contador).getCodop(), key);
+                }else if(tamaño<=32768){
+                    String key = "oprx16,xysp";
+                    System.out.print(key + "  ");
+                    comparadorExcel(instruccion.get(contador).getCodop(), key);
+                }else{//Valor no valido
+                     String key = "Error";
+                System.out.print(key + "  ");
+                }
+            }else if(Character.toString(temp2).matches("[0-9]")){
+                int tamaño = Integer.parseInt(operando1);
+                 if(tamaño<=16){
+                     String key = "oprx0_xysp";
+                     System.out.print(key + "  ");
+                     comparadorExcel(instruccion.get(contador).getCodop(), key);
+                 }else if(tamaño<=256){
+                     String key = "oprx9,xysp";
+                     System.out.print(key + "  ");
+                     comparadorExcel(instruccion.get(contador).getCodop(), key);
+                }else if(tamaño<=32768){
+                    String key = "oprx16,xysp";
+                    System.out.print(key + "  ");
+                    comparadorExcel(instruccion.get(contador).getCodop(), key);
+                }else{//Valor no valido
+                     String key = "Error";
+                    System.out.print(key + "  ");                
+                }
+                }else{
+                    String key = "Error";
+                    System.out.print(key + "  ");
+                }
+        }else if(Character.toString(temp3).equals("+")||Character.toString(temp4).equals("+")){
+              char temp2 = operando1.charAt(0);
+             if(Character.toString(temp2).matches("%")){
+                 String binario = operando1.substring(1);//Elimina caracteres no deseados
                  int tamaño = Integer.parseInt(binario, 2);
                  if(tamaño<=15){
                      String key = "oprx0_xysp";
@@ -554,7 +636,7 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                      System.out.print(key + "  ");
                  }
             }else if(Character.toString(temp2).matches("@")){
-                 String octal = operando1.substring(2);//Elimina caracteres no deseados
+                 String octal = operando1.substring(1);//Elimina caracteres no deseados
                  int tamaño = Integer.parseInt(octal, 8);
                  if(tamaño<=15){
                      String key = "oprx0_xysp";
@@ -573,7 +655,7 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                 System.out.print(key + "  ");
                 }
             }else if(Character.toString(temp2).equals("$")){
-                 String hexa = operando1.substring(2);//Elimina caracteres no deseados
+                 String hexa = operando1.substring(1);//Elimina caracteres no deseados
                  int tamaño = Integer.parseInt(hexa, 16);
                  if(tamaño<=15){
                      String key = "oprx0_xysp";
@@ -765,7 +847,7 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
            String[] registros = {"DIR_INIC", "CONTLOC", "VALOR"};
 
            String org = instruccion.get(1).codop + " " + instruccion.get(1).operando;
-           String regexOrg = "ORG \\$[0-9A-Fa-f]+";
+           String regexOrg = "ORG \\$[0-9A-Fa-f]+"; // *************************************************************************
 
            Pattern patternOrg = Pattern.compile(regexOrg);
 
