@@ -847,7 +847,170 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
        }
    
      }
-   }
+    }
+
+static void calcularXB(String comparador, LineaInstruccion actual, String valor, String opr2){
+       String registro="";
+       int n = 5, n2= 4;
+       
+       if(opr2.matches("[xX]")){
+           registro="00";
+       }else if(opr2.matches("[yY]")){
+           registro="01";
+       }else if(opr2.matches("[sp | SP]")){
+           registro="10";
+       }else if(opr2.matches("[pc | PC]")){
+           registro="11";
+       }else{
+           System.out.println("ERROR");
+       }
+       
+
+        switch(comparador){
+            case "5b":
+                int valorE = Integer.valueOf(valor);
+                String base= "rr0nnnnn";
+                char signo = valor.charAt(0);
+                String binario = Integer.toBinaryString(valorE);
+                
+                if(Character.toString(signo).equalsIgnoreCase("-")){
+                    
+                String bin2 = binario.substring(binario.length()-5);
+                String paso1 = base.replace("rr", registro);
+                String paso2 = paso1.replace("nnnnn", bin2);
+                int decimal = Integer.parseInt(paso2, 2);
+                String xb = Integer.toHexString(decimal);
+                
+                }else{
+                
+                String cadena = String.format("%" + n + "s", binario).replace(' ', '0');
+                String paso1 = base.replace("rr", registro);
+                String paso2 = paso1.replace("nnnnn", cadena);
+                int decimal = Integer.parseInt(paso2, 2);
+                String xb = "0"+Integer.toHexString(decimal);
+                
+                }
+                
+                break;
+                
+            case "9b":
+                signo = valor.charAt(0);
+
+                if(Character.toString(signo).equalsIgnoreCase("-")){
+                    
+                    base= "111rr000";
+                    String paso1 = base.replace("rr", registro);
+                    int decimal = Integer.parseInt(paso1, 2);
+                    String xb = Integer.toHexString(decimal);
+                    
+                }else{
+                    
+                    base= "111rr001";
+                    String paso1 = base.replace("rr", registro);
+                    int decimal = Integer.parseInt(paso1, 2);
+                    String xb = Integer.toHexString(decimal);
+                
+                }
+                
+                break;
+        
+            case "16b":
+                
+                base= "111rr010";
+                String paso1 = base.replace("rr", registro);
+                int decimal = Integer.parseInt(paso1, 2);
+                String xb = Integer.toHexString(decimal);
+                
+                break;
+            
+            case "pre":
+                
+                base= "rr10nnnn";
+                signo = valor.charAt(0);
+                valorE = Integer.valueOf(valor);
+                binario = Integer.toBinaryString(valorE);
+                
+                
+                if(Character.toString(signo).equalsIgnoreCase("-")){
+                    
+                String bin2 = binario.substring(binario.length()-4);
+                paso1 = base.replace("rr", registro);
+                String paso2 = paso1.replace("nnnn", bin2);
+                decimal = Integer.parseInt(paso2, 2);
+                xb = Integer.toHexString(decimal);
+                
+                }else{
+                
+                String cadena = String.format("%" + n2 + "s", binario).replace(' ', '0');
+                paso1 = base.replace("rr", registro);
+                String paso2 = paso1.replace("nnnn", cadena);
+                decimal = Integer.parseInt(paso2, 2);
+                xb = Integer.toHexString(decimal);
+                
+                }
+                
+                break;
+                
+            case "post":
+                
+                base= "rr11nnnn";
+                signo = valor.charAt(0);
+                valorE = Integer.valueOf(valor);
+                binario = Integer.toBinaryString(valorE);
+                
+                
+                if(Character.toString(signo).equalsIgnoreCase("-")){
+                    
+                String bin2 = binario.substring(binario.length()-4);
+                paso1 = base.replace("rr", registro);
+                String paso2 = paso1.replace("nnnn", bin2);
+                decimal = Integer.parseInt(paso2, 2);
+                xb = Integer.toHexString(decimal);
+                
+                }else{
+                
+                String cadena = String.format("%" + n2 + "s", binario).replace(' ', '0');
+                paso1 = base.replace("rr", registro);
+                String paso2 = paso1.replace("nnnn", cadena);
+                decimal = Integer.parseInt(paso2, 2);
+                xb = Integer.toHexString(decimal);
+                
+                }
+                
+                break;
+                
+            case "ABD":
+                
+                if(valor.matches("[Aa]")){
+                    
+                    base= "111rr100";
+                    paso1 = base.replace("rr", registro);
+                    decimal = Integer.parseInt(paso1, 2);
+                    xb = Integer.toHexString(decimal);
+                
+                }else if(valor.matches("[Bb]")){
+                
+                    base= "111rr101";
+                    paso1 = base.replace("rr", registro);
+                    decimal = Integer.parseInt(paso1, 2);
+                    xb = Integer.toHexString(decimal);
+                
+                }else if(valor.matches("[Dd]")){
+                    
+                    base= "111rr110";
+                    paso1 = base.replace("rr", registro);
+                    decimal = Integer.parseInt(paso1, 2);
+                    xb = Integer.toHexString(decimal);
+                
+                }else{
+                    System.out.println("ERROR");
+                }
+                
+                break;
+                
+        }//fin del switch
+   
+   }//fin de calcular xb
 
    static void calcPostByte(String comparador, LineaInstruccion actual, int valor){
         String hexa = Integer.toHexString(valor);
