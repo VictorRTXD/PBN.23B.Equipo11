@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package excelread;
 
 import org.apache.poi.ss.usermodel.*;
@@ -18,141 +13,196 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.HashMap;
+import java.util.Scanner;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
-public class ExcelRead {
+public class ExcelRead extends JFrame{
+    static private JTable table;
+    static private DefaultTableModel tableModel;
+
+    public ExcelRead() {
+        JFrame frame = new JFrame("Ejemplo JTable");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // Crear el modelo de la tabla con columnas
+        String[] columnNames = {"Etiqueta", "codop", "operando", "key", "peso", "direccionamiento", "postbyte", "contloc"};
+        tableModel = new DefaultTableModel(columnNames, 0);
+
+        // Crear la tabla con el modelo
+        table = new JTable(tableModel);
+
+        // Agregar la tabla a un JScrollPane para hacerla desplazable
+        JScrollPane scrollPane = new JScrollPane(table);
+        frame.add(scrollPane);
+
+        frame.setSize(500, 300);
+        frame.setVisible(true);
+    }
+    
 static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>();
     static int contador = 0;
     public static void main(String[] args) throws IOException {
-        String fileName = "P1ASM.asm";
+        String flag = "y";
 
-        // ** Expresiones regulares
+        while (flag.equals("y")) {
+            System.out.println("oprime 0 para default o escribe el nombre del archivo");
+            Scanner sc = new Scanner(System.in);
+            flag = sc.next();
+            String fileName;
 
-        String regexComentario = "^\\s*;.*$";
+            if (flag.equals("0"))
+                fileName = "P1ASM.asm";
+            else
+                fileName = flag;
 
-        // Expresión regular para identificar código de operación y operando
-        String regexCodigoOperacionOperando = "^\\s*([Aa.-Zz]+)\\s+(.*?)$";
+            // ** Expresiones regulares
 
-        // Expresión regular para identificar etiquetas, códigos de operación y operandos
-        String regexCodigo = "^\\s*([a-zA-Z0-9]+):\\s*([Aa.-Zz]+)\\s+(.*?)$"; 
+            String regexComentario = "^\\s*;.*$";
 
-        //Expresión regular para identificar solo etiqueta y código de operación
-        String regexEtiquetaCodigoOperacion = "^\\s*([a-zA-Z0-9]+):\\s*([Aa.-Zz]+)";
+            // Expresión regular para identificar código de operación y operando
+            String regexCodigoOperacionOperando = "^\\s*([Aa.-Zz]+)\\s+(.*?)$";
 
-        //Un solo codigo de operacion
-        String regexCodigoOperacion = "^\\s*([Aa.-Zz]+)";
+            // Expresión regular para identificar etiquetas, códigos de operación y operandos
+            String regexCodigo = "^\\s*([a-zA-Z0-9]+):\\s*([Aa.-Zz]+)\\s+(.*?)$"; 
 
-        // Compilar las expresiones regulares
-        Pattern patComentario = Pattern.compile(regexComentario);
-        Pattern patCodigo = Pattern.compile(regexCodigo);
-        Pattern patCodigoOperacionOperando = Pattern.compile(regexCodigoOperacionOperando);
-        Pattern patCodigoOperacion = Pattern.compile(regexCodigoOperacion);
-        Pattern patEtiquetaCodigoOperacion = Pattern.compile(regexEtiquetaCodigoOperacion);
+            //Expresión regular para identificar solo etiqueta y código de operación
+            String regexEtiquetaCodigoOperacion = "^\\s*([a-zA-Z0-9]+):\\s*([Aa.-Zz]+)";
 
-        /*
-        br sirve para leer el contenido del archivo y el while es para leerlo todo usando br.readLIne() y almacenamos cada linea en la variable linea */
-        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-            String linea;
-            System.out.println("Contenido original del archivo:");
-            while ((linea = br.readLine()) != null){
-                Matcher matcherComentario = patComentario.matcher(linea);
-                Matcher matcherCodigo = patCodigo.matcher(linea);
-                Matcher matcherCodigoOperacionOperando = patCodigoOperacionOperando.matcher(linea);
-                Matcher matcherCodigoOperacion= patCodigoOperacion.matcher(linea);
-                Matcher matcherEtiquetaCodigoOperacion = patEtiquetaCodigoOperacion.matcher(linea);
-                
-                //String etiqueta=null, codigoOperacion=null, operando=null;
-    
-                if (matcherComentario.matches()) {
-                    if (linea.length () > 80){
-                        System.out.println("Exceso de caracteres en: "+linea);
-                    } else {
-                    // Es un comentario
-                        System.out.println("Comentario: " + linea);
-                        System.out.println("");}
-                } else if (matcherCodigo.matches()) {
-                    // Es una línea de código con etiqueta, código de operación y operando
-                    String etiqueta = matcherCodigo.group(1);
-                    String codigoOperacion = matcherCodigo.group(2);
-                    String operando = matcherCodigo.group(3);
-                    //instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, null));
+            //Un solo codigo de operacion
+            String regexCodigoOperacion = "^\\s*([Aa.-Zz]+)";
+
+            // Compilar las expresiones regulares
+            Pattern patComentario = Pattern.compile(regexComentario);
+            Pattern patCodigo = Pattern.compile(regexCodigo);
+            Pattern patCodigoOperacionOperando = Pattern.compile(regexCodigoOperacionOperando);
+            Pattern patCodigoOperacion = Pattern.compile(regexCodigoOperacion);
+            Pattern patEtiquetaCodigoOperacion = Pattern.compile(regexEtiquetaCodigoOperacion);
+
+            /*
+            br sirve para leer el contenido del archivo y el while es para leerlo todo usando br.readLIne() y almacenamos cada linea en la variable linea */
+            try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+                String linea;
+                System.out.println("Contenido original del archivo:");
+                while ((linea = br.readLine()) != null){
+                    Matcher matcherComentario = patComentario.matcher(linea);
+                    Matcher matcherCodigo = patCodigo.matcher(linea);
+                    Matcher matcherCodigoOperacionOperando = patCodigoOperacionOperando.matcher(linea);
+                    Matcher matcherCodigoOperacion= patCodigoOperacion.matcher(linea);
+                    Matcher matcherEtiquetaCodigoOperacion = patEtiquetaCodigoOperacion.matcher(linea);
+                    
+                    //String etiqueta=null, codigoOperacion=null, operando=null;
+        
+                    if (matcherComentario.matches()) {
+                        if (linea.length () > 80){
+                            System.out.println("Exceso de caracteres en: "+linea);
+                        } else {
+                        // Es un comentario
+                            System.out.println("Comentario: " + linea);
+                            System.out.println("");}
+                    } else if (matcherCodigo.matches()) {
+                        // Es una línea de código con etiqueta, código de operación y operando
+                        String etiqueta = matcherCodigo.group(1);
+                        String codigoOperacion = matcherCodigo.group(2);
+                        String operando = matcherCodigo.group(3);
+                        //instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, null));
+                            if(etiqueta.length()>8 || codigoOperacion.length()>5){
+                                System.out.println("Exceso de caracteres en: "+linea);
+                            }else{
+                                instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, 0, "0", "0", "0"));}
+                        
+                    } else if(matcherCodigoOperacionOperando.matches()) {
+                        // Es una línea con código de operación y operando
+                        String etiqueta = "-";
+                        String codigoOperacion = matcherCodigoOperacionOperando.group(1);
+                        String operando = matcherCodigoOperacionOperando.group(2);
+                        //instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, null));
+                        if(codigoOperacion.length()>5){
+                            System.out.println("Exceso de caracteres en: "+linea);
+                            System.out.println("");
+                        }else{
+                        instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, 0, "0", "0", "0"));}
+                        
+                    } else if(matcherCodigoOperacion.matches()) {
+                        // Es una línea con código de operación y operando
+                        String etiqueta = "-";
+                        String codigoOperacion = matcherCodigoOperacion.group(1);
+                        String operando = "-";
+                        //instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, null));
+                        if(codigoOperacion.length()>5){
+                            System.out.println("Exceso de caracteres en: "+linea);
+                            System.out.println("");
+                        }else{
+                        instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, 0, "0", "0", "0"));}
+                        
+                    }else if(matcherEtiquetaCodigoOperacion.matches()){
+                        String etiqueta = matcherEtiquetaCodigoOperacion.group(1);
+                        String codigoOperacion = matcherEtiquetaCodigoOperacion.group(2);
+                        String operando = "-";
+                        //instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, null));
                         if(etiqueta.length()>8 || codigoOperacion.length()>5){
                             System.out.println("Exceso de caracteres en: "+linea);
+                            System.out.println("");
                         }else{
                             instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, 0, "0", "0", "0"));}
-                    
-                } else if(matcherCodigoOperacionOperando.matches()) {
-                    // Es una línea con código de operación y operando
-                    String etiqueta = "-";
-                    String codigoOperacion = matcherCodigoOperacionOperando.group(1);
-                    String operando = matcherCodigoOperacionOperando.group(2);
-                    //instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, null));
-                    if(codigoOperacion.length()>5){
-                        System.out.println("Exceso de caracteres en: "+linea);
+                        } else {
+                        // No coincide con ninguna de las expresiones regulares
+                        System.out.println("Error de Sintaxis: " + linea);
                         System.out.println("");
-                    }else{
-                    instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, 0, "0", "0", "0"));}
-                    
-                } else if(matcherCodigoOperacion.matches()) {
-                    // Es una línea con código de operación y operando
-                    String etiqueta = "-";
-                    String codigoOperacion = matcherCodigoOperacion.group(1);
-                    String operando = "-";
-                    //instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, null));
-                    if(codigoOperacion.length()>5){
-                        System.out.println("Exceso de caracteres en: "+linea);
-                        System.out.println("");
-                    }else{
-                    instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, 0, "0", "0", "0"));}
-                    
-                }else if(matcherEtiquetaCodigoOperacion.matches()){
-                    String etiqueta = matcherEtiquetaCodigoOperacion.group(1);
-                    String codigoOperacion = matcherEtiquetaCodigoOperacion.group(2);
-                    String operando = "-";
-                    //instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, null));
-                    if(etiqueta.length()>8 || codigoOperacion.length()>5){
-                        System.out.println("Exceso de caracteres en: "+linea);
-                        System.out.println("");
-                    }else{
-                        instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, 0, "0", "0", "0"));}
-                    } else {
-                    // No coincide con ninguna de las expresiones regulares
-                    System.out.println("Error de Sintaxis: " + linea);
-                    System.out.println("");
+                    }
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+            
+            System.out.println("ETIQUETA CODOP OPERANDO KEY PESO ADDRESS FORM_POSTBYTE");
+            
+            mostrarArray(); 
+            SwingUtilities.invokeLater(() -> {
+                ExcelRead ventana = new ExcelRead();
+                ventana.mostrarArray2();
+            });
+        
+            // proyecto 3
+            calcularContloc();
+            insertarDatosList();
+            insertarDatosTabism();
+
+            System.out.println("quieres continuar? y/n");
+            flag = sc.next();
         }
-        System.out.println("ETIQUETA CODOP OPERANDO KEY PESO ADDRESS FORM_POSTBYTE");
-       mostrarArray(); 
-       
-        // proyecto 3
-        calcularContloc();
+    }
+    
+    public void mostrarArray2() {
+        // Simulación de datos con un bucle for
+        for (int i=0; i<=instruccion.size()-1; i++) {
+            contador = i;
+            
+            Object[] rowData = {
+                instruccion.get(i).etiqueta,
+                instruccion.get(i).codop,
+                instruccion.get(i).operando,
+                instruccion.get(i).key,
+                String.valueOf(instruccion.get(i).peso),
+                instruccion.get(i).direc,
+                instruccion.get(i).postByte,
+                instruccion.get(i).contloc
+            };
 
-        // for (int i = 0; i < instruccion.size(); i++) {
-        //     System.out.println("soy el peso " + instruccion.get(i).peso);
-        //     System.out.println(" ");
-        //     System.out.println("soy el contloc " + instruccion.get(i).contloc);
-        //     System.out.println(" ");
-        // }
-        //archivo .lst
-        insertarDatosList();
-        //archivo TABSIM.txt
-        insertarDatosTabism();
-
-        //proyecto 4
-
+            tableModel.addRow(rowData);
+        }
     }
     
     static void mostrarArray(){
     for(int i=0; i<=instruccion.size()-1; i++){
         contador = i;
-        System.out.print(instruccion.get(i).getEtiqueta()+"  "+instruccion.get(i).getCodop()+"  "+instruccion.get(i).getOperando()+ "  ");
+        System.out.print(instruccion.get(i).getEtiqueta()+"  "+instruccion.get(i).getCodop()+"  "+instruccion.get(i).getOperando()+ "  " + " " + instruccion.get(i).contloc);
         notacion(instruccion.get(i).getCodop(), instruccion.get(i).getOperando());
         System.out.println("");
-        System.out.println("-------------------------------");
         }
     }
+    
+    
     
     static void notacion(String codop, String notacion){
         LineaInstruccion actual = instruccion.get(contador);
@@ -363,13 +413,13 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                         String key = "[oprx16,xysp]";
                         System.out.print(key + "  ");
                         comparadorExcel(instruccion.get(contador).getCodop(), key);
-                    } //atencion aqui ****************************************************************************************
+                    }
                 }else if(Character.toString(tem).equals("-")){
                     separarOperandos(notacion, comparador);
                 }else if(Character.toString(tem).matches("[0-9]")){
                     separarOperandos(notacion, comparador);
                 }else if(Character.toString(tem).matches("[@%\\$?]")){
-                    separarOperandos(notacion, comparador); // *********************************************************************
+                    separarOperandos(notacion, comparador);
                 }else{
                     System.out.println("Instruccion no valida");
                 }
@@ -383,7 +433,7 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
 
                         int pesoBytes = aux.length(); //Saca la longitud del conjunto de elementos y le asigna un byte
                         double pesoDouble = (double) pesoBytes;
-                        instruccion.get(contador).peso = pesoDouble; //atencion aqui ***************************************
+                        instruccion.get(contador).peso = pesoDouble;
 
                         System.out.print(pesoBytes + "  "); //imprimir para confirmar
                     }else{//Si no inicia con comillas
@@ -440,7 +490,6 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
     }
     
     static void separarOperandos(String operandos, String comparador){
-        System.out.print("Entré a separa operandos");
         //String operandosOriginal = operandos;
         String[] aOperandos = operandos.split(",");
         String operando1 = aOperandos[0];
@@ -452,7 +501,7 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
         char temp3 = operando2.charAt(0);
         char temp4 = operando2.charAt(idx);
         
-        if(Character.toString(tem).equals("-")){
+        if(Character.toString(tem).equals("-")||Character.toString(temp3).equals("-")||Character.toString(temp4).equals("-")){
               char temp2 = operando1.charAt(1);
              if(Character.toString(temp2).matches("%")){
                  String binario = operando1.substring(2);//Elimina caracteres no deseados
@@ -522,168 +571,6 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                      System.out.print(key + "  ");
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
                 }else if(tamaño<=32768){
-                    String key = "oprx16,xysp";
-                    System.out.print(key + "  ");
-                    comparadorExcel(instruccion.get(contador).getCodop(), key);
-                }else{//Valor no valido
-                     String key = "Error";
-                    System.out.print(key + "  ");                
-                }
-                }else{
-                    String key = "Error";
-                    System.out.print(key + "  ");
-                }
-        }else if(Character.toString(temp3).equals("-")||Character.toString(temp4).equals("-")){
-            char temp2 = operando1.charAt(0);
-             if(Character.toString(temp2).matches("%")){
-                 String binario = operando1.substring(1);//Elimina caracteres no deseados
-                 int tamaño = Integer.parseInt(binario, 2);
-                 if(tamaño<=16){
-                     String key = "oprx0_xysp";
-                     System.out.print(key + "  ");
-                     comparadorExcel(instruccion.get(contador).getCodop(), key);
-                 }else if(tamaño<=256){
-                     String key = "oprx9,xysp";
-                     System.out.print(key + "  ");
-                     comparadorExcel(instruccion.get(contador).getCodop(), key);
-                }else if(tamaño<=32768){
-                    String key = "oprx16,xysp";
-                    System.out.print(key + "  ");
-                    comparadorExcel(instruccion.get(contador).getCodop(), key);
-                }else{//Valor no valido
-                     String key = "Error";
-                     System.out.print(key + "  ");
-                 }
-            }else if(Character.toString(temp2).matches("@")){
-                 String octal = operando1.substring(1);//Elimina caracteres no deseados
-                 int tamaño = Integer.parseInt(octal, 8);
-                 if(tamaño<=16){
-                     String key = "oprx0_xysp";
-                     System.out.print(key + "  ");
-                     comparadorExcel(instruccion.get(contador).getCodop(), key);
-                 }else if(tamaño<=256){
-                     String key = "oprx9,xysp";
-                     System.out.print(key + "  ");
-                     comparadorExcel(instruccion.get(contador).getCodop(), key);
-                }else if(tamaño<=32768){
-                    String key = "oprx16,xysp";
-                    System.out.print(key + "  ");
-                    comparadorExcel(instruccion.get(contador).getCodop(), key);
-                }else{//Valor no valido
-                     String key = "Error";
-                System.out.print(key + "  ");
-                }
-            }else if(Character.toString(temp2).equals("$")){
-                 String hexa = operando1.substring(1);//Elimina caracteres no deseados
-                 int tamaño = Integer.parseInt(hexa, 16);
-                 if(tamaño<=16){
-                     String key = "oprx0_xysp";
-                     System.out.print(key + "  ");
-                     comparadorExcel(instruccion.get(contador).getCodop(), key);
-                 }else if(tamaño<=256){
-                     String key = "oprx9,xysp";
-                     System.out.print(key + "  ");
-                     comparadorExcel(instruccion.get(contador).getCodop(), key);
-                }else if(tamaño<=32768){
-                    String key = "oprx16,xysp";
-                    System.out.print(key + "  ");
-                    comparadorExcel(instruccion.get(contador).getCodop(), key);
-                }else{//Valor no valido
-                     String key = "Error";
-                System.out.print(key + "  ");
-                }
-            }else if(Character.toString(temp2).matches("[0-9]")){
-                int tamaño = Integer.parseInt(operando1);
-                 if(tamaño<=16){
-                     String key = "oprx0_xysp";
-                     System.out.print(key + "  ");
-                     comparadorExcel(instruccion.get(contador).getCodop(), key);
-                 }else if(tamaño<=256){
-                     String key = "oprx9,xysp";
-                     System.out.print(key + "  ");
-                     comparadorExcel(instruccion.get(contador).getCodop(), key);
-                }else if(tamaño<=32768){
-                    String key = "oprx16,xysp";
-                    System.out.print(key + "  ");
-                    comparadorExcel(instruccion.get(contador).getCodop(), key);
-                }else{//Valor no valido
-                     String key = "Error";
-                    System.out.print(key + "  ");                
-                }
-                }else{
-                    String key = "Error";
-                    System.out.print(key + "  ");
-                }
-        }else if(Character.toString(temp3).equals("+")||Character.toString(temp4).equals("+")){
-              char temp2 = operando1.charAt(0);
-             if(Character.toString(temp2).matches("%")){
-                 String binario = operando1.substring(1);//Elimina caracteres no deseados
-                 int tamaño = Integer.parseInt(binario, 2);
-                 if(tamaño<=15){
-                     String key = "oprx0_xysp";
-                     System.out.print(key + "  ");
-                     comparadorExcel(instruccion.get(contador).getCodop(), key);
-                 }else if(tamaño<=255){
-                     String key = "oprx9,xysp";
-                     System.out.print(key + "  ");
-                     comparadorExcel(instruccion.get(contador).getCodop(), key);
-                }else if(tamaño<=65535){
-                    String key = "oprx16,xysp";
-                    System.out.print(key + "  ");
-                    comparadorExcel(instruccion.get(contador).getCodop(), key);
-                }else{//Valor no valido
-                     String key = "Error";
-                     System.out.print(key + "  ");
-                 }
-            }else if(Character.toString(temp2).matches("@")){
-                 String octal = operando1.substring(1);//Elimina caracteres no deseados
-                 int tamaño = Integer.parseInt(octal, 8);
-                 if(tamaño<=15){
-                     String key = "oprx0_xysp";
-                     System.out.print(key + "  ");
-                     comparadorExcel(instruccion.get(contador).getCodop(), key);
-                 }else if(tamaño<=255){
-                     String key = "oprx9,xysp";
-                     System.out.print(key + "  ");
-                     comparadorExcel(instruccion.get(contador).getCodop(), key);
-                }else if(tamaño<=65535){
-                    String key = "oprx16,xysp";
-                    System.out.print(key + "  ");
-                    comparadorExcel(instruccion.get(contador).getCodop(), key);
-                }else{//Valor no valido
-                     String key = "Error";
-                System.out.print(key + "  ");
-                }
-            }else if(Character.toString(temp2).equals("$")){
-                 String hexa = operando1.substring(1);//Elimina caracteres no deseados
-                 int tamaño = Integer.parseInt(hexa, 16);
-                 if(tamaño<=15){
-                     String key = "oprx0_xysp";
-                     System.out.print(key + "  ");
-                     comparadorExcel(instruccion.get(contador).getCodop(), key);
-                 }else if(tamaño<=255){
-                     String key = "oprx9,xysp";
-                     System.out.print(key + "  ");
-                     comparadorExcel(instruccion.get(contador).getCodop(), key);
-                }else if(tamaño<=65535){
-                    String key = "oprx16,xysp";
-                    System.out.print(key + "  ");
-                    comparadorExcel(instruccion.get(contador).getCodop(), key);
-                }else{//Valor no valido
-                     String key = "Error";
-                System.out.print(key + "  ");
-                }
-            }else if(Character.toString(temp2).matches("[0-9]")){
-                int tamaño = Integer.parseInt(operando1);
-                 if(tamaño<=15){
-                     String key = "oprx0_xysp";
-                     System.out.print(key + "  ");
-                     comparadorExcel(instruccion.get(contador).getCodop(), key);
-                 }else if(tamaño<=255){
-                     String key = "oprx9,xysp";
-                     System.out.print(key + "  ");
-                     comparadorExcel(instruccion.get(contador).getCodop(), key);
-                }else if(tamaño<=65535){
                     String key = "oprx16,xysp";
                     System.out.print(key + "  ");
                     comparadorExcel(instruccion.get(contador).getCodop(), key);
@@ -812,6 +699,7 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
 
                     instruccion.get(contador).peso = pesoTotal;
                     instruccion.get(contador).direc = addrCell.toString();
+                    instruccion.get(contador).key = key;
 
                     //cambios proyecto 4
 
@@ -847,7 +735,7 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
            String[] registros = {"DIR_INIC", "CONTLOC", "VALOR"};
 
            String org = instruccion.get(1).codop + " " + instruccion.get(1).operando;
-           String regexOrg = "ORG \\$[0-9A-Fa-f]+"; // *************************************************************************
+           String regexOrg = "ORG \\$[0-9A-Fa-f]+";
 
            Pattern patternOrg = Pattern.compile(regexOrg);
 
@@ -979,26 +867,78 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                }
                }
        }else if(instruccion.get(i).codop.equals("EQU")){//si la instruccion es un EQU
-           char tem = instruccion.get(i).operando.charAt(0);//variable temporal para comparar 
-           if(Character.toString(tem).matches("%")){
-                String binario = instruccion.get(i).operando.substring(1);//Elimina caracteres no deseados
-                int numero = Integer.parseInt(binario, 2);//convierte el binario a decimal
-                String contloc = Integer.toHexString(numero);//luego lo cambia a hexadecimal y lo guarda en un string
-                auxiliar2.setContloc(contloc);//guarda el contloc en la linea actual
-              }else if(Character.toString(tem).equals("@")){
-                String octal = instruccion.get(i).operando.substring(1);//Elimina caracteres no deseados
-                int numero = Integer.parseInt(octal, 8);//convierte el octal a decimal
-                String contloc = Integer.toHexString(numero);//luego lo cambia a hexadecimal y lo guarda en un string
-                auxiliar2.setContloc(contloc);//guarda el contloc en la linea actual
-              }else if(Character.toString(tem).equals("$")){
-                String hexa = instruccion.get(i).operando.substring(1);//Elimina caracteres no deseados
-                auxiliar2.setContloc(hexa);//guarda el contloc en la linea actual
-               }else{
-                String decimal = instruccion.get(i).operando;//Elimina caracteres no deseados
-                int numero = Integer.parseInt(decimal);//convierte el string a int decimal
-                String contloc = Integer.toHexString(numero);//luego lo cambia a hexadecimal y lo guarda en un string
-                auxiliar2.setContloc(contloc);//guarda el contloc en la linea actual
-               }
+        char tem = instruccion.get(i).operando.charAt(0);//variable temporal para comparar
+        if(Character.toString(tem).matches("#")){//si el primer digito es un #
+            char tem2 = instruccion.get(i).operando.charAt(1);//variable temporal para comparar
+            if(Character.toString(tem2).matches("%")){//si el segundodigito es un %
+         String binario = instruccion.get(i).operando.substring(2);//Elimina caracteres no deseados
+         int numero = Integer.parseInt(binario, 2); //convierte el binario a decimal
+         String contloc = Integer.toHexString(numero); //luego lo cambia a hexadecimal y lo guarda en un string
+         auxiliar.setContloc(contloc); //guarda el contloc en la siguiente linea
+       }else if(Character.toString(tem2).equals("@")){
+         String octal = instruccion.get(i).operando.substring(2);//Elimina caracteres no deseados
+         int numero = Integer.parseInt(octal, 8); //convierte el octal a decimal
+         String contloc = Integer.toHexString(numero);//luego lo cambia a hexadecimal y lo guarda en un string
+         auxiliar.setContloc(contloc);//guarda el contloc en la siguiente linea
+       }else if(Character.toString(tem2).equals("$")){
+         String hexa = instruccion.get(i).operando.substring(2);//Elimina caracteres no deseados
+         auxiliar.setContloc(hexa); //guarda el valor en la siguiente linea
+        }else{
+         String decimal = instruccion.get(i).operando.substring(1);//Elimina caracteres no deseados
+         int numero = Integer.parseInt(decimal); //convierte el valor a tipo int
+         String contloc = Integer.toHexString(numero); //luego lo convierte a hexadecimal y lo gurda en un string
+         auxiliar.setContloc(contloc);//guarda el contloc en la siguiente linea
+        }
+        }else{
+            if(Character.toString(tem).matches("%")){
+         String binario = instruccion.get(i).operando.substring(1);//Elimina caracteres no deseados
+         int numero = Integer.parseInt(binario, 2);//convierte el binario a decimal
+         String contloc = Integer.toHexString(numero);//luego lo cambia a hexadecimal y lo guarda en un string
+         auxiliar.setContloc(contloc);//guarda el contloc en la siguiente linea
+       }else if(Character.toString(tem).equals("@")){
+         String octal = instruccion.get(i).operando.substring(1);//Elimina caracteres no deseados
+         int numero = Integer.parseInt(octal, 8);//convierte el octal a decimal
+         String contloc = Integer.toHexString(numero);//luego lo cambia a hexadecimal y lo guarda en un string
+         auxiliar.setContloc(contloc);//guarda el contloc en la siguiente linea
+       }else if(Character.toString(tem).equals("$")){
+         String hexa = instruccion.get(i).operando.substring(1);//Elimina caracteres no deseados
+         auxiliar.setContloc(hexa);//guarda el contloc en la siguiente linea
+        }else{
+         String decimal = instruccion.get(i).operando;//Elimina caracteres no deseados
+         int numero = Integer.parseInt(decimal);//convierte el valor a tipo int
+         String contloc = Integer.toHexString(numero);//luego lo convierte a hexadecimal y lo gurda en un string
+         auxiliar.setContloc(contloc);//guarda el contloc en la siguiente linea
+        }
+        }
+}else if(instruccion.get(i).codop.equals("EQU")){//si la instruccion es un EQU
+    char tem = instruccion.get(i).operando.charAt(0);//variable temporal para comparar 
+    if(Character.toString(tem).matches("%")){
+         String nextCont = auxiliar2.getContloc(); //los convertimos a hexadecimal y los convertimos a string
+         auxiliar.setContloc(nextCont);
+         String binario = instruccion.get(i).operando.substring(1);//Elimina caracteres no deseados
+         int numero = Integer.parseInt(binario, 2);//convierte el binario a decimal
+         String contloc = Integer.toHexString(numero);//luego lo cambia a hexadecimal y lo guarda en un string
+         auxiliar2.setContloc(contloc);//guarda el contloc en la linea actual
+       }else if(Character.toString(tem).equals("@")){
+         String nextCont = auxiliar2.getContloc(); //los convertimos a hexadecimal y los convertimos a string
+         auxiliar.setContloc(nextCont);
+         String octal = instruccion.get(i).operando.substring(1);//Elimina caracteres no deseados
+         int numero = Integer.parseInt(octal, 8);//convierte el octal a decimal
+         String contloc = Integer.toHexString(numero);//luego lo cambia a hexadecimal y lo guarda en un string
+         auxiliar2.setContloc(contloc);//guarda el contloc en la linea actual
+       }else if(Character.toString(tem).equals("$")){
+         String nextCont = auxiliar2.getContloc(); //los convertimos a hexadecimal y los convertimos a string
+         auxiliar.setContloc(nextCont);
+         String hexa = instruccion.get(i).operando.substring(1);//Elimina caracteres no deseados
+         auxiliar2.setContloc(hexa);//guarda el contloc en la linea actual
+        }else{
+         String nextCont = auxiliar2.getContloc(); //los convertimos a hexadecimal y los convertimos a string
+         auxiliar.setContloc(nextCont);
+         String decimal = instruccion.get(i).operando;//Elimina caracteres no deseados
+         int numero = Integer.parseInt(decimal);//convierte el string a int decimal
+         String contloc = Integer.toHexString(numero);//luego lo cambia a hexadecimal y lo guarda en un string
+         auxiliar2.setContloc(contloc);//guarda el contloc en la linea actual
+        }
        }else if (instruccion.get(i).codop.equals("END")){
                System.out.println("no hacer nada");    
        }else{
@@ -1010,7 +950,216 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
        }
    
      }
-   }
+    }
+
+    static void calcularXB(String comparador, LineaInstruccion actual, String valor, String opr2){
+       String registro="";
+       int n = 5, n2= 4;
+       
+       if(opr2.matches("[xX]") || opr2.equals("-X") || opr2.equals("X-") || opr2.equals("+X") || opr2.equals("X+")){
+           registro="00";
+       }else if(opr2.matches("[yY]")|| opr2.equals("-Y") || opr2.equals("Y-") || opr2.equals("+Y") || opr2.equals("Y+")){
+           registro="01";
+       }else if(opr2.matches("[sp | SP]") || opr2.equals("-SP") || opr2.equals("SP-") || opr2.equals("+SP") || opr2.equals("SP+")){
+           registro="10";
+       }else if(opr2.matches("[pc | PC]")){
+           registro="11";
+       }else{
+           System.out.println("ERROR");
+       }
+       
+
+        switch(comparador){
+            case "5b":
+                int valorE = Integer.valueOf(valor);
+                String base= "rr0nnnnn";
+                char signo = valor.charAt(0);
+                String binario = Integer.toBinaryString(valorE);
+                
+                if(Character.toString(signo).equals("-")){
+                    
+                String bin2 = binario.substring(binario.length()-5);
+                String paso1 = base.replace("rr", registro);
+                String paso2 = paso1.replace("nnnnn", bin2);
+                int decimal = Integer.parseInt(paso2, 2);
+                String xb = Integer.toHexString(decimal);
+                String cambio = actual.getForma().replace("xb", xb);
+                actual.setForma(cambio);
+                
+                }else{
+                
+                String cadena = String.format("%" + n + "s", binario).replace(' ', '0');
+                String paso1 = base.replace("rr", registro);
+                String paso2 = paso1.replace("nnnnn", cadena);
+                int decimal = Integer.parseInt(paso2, 2);
+                String xb = "0"+Integer.toHexString(decimal);
+                String cambio = actual.getForma().replace("xb", xb);
+                actual.setForma(cambio);
+                
+                }
+                
+                break;
+                
+            case "9b":
+                signo = valor.charAt(0);
+
+                if(Character.toString(signo).equals("-")){
+                    
+                    base= "111rr000";
+                    String paso1 = base.replace("rr", registro);
+                    int decimal = Integer.parseInt(paso1, 2);
+                    String xb = Integer.toHexString(decimal);
+                    String cambio = actual.getForma().replace("xb", xb);
+                    actual.setForma(cambio);
+                    
+                }else{
+                    
+                    base= "111rr001";
+                    String paso1 = base.replace("rr", registro);
+                    int decimal = Integer.parseInt(paso1, 2);
+                    String xb = Integer.toHexString(decimal);
+                    String cambio = actual.getForma().replace("xb", xb);
+                    actual.setForma(cambio);
+                
+                }
+                
+                break;
+        
+            case "16b":
+                
+                base= "111rr010";
+                String paso1 = base.replace("rr", registro);
+                int decimal = Integer.parseInt(paso1, 2);
+                String xb = Integer.toHexString(decimal);
+                String cambio = actual.getForma().replace("xb", xb);
+                actual.setForma(cambio);
+                
+                break;
+            
+            case "pre":
+                
+                base= "rr10nnnn";
+                signo = valor.charAt(0);
+                valorE = Integer.valueOf(valor);
+                binario = Integer.toBinaryString(valorE);
+                
+                
+                if(Character.toString(signo).equals("-")){
+                    
+                String bin2 = binario.substring(binario.length()-4);
+                paso1 = base.replace("rr", registro);
+                String paso2 = paso1.replace("nnnn", bin2);
+                decimal = Integer.parseInt(paso2, 2);
+                xb = Integer.toHexString(decimal);
+                cambio = actual.getForma().replace("xb", xb);
+                actual.setForma(cambio);
+                
+                }else{
+                
+                String cadena = String.format("%" + n2 + "s", binario).replace(' ', '0');
+                paso1 = base.replace("rr", registro);
+                String paso2 = paso1.replace("nnnn", cadena);
+                decimal = Integer.parseInt(paso2, 2);
+                xb = Integer.toHexString(decimal);
+                cambio = actual.getForma().replace("xb", xb);
+                actual.setForma(cambio);
+                
+                }
+                
+                break;
+                
+            case "post":
+                
+                base= "rr11nnnn";
+                signo = valor.charAt(0);
+                valorE = Integer.valueOf(valor);
+                binario = Integer.toBinaryString(valorE);
+                
+                
+                if(Character.toString(signo).equalsIgnoreCase("-")){
+                    
+                String bin2 = binario.substring(binario.length()-4);
+                paso1 = base.replace("rr", registro);
+                String paso2 = paso1.replace("nnnn", bin2);
+                decimal = Integer.parseInt(paso2, 2);
+                xb = Integer.toHexString(decimal);
+                cambio = actual.getForma().replace("xb", xb);
+                actual.setForma(cambio);
+                
+                }else{
+                
+                String cadena = String.format("%" + n2 + "s", binario).replace(' ', '0');
+                paso1 = base.replace("rr", registro);
+                String paso2 = paso1.replace("nnnn", cadena);
+                decimal = Integer.parseInt(paso2, 2);
+                xb = Integer.toHexString(decimal);
+                cambio = actual.getForma().replace("xb", xb);
+                actual.setForma(cambio);
+                
+                }
+                
+                break;
+                
+            case "ABD":
+                
+                if(valor.matches("[Aa]")){
+                    
+                    base= "111rr100";
+                    paso1 = base.replace("rr", registro);
+                    decimal = Integer.parseInt(paso1, 2);
+                    xb = Integer.toHexString(decimal);
+                    cambio = actual.getForma().replace("xb", xb);
+                    actual.setForma(cambio);
+                
+                }else if(valor.matches("[Bb]")){
+                
+                    base= "111rr101";
+                    paso1 = base.replace("rr", registro);
+                    decimal = Integer.parseInt(paso1, 2);
+                    xb = Integer.toHexString(decimal);
+                    cambio = actual.getForma().replace("xb", xb);
+                    actual.setForma(cambio);
+                
+                }else if(valor.matches("[Dd]")){
+                    
+                    base= "111rr110";
+                    paso1 = base.replace("rr", registro);
+                    decimal = Integer.parseInt(paso1, 2);
+                    xb = Integer.toHexString(decimal);
+                    cambio = actual.getForma().replace("xb", xb);
+                    actual.setForma(cambio);
+                
+                }else{
+                    System.out.println("ERROR");
+                }
+                
+                break;
+                
+            case "DIDX":
+                
+                base= "111rr111";
+                paso1 = base.replace("rr", registro);
+                decimal = Integer.parseInt(paso1, 2);
+                xb = Integer.toHexString(decimal);
+                cambio = actual.getForma().replace("xb", xb);
+                actual.setForma(cambio);
+                
+                break;
+                
+            case "16IDX":
+                
+                base= "111rr011";
+                paso1 = base.replace("rr", registro);
+                decimal = Integer.parseInt(paso1, 2);
+                xb = Integer.toHexString(decimal);
+                cambio = actual.getForma().replace("xb", xb);
+                actual.setForma(cambio);
+                
+                break;
+                
+        }//fin del switch
+   
+   }//fin de calcular xb
 
    static void calcPostByte(String comparador, LineaInstruccion actual, int valor){
         String hexa = Integer.toHexString(valor);
@@ -1099,83 +1248,111 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                 }
                 
                 break;//fin de los extendidos  
+
+            case "esIndexado5Bits":
+                if (hexa.length() == 1) {
+                    String nuevo = "0" + hexa;
+                    String cambio = actual.getForma().replace("xb", nuevo);
+                    actual.setPostByte(cambio);
+                } else {
+                    String cambio = actual.getForma().replace("xb", hexa);
+                    actual.setPostByte(cambio);
+                }
+                break;
+
+            case "esIndexado9Bits":
+                if (hexa.length() == 3) {
+                    String nuevo = "0" + hexa;
+                    String xb = nuevo.substring(2, 4);
+                    String ff = nuevo.substring(0, 2);
+                    String cambio = actual.getForma().replace("xb", xb);
+                    String cambio2 = cambio.replace("ff", ff);
+                    actual.setPostByte(cambio2);
+                } else {
+                    String xb = hexa.substring(2, 4);
+                    String ff = hexa.substring(0, 2);
+                    String cambio = actual.getForma().replace("xb", xb);
+                    String cambio2 = cambio.replace("ff", ff);
+                    actual.setPostByte(cambio2);
+                }
+                break;
+                
+            case "esIndexado16Bits":
+                if (hexa.length() == 5) {
+                    String nuevo = "0" + hexa;
+                    String xb = nuevo.substring(4, 6);
+                    String ee = nuevo.substring(2, 4);
+                    String ff = nuevo.substring(0, 2);
+                    String cambio = actual.getForma().replace("xb", xb);
+                    String cambio2 = cambio.replace("ee", ee);
+                    String cambio3 = cambio.replace("ff", ff);
+                    actual.setPostByte(cambio3);
+            } else {
+                    String xb = hexa.substring(4, 6);
+                    String ee = hexa.substring(2, 4);
+                    String ff = hexa.substring(0, 2);
+                    String cambio = actual.getForma().replace("xb", xb);
+                    String cambio2 = cambio.replace("ee", ee);
+                    String cambio3 = cambio.replace("ff", ff);
+                    actual.setPostByte(cambio3);
+                }
+                break;
         }
     }
 
-    static void calcularXB(String comparador, LineaInstruccion actual, String valor, String opr2){
-       String registro="";
-       int n = 5, n2= 4;
-       
-       if(opr2.matches("[xX]")){
-           registro="00";
-       }else if(opr2.matches("[yY]")){
-           registro="01";
-       }else if(opr2.matches("[sp | SP]")){
-           registro="10";
-       }else if(opr2.matches("[pc | PC]")){
-           registro="11";
-       }else{
-           System.out.println("ERROR");
-       }
-       
+    static void calcularXb2(String temp1, String temp2, String valor, LineaInstruccion actual) {
+        String operando = temp1 + ',' + temp2;
+        Integer validador = Integer.parseInt(temp1);
+        String size = "";
+        try {
+            // Ruta del archivo Excel
+            String archivoExcel = "Salvation.Tabop.xlsx";
 
-        switch(comparador){
-            case "5b":
-                int valorE = Integer.valueOf(valor);
-                String base= "rr0nnnnn";
-                char signo = valor.charAt(0);
-                String binario = Integer.toBinaryString(valorE);
-                
-                if(Character.toString(signo).equalsIgnoreCase("-")){
-                    
-                String bin2 = binario.substring(binario.length()-5);
-                String paso1 = base.replace("rr", registro);
-                String paso2 = paso1.replace("nnnnn", bin2);
-                int decimal = Integer.parseInt(paso2, 2);
-                String xb = Integer.toHexString(decimal);
-                
-                }else{
-                
-                String cadena = String.format("%" + n + "s", binario).replace(' ', '0');
-                String paso1 = base.replace("rr", registro);
-                String paso2 = paso1.replace("nnnnn", cadena);
-                int decimal = Integer.parseInt(paso2, 2);
-                String xb = "0"+Integer.toHexString(decimal);
-                
-                }
-                
-                break;
-                
-            case "9b":
-                signo = valor.charAt(0);
+            // Crear un flujo de entrada para el archivo Excel
+            FileInputStream fis = new FileInputStream(new File(archivoExcel));
 
-                if(Character.toString(signo).equalsIgnoreCase("-")){
-                    
-                    base= "111rr000";
-                    String paso1 = base.replace("rr", registro);
-                    int decimal = Integer.parseInt(paso1, 2);
-                    String xb = Integer.toHexString(decimal);
-                    
-                }else{
-                    
-                    base= "111rr001";
-                    String paso1 = base.replace("rr", registro);
-                    int decimal = Integer.parseInt(paso1, 2);
-                    String xb = Integer.toHexString(decimal);
-                
-                }
-                
-                break;
-        
-            case "16b":
-                
-                base= "111rr010";
-                String paso1 = base.replace("rr", registro);
-                int decimal = Integer.parseInt(paso1, 2);
-                String xb = Integer.toHexString(decimal);
-                
-                break;
-        }//fin del switch
-   
-   }//fin de calcular xb
+            // Crear un libro de trabajo (workbook) a partir del archivo Excel
+            Workbook workbook = WorkbookFactory.create(fis);
+
+            // Obtener la hoja de Excel (supongamos que es la primera hoja)
+            Sheet sheet = workbook.getSheetAt(2);
+            
+            // Recorrer las filas de la hoja
+            for (Row row : sheet) {
+                Cell operandoCell = row.getCell(0);
+                Cell sizeExcel = row.getCell(1);
+                Cell xb = row.getCell(2);
+
+                String operandoEnFila = operandoCell.getStringCellValue();
+                String sizeEnFila = sizeExcel.getStringCellValue();
+                String xbEnFila = xb.getStringCellValue();
+
+                // Compara codop y key con los valores deseados
+                if (validador < -16 || validador > 15) { // verificar si es n
+                    if (temp1.contains("-")) //compara signo
+                        operando = "-n" + ',' + temp2;
+                    else
+                        operando = "n" + ',' + temp2;
+
+                    if (actual.key.contains("oprx9,xysp")) //compara tamano
+                        size = "9b const";
+                    else if (actual.key.contains("oprx16,xysp"))
+                        size = "16b const";
+
+                    if (operandoEnFila.equals(operando) && sizeEnFila.equals(size)){ // compara con excel con tamano y operando
+                        System.out.print(xbEnFila + "  ");
+                        System.out.println(Integer.toHexString(Integer.parseInt(temp1)));
+                        System.out.println("");
+                        break; 
+                    }
+                } else if (operandoEnFila.equals(operando)){ // compara con operando
+                    System.out.println(xbEnFila);
+                    System.out.println(Integer.toHexString(Integer.parseInt(temp1)));
+                    break; 
+                } 
+            } 
+            } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

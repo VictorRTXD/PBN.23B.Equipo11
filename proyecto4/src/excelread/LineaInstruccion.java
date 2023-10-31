@@ -10,7 +10,8 @@ package excelread;
  * @author Isaac
  */
 public class LineaInstruccion {
-   String etiqueta, codop, operando, direc, contloc, forma, postByte;
+   String etiqueta, codop, operando, direc, contloc, forma, postByte, key;
+   double peso;
 
     public String getPostByte() {
         return postByte;
@@ -19,7 +20,7 @@ public class LineaInstruccion {
     public void setPostByte(String postByte) {
         this.postByte = postByte;
     }
-   double peso;
+   
 
     public String getForma() {
     return forma;
@@ -89,3 +90,11 @@ public void setForma(String forma) {
         this.postByte = postByte;
     }
 }
+
+/*
+
+
+
+*/
+
+
