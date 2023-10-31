@@ -849,15 +849,15 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
      }
     }
 
-static void calcularXB(String comparador, LineaInstruccion actual, String valor, String opr2){
+    static void calcularXB(String comparador, LineaInstruccion actual, String valor, String opr2){
        String registro="";
        int n = 5, n2= 4;
        
-       if(opr2.matches("[xX]")){
+       if(opr2.matches("[xX]") || opr2.equals("-X") || opr2.equals("X-") || opr2.equals("+X") || opr2.equals("X+")){
            registro="00";
-       }else if(opr2.matches("[yY]")){
+       }else if(opr2.matches("[yY]")|| opr2.equals("-Y") || opr2.equals("Y-") || opr2.equals("+Y") || opr2.equals("Y+")){
            registro="01";
-       }else if(opr2.matches("[sp | SP]")){
+       }else if(opr2.matches("[sp | SP]") || opr2.equals("-SP") || opr2.equals("SP-") || opr2.equals("+SP") || opr2.equals("SP+")){
            registro="10";
        }else if(opr2.matches("[pc | PC]")){
            registro="11";
@@ -873,13 +873,15 @@ static void calcularXB(String comparador, LineaInstruccion actual, String valor,
                 char signo = valor.charAt(0);
                 String binario = Integer.toBinaryString(valorE);
                 
-                if(Character.toString(signo).equalsIgnoreCase("-")){
+                if(Character.toString(signo).equals("-")){
                     
                 String bin2 = binario.substring(binario.length()-5);
                 String paso1 = base.replace("rr", registro);
                 String paso2 = paso1.replace("nnnnn", bin2);
                 int decimal = Integer.parseInt(paso2, 2);
                 String xb = Integer.toHexString(decimal);
+                String cambio = actual.getForma().replace("xb", xb);
+                actual.setForma(cambio);
                 
                 }else{
                 
@@ -888,6 +890,8 @@ static void calcularXB(String comparador, LineaInstruccion actual, String valor,
                 String paso2 = paso1.replace("nnnnn", cadena);
                 int decimal = Integer.parseInt(paso2, 2);
                 String xb = "0"+Integer.toHexString(decimal);
+                String cambio = actual.getForma().replace("xb", xb);
+                actual.setForma(cambio);
                 
                 }
                 
@@ -896,12 +900,14 @@ static void calcularXB(String comparador, LineaInstruccion actual, String valor,
             case "9b":
                 signo = valor.charAt(0);
 
-                if(Character.toString(signo).equalsIgnoreCase("-")){
+                if(Character.toString(signo).equals("-")){
                     
                     base= "111rr000";
                     String paso1 = base.replace("rr", registro);
                     int decimal = Integer.parseInt(paso1, 2);
                     String xb = Integer.toHexString(decimal);
+                    String cambio = actual.getForma().replace("xb", xb);
+                    actual.setForma(cambio);
                     
                 }else{
                     
@@ -909,6 +915,8 @@ static void calcularXB(String comparador, LineaInstruccion actual, String valor,
                     String paso1 = base.replace("rr", registro);
                     int decimal = Integer.parseInt(paso1, 2);
                     String xb = Integer.toHexString(decimal);
+                    String cambio = actual.getForma().replace("xb", xb);
+                    actual.setForma(cambio);
                 
                 }
                 
@@ -920,6 +928,8 @@ static void calcularXB(String comparador, LineaInstruccion actual, String valor,
                 String paso1 = base.replace("rr", registro);
                 int decimal = Integer.parseInt(paso1, 2);
                 String xb = Integer.toHexString(decimal);
+                String cambio = actual.getForma().replace("xb", xb);
+                actual.setForma(cambio);
                 
                 break;
             
@@ -931,13 +941,15 @@ static void calcularXB(String comparador, LineaInstruccion actual, String valor,
                 binario = Integer.toBinaryString(valorE);
                 
                 
-                if(Character.toString(signo).equalsIgnoreCase("-")){
+                if(Character.toString(signo).equals("-")){
                     
                 String bin2 = binario.substring(binario.length()-4);
                 paso1 = base.replace("rr", registro);
                 String paso2 = paso1.replace("nnnn", bin2);
                 decimal = Integer.parseInt(paso2, 2);
                 xb = Integer.toHexString(decimal);
+                cambio = actual.getForma().replace("xb", xb);
+                actual.setForma(cambio);
                 
                 }else{
                 
@@ -946,6 +958,8 @@ static void calcularXB(String comparador, LineaInstruccion actual, String valor,
                 String paso2 = paso1.replace("nnnn", cadena);
                 decimal = Integer.parseInt(paso2, 2);
                 xb = Integer.toHexString(decimal);
+                cambio = actual.getForma().replace("xb", xb);
+                actual.setForma(cambio);
                 
                 }
                 
@@ -966,6 +980,8 @@ static void calcularXB(String comparador, LineaInstruccion actual, String valor,
                 String paso2 = paso1.replace("nnnn", bin2);
                 decimal = Integer.parseInt(paso2, 2);
                 xb = Integer.toHexString(decimal);
+                cambio = actual.getForma().replace("xb", xb);
+                actual.setForma(cambio);
                 
                 }else{
                 
@@ -974,6 +990,8 @@ static void calcularXB(String comparador, LineaInstruccion actual, String valor,
                 String paso2 = paso1.replace("nnnn", cadena);
                 decimal = Integer.parseInt(paso2, 2);
                 xb = Integer.toHexString(decimal);
+                cambio = actual.getForma().replace("xb", xb);
+                actual.setForma(cambio);
                 
                 }
                 
@@ -987,6 +1005,8 @@ static void calcularXB(String comparador, LineaInstruccion actual, String valor,
                     paso1 = base.replace("rr", registro);
                     decimal = Integer.parseInt(paso1, 2);
                     xb = Integer.toHexString(decimal);
+                    cambio = actual.getForma().replace("xb", xb);
+                    actual.setForma(cambio);
                 
                 }else if(valor.matches("[Bb]")){
                 
@@ -994,6 +1014,8 @@ static void calcularXB(String comparador, LineaInstruccion actual, String valor,
                     paso1 = base.replace("rr", registro);
                     decimal = Integer.parseInt(paso1, 2);
                     xb = Integer.toHexString(decimal);
+                    cambio = actual.getForma().replace("xb", xb);
+                    actual.setForma(cambio);
                 
                 }else if(valor.matches("[Dd]")){
                     
@@ -1001,10 +1023,34 @@ static void calcularXB(String comparador, LineaInstruccion actual, String valor,
                     paso1 = base.replace("rr", registro);
                     decimal = Integer.parseInt(paso1, 2);
                     xb = Integer.toHexString(decimal);
+                    cambio = actual.getForma().replace("xb", xb);
+                    actual.setForma(cambio);
                 
                 }else{
                     System.out.println("ERROR");
                 }
+                
+                break;
+                
+            case "DIDX":
+                
+                base= "111rr111";
+                paso1 = base.replace("rr", registro);
+                decimal = Integer.parseInt(paso1, 2);
+                xb = Integer.toHexString(decimal);
+                cambio = actual.getForma().replace("xb", xb);
+                actual.setForma(cambio);
+                
+                break;
+                
+            case "16IDX":
+                
+                base= "111rr011";
+                paso1 = base.replace("rr", registro);
+                decimal = Integer.parseInt(paso1, 2);
+                xb = Integer.toHexString(decimal);
+                cambio = actual.getForma().replace("xb", xb);
+                actual.setForma(cambio);
                 
                 break;
                 
