@@ -13,6 +13,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -40,7 +41,10 @@ public class ExcelRead extends JFrame{
         frame.setVisible(true);
     }
     
-static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>();
+    static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>();
+    static ArrayList<LineaInstruccion> origenRel = new ArrayList<LineaInstruccion>();
+    static ArrayList<LineaInstruccion> destinoRel = new ArrayList<LineaInstruccion>();
+    
     static int contador = 0;
     public static void main(String[] args) throws IOException {
         String flag = "y";
@@ -167,6 +171,9 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
             calcularContloc();
             insertarDatosList();
             insertarDatosTabism();
+            
+            //proyecto 4
+            calcularRel();
 
             System.out.println("quieres continuar? y/n");
             flag = sc.next();
@@ -777,11 +784,10 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
    /**
     * Datos: esta funcion cera el archivo tabism
     */
-    static void insertarDatosTabism() {//¿Hace falta algo del Tabsim?
+    static void insertarDatosTabism() {
         FileOutputStream programTabsim;
         HashMap<String, Boolean> validadorSimbolo = new HashMap<>();
         String [] Tipo = {"Relativa", "Absoluta"};
-
 
         try {
             programTabsim = new FileOutputStream("TABSIM.txt");
@@ -789,10 +795,12 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
             tabsim.println("SI TIPO TI ");
             //String [] Tipo = {"Relativa", "Absoluta"};
     
-            for (int i = 0; i < instruccion.size(); i++) {
+            for (int i = 2; i < instruccion.size(); i++) {
                 contador = i;
-
-
+                
+                if (instruccion.get(i).key != null && (instruccion.get(i).key.contains("rel8") || instruccion.get(i).key.contains("rel16") || instruccion.get(i).key.contains("abdxys,rel9")))
+                    origenRel.add(new LineaInstruccion("", "", instruccion.get(i).operando, null, 0, instruccion.get(1+i).contloc, "0", "0"));
+                
                 // Verifica si la etiqueta ya existe en el HashMap
                 if (validadorSimbolo.containsKey(instruccion.get(contador).etiqueta)) {
                     // La etiqueta ya existe
@@ -807,6 +815,11 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                     }
 
                     tabsim.print(instruccion.get(i).contloc + " ");
+                    
+                    if (instruccion.get(i).etiqueta.contains("-")) {
+                    } else
+                        destinoRel.add(new LineaInstruccion(instruccion.get(i).etiqueta, "", "", null, 0, instruccion.get(i).contloc, "0", "0"));
+                    
                     tabsim.println("");
                     tabsim.println("-------------");
                 }
@@ -816,6 +829,7 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
             e.printStackTrace();
         }
     }
+    
     static void calcularContloc(){//inicio del método calcular contloc
         for(int i=0; i<=instruccion.size()-2; i++){//for para recorrer todo el arrayList
             
@@ -1235,7 +1249,7 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                     String cambio2 = cambio.replace("ll", ll); // ahora reemplaza el ll y lo guarda en cambio 2
                     
                     actual.setPostByte(cambio2); //cambio 2 es nuestro postByte asi que lo guardamos en el objeto
-                    
+
                 }else{
                     
                     String hh = hexa.substring(2, 4);
@@ -1297,10 +1311,15 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                     actual.setPostByte(cambio3);
                 }
                 break;
+            /*case "esRelativo":
+                System.out.println("aaaaaaaaaaaaaaaaaaaaaaaa");
+                calcularRel();
+            break;
+            */
         }
     }
 
-    static void calcularXb2(String temp1, String temp2, String valor, LineaInstruccion actual) {
+    static void calcularLb(String temp1, String temp2, String valor, LineaInstruccion actual) {
         String operando = temp1 + ',' + temp2;
         Integer validador = Integer.parseInt(temp1);
         String size = "";
@@ -1353,6 +1372,73 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
             } 
             } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+    
+    public static int complementoDos(int destino, int origen) {
+        int suma = destino + (~origen + 1); // Realizar la resta en complemento a dos
+        return suma & 0xFFFF; // Aplicar la máscara para asegurar que el resultado sea de 4 bytes
+    }
+    
+    static void calcularRel() {
+        /*for (int i = 0; i < origenRel.size(); i++) {
+            System.out.println(origenRel.get(i).operando + " " +origenRel.get(i).contloc);
+        }
+        
+        for (int i = 0; i < destinoRel.size(); i++) {
+            System.out.println(destinoRel.get(i).etiqueta + " " +destinoRel.get(i).contloc);
+        }
+        estos for eran para ver si funcionaba la seleccion*/  
+        
+        for (int i = 0; i < origenRel.size(); i++) {
+            for (int j = 0; j < destinoRel.size(); j++) { //fors para comparar el contloc origen y destino
+                int valorOri = Integer.parseInt(origenRel.get(i).contloc, 16);
+                int valorDes = Integer.parseInt(destinoRel.get(j).contloc, 16);
+                String resultadoHex = "";
+                
+                if (origenRel.get(i).operando.equals(destinoRel.get(j).etiqueta)) { // si el operando origen y la etiqueta destino son iguales 
+                    if (valorOri < valorDes) { // si Destino es mayor que el oRIGEN
+                        resultadoHex = Integer.toHexString(valorDes - valorOri);
+                    } else if (valorOri > valorDes) { // origen es mayor que el destino
+                        int resultadoDecimal = complementoDos(valorDes, valorOri);
+
+                        resultadoHex = Integer.toHexString(resultadoDecimal);
+
+                        System.out.println("Resultado en hexadecimal: " + resultadoHex);
+                    } else { // si son iguales
+                        resultadoHex = "0000";
+                    }
+                    
+                    colocarPostByteRelativo(i, resultadoHex); //se va a la funcion para usarlo con su postbyte
+                }
+            }
+        } 
+    }
+    
+    static void colocarPostByteRelativo(int indiceOrigen, String resultado) {
+        for (int i = 0; i < instruccion.size(); i++) {
+            if (instruccion.get(i).contloc.equals(origenRel.get(indiceOrigen).contloc)) { // se planea recorrer instruccion donde coincide con contloc origen
+                int auxiliarPeso = (int) instruccion.get(i).peso; // Actualiza el atributo del elemento encontrado.
+                
+                if (auxiliarPeso == 2) { // es de 8 bits //******************************************************************** aqui es dependiente de la existencia de la forma posbyte
+                    int indexCortador = instruccion.get(i).postByte.indexOf(" rr "); //se busca cortar las letras
+                    
+                    funcionCortadora(indexCortador, i, resultado);
+                } else if (auxiliarPeso == 4) { // es de 16 bits
+                    int indexCortador = instruccion.get(i).postByte.indexOf(" qq "); //se busca cortar las letras
+                    
+                    funcionCortadora(indexCortador, i, resultado);
+                }
+                break; // Puedes detener el bucle una vez que encuentres el elemento.
+            }
+        }
+    }
+    
+    static void funcionCortadora(int indexCortador, int i, String resultado) {
+        if (indexCortador != -1) {
+        // Extraer la subcadena desde el inicio hasta la posición de " letras "
+        String cortador = instruccion.get(i).postByte.substring(0, indexCortador);
+        instruccion.get(i).postByte = cortador + resultado; // se agrega el postbyte default y el resultado
         }
     }
 }

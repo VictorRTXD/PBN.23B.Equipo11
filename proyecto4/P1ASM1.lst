@@ -41,11 +41,9 @@ Uno  EORA  255,X  CONTLOC 4052
 ----------------
 -  EORA  [D,X]  CONTLOC 406a  
 ----------------
--  BLT  UNO  CONTLOC 406c  
+-  BLT  Uno  CONTLOC 406c  
 ----------------
--  LBLT  UNO  CONTLOC 406e  
-----------------
--  IBNE  A,UNO  CONTLOC 4072  
+-  LBLT  Uno  CONTLOC 406e  
 ----------------
 -  DS.B  %001101010010101011  CONTLOC 4072  
 ----------------
