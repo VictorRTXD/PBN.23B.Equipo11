@@ -1078,6 +1078,7 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
    }//fin de calcular xb
 
    static void calcPostByte(String comparador, LineaInstruccion actual, int valor){
+        String valorS = Integer.toString(valor);
         String hexa = Integer.toHexString(valor);
         switch(comparador){
             case "esInherente":// Si es inherente
@@ -1163,56 +1164,67 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                     actual.setPostByte(cambio2);
                 }
                 
-                break;//fin de los extendidos  
-
-            case "esIndexado5Bits":
-                if (hexa.length() == 1) {
-                    String nuevo = "0" + hexa;
-                    String cambio = actual.getForma().replace("xb", nuevo);
-                    actual.setPostByte(cambio);
-                } else {
-                    String cambio = actual.getForma().replace("xb", hexa);
+                break;//fin de los extendidos 
+                
+            case "idx9":
+                char signo = valorS.charAt(0);
+                
+                if(Character.toString(signo).equals("-")){
+                String hexa2 = hexa.substring(hexa.length()-2);
+                
+                String ff = hexa2;
+                String cambio = actual.getForma().replace("ff", ff);
+                
+                actual.setPostByte(cambio);
+                
+                }else{
+                    
+                    String ff = hexa;
+                    String cambio = actual.getForma().replace("ff", ff);
+                
                     actual.setPostByte(cambio);
                 }
-                break;
 
-            case "esIndexado9Bits":
-                if (hexa.length() == 3) {
-                    String nuevo = "0" + hexa;
-                    String xb = nuevo.substring(2, 4);
-                    String ff = nuevo.substring(0, 2);
-                    String cambio = actual.getForma().replace("xb", xb);
-                    String cambio2 = cambio.replace("ff", ff);
-                    actual.setPostByte(cambio2);
-                } else {
-                    String xb = hexa.substring(2, 4);
-                    String ff = hexa.substring(0, 2);
-                    String cambio = actual.getForma().replace("xb", xb);
-                    String cambio2 = cambio.replace("ff", ff);
-                    actual.setPostByte(cambio2);
-                }
                 break;
                 
-            case "esIndexado16Bits":
-                if (hexa.length() == 5) {
-                    String nuevo = "0" + hexa;
-                    String xb = nuevo.substring(4, 6);
-                    String ee = nuevo.substring(2, 4);
-                    String ff = nuevo.substring(0, 2);
-                    String cambio = actual.getForma().replace("xb", xb);
-                    String cambio2 = cambio.replace("ee", ee);
-                    String cambio3 = cambio.replace("ff", ff);
-                    actual.setPostByte(cambio3);
-            } else {
-                    String xb = hexa.substring(4, 6);
-                    String ee = hexa.substring(2, 4);
-                    String ff = hexa.substring(0, 2);
-                    String cambio = actual.getForma().replace("xb", xb);
-                    String cambio2 = cambio.replace("ee", ee);
-                    String cambio3 = cambio.replace("ff", ff);
-                    actual.setPostByte(cambio3);
+            case "idx16":
+                
+                signo = valorS.charAt(0);
+                
+                if(Character.toString(signo).equals("-")){
+                    String hexa2 = hexa.substring(hexa.length()-4);
+                    
+                    String ee = hexa2.substring(2, 4);
+                    String ff = hexa2.substring(0, 2);
+                
+                    String cambio = actual.getForma().replace("ee", ee);
+                    String cambio2 = cambio.replace("ff", ff);
+                
+                    actual.setPostByte(cambio2);
+                }else{
+                    if(hexa.length()==3){
+                        String hexa2 = "0"+hexa;
+                    
+                        String ee = hexa2.substring(2, 4);
+                        String ff = hexa2.substring(0, 2);
+                
+                        String cambio = actual.getForma().replace("ee", ee);
+                        String cambio2 = cambio.replace("ff", ff);
+                
+                        actual.setPostByte(cambio2);
+                    }else{
+                        String ee = hexa.substring(2, 4);
+                        String ff = hexa.substring(0, 2);
+                
+                        String cambio = actual.getForma().replace("ee", ee);
+                        String cambio2 = cambio.replace("ff", ff);
+                
+                        actual.setPostByte(cambio2);
+                    }
+
                 }
+
                 break;
-        }
-    }
+        }//fin del switch
+    }//fin de calcular postbyte
 }
