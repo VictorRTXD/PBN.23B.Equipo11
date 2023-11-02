@@ -1116,7 +1116,7 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
      }
     }
 
-    static void calcularXB(String comparador, LineaInstruccion actual, String valor, String opr2){
+   static void calcularXB(String comparador, LineaInstruccion actual, String valor, String opr2){
        int entero = Integer.valueOf(valor);
        String registro="";
        int n = 5, n2= 4;
