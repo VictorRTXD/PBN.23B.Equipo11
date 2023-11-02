@@ -1,9 +1,7 @@
 SI TIPO TI 
-Et1 Relativa 4040 
+- Relativa 4040 
 -------------
-dos Relativa 4041 
+dos Relativa 404b 
 -------------
-- Relativa 4043 
--------------
-Uno Relativa 4052 
+Uno Relativa 4054 
 -------------

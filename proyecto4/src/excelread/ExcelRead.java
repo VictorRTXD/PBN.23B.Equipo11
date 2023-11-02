@@ -396,7 +396,7 @@ public class ExcelRead extends JFrame{
                    System.out.print(key + "  ");
                    comparadorExcel(instruccion.get(contador).getCodop(), key);
                }else if(Character.toString(temp2).matches("[A | B | D | X | Y | SP]")){
-                   String key = "abdxys,rel9";
+                   String key = "abdxys, rel9";
                    System.out.print(key + "  ");
                    comparadorExcel(instruccion.get(contador).getCodop(), key);
                }else{
@@ -1381,15 +1381,6 @@ public class ExcelRead extends JFrame{
     }
     
     static void calcularRel() {
-        /*for (int i = 0; i < origenRel.size(); i++) {
-            System.out.println(origenRel.get(i).operando + " " +origenRel.get(i).contloc);
-        }
-        
-        for (int i = 0; i < destinoRel.size(); i++) {
-            System.out.println(destinoRel.get(i).etiqueta + " " +destinoRel.get(i).contloc);
-        }
-        estos for eran para ver si funcionaba la seleccion*/  
-        
         for (int i = 0; i < origenRel.size(); i++) {
             for (int j = 0; j < destinoRel.size(); j++) { //fors para comparar el contloc origen y destino
                 int valorOri = Integer.parseInt(origenRel.get(i).contloc, 16);
@@ -1416,29 +1407,31 @@ public class ExcelRead extends JFrame{
     }
     
     static void colocarPostByteRelativo(int indiceOrigen, String resultado) {
-        for (int i = 0; i < instruccion.size(); i++) {
-            if (instruccion.get(i).contloc.equals(origenRel.get(indiceOrigen).contloc)) { // se planea recorrer instruccion donde coincide con contloc origen
-                int auxiliarPeso = (int) instruccion.get(i).peso; // Actualiza el atributo del elemento encontrado.
+        int i;
+        for (i = 1; i < instruccion.size(); i++) {
+            if (instruccion.get(i-1).contloc.equals(origenRel.get(indiceOrigen).contloc)) { // se planea recorrer instruccion donde coincide con contloc origen
+                int auxiliarPeso = (int) instruccion.get(i-2).peso; // Actualiza el atributo del elemento encontrado.
                 
                 if (auxiliarPeso == 2) { // es de 8 bits //******************************************************************** aqui es dependiente de la existencia de la forma posbyte
-                    int indexCortador = instruccion.get(i).postByte.indexOf(" rr "); //se busca cortar las letras
-                    
-                    funcionCortadora(indexCortador, i, resultado);
+                    resultado = resultado.substring(2, 4);
+                    funcionCortadora(i, resultado, auxiliarPeso);
                 } else if (auxiliarPeso == 4) { // es de 16 bits
-                    int indexCortador = instruccion.get(i).postByte.indexOf(" qq "); //se busca cortar las letras
-                    
-                    funcionCortadora(indexCortador, i, resultado);
+                    funcionCortadora(i, resultado, auxiliarPeso);
                 }
                 break; // Puedes detener el bucle una vez que encuentres el elemento.
             }
         }
     }
     
-    static void funcionCortadora(int indexCortador, int i, String resultado) {
-        if (indexCortador != -1) {
-        // Extraer la subcadena desde el inicio hasta la posición de " letras "
-        String cortador = instruccion.get(i).postByte.substring(0, indexCortador);
-        instruccion.get(i).postByte = cortador + resultado; // se agrega el postbyte default y el resultado
-        }
+    static void funcionCortadora(int i, String resultado, int auxiliarPeso) {
+        String firstThreeCharacters = "";
+        if (auxiliarPeso == 4)
+            firstThreeCharacters = instruccion.get(i-2).forma.substring(0, 6);
+        else if (auxiliarPeso == 2)
+            firstThreeCharacters = instruccion.get(i-2).forma.substring(0, 3);
+        
+        String modifiedString = firstThreeCharacters.concat(resultado);
+        System.out.println("es " + modifiedString);
+        instruccion.get(i-2).postByte =  modifiedString;
     }
 }
