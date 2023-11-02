@@ -857,6 +857,7 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
     }
 
     static void calcularXB(String comparador, LineaInstruccion actual, String valor, String opr2){
+       int entero = Integer.valueOf(valor);
        String registro="";
        int n = 5, n2= 4;
        
@@ -888,7 +889,7 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                 int decimal = Integer.parseInt(paso2, 2);
                 String xb = Integer.toHexString(decimal);
                 String cambio = actual.getForma().replace("xb", xb);
-                actual.setForma(cambio);
+                actual.setPostByte(cambio);
                 
                 }else{
                 
@@ -898,7 +899,7 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                 int decimal = Integer.parseInt(paso2, 2);
                 String xb = "0"+Integer.toHexString(decimal);
                 String cambio = actual.getForma().replace("xb", xb);
-                actual.setForma(cambio);
+                actual.setPostByte(cambio);
                 
                 }
                 
@@ -916,6 +917,9 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                     String cambio = actual.getForma().replace("xb", xb);
                     actual.setForma(cambio);
                     
+                    String llave="idx9";
+                    calcPostByte(llave, actual, entero);
+                    
                 }else{
                     
                     base= "111rr001";
@@ -924,7 +928,9 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                     String xb = Integer.toHexString(decimal);
                     String cambio = actual.getForma().replace("xb", xb);
                     actual.setForma(cambio);
-                
+                    
+                    String llave="idx9";
+                    calcPostByte(llave, actual, entero);
                 }
                 
                 break;
@@ -937,6 +943,9 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                 String xb = Integer.toHexString(decimal);
                 String cambio = actual.getForma().replace("xb", xb);
                 actual.setForma(cambio);
+                
+                String llave="idx16";
+                calcPostByte(llave, actual, entero);
                 
                 break;
             
@@ -956,7 +965,7 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                 decimal = Integer.parseInt(paso2, 2);
                 xb = Integer.toHexString(decimal);
                 cambio = actual.getForma().replace("xb", xb);
-                actual.setForma(cambio);
+                actual.setPostByte(cambio);
                 
                 }else{
                 
@@ -966,7 +975,7 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                 decimal = Integer.parseInt(paso2, 2);
                 xb = Integer.toHexString(decimal);
                 cambio = actual.getForma().replace("xb", xb);
-                actual.setForma(cambio);
+                actual.setPostByte(cambio);
                 
                 }
                 
@@ -988,7 +997,7 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                 decimal = Integer.parseInt(paso2, 2);
                 xb = Integer.toHexString(decimal);
                 cambio = actual.getForma().replace("xb", xb);
-                actual.setForma(cambio);
+                actual.setPostByte(cambio);
                 
                 }else{
                 
@@ -998,7 +1007,7 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                 decimal = Integer.parseInt(paso2, 2);
                 xb = Integer.toHexString(decimal);
                 cambio = actual.getForma().replace("xb", xb);
-                actual.setForma(cambio);
+                actual.setPostByte(cambio);
                 
                 }
                 
@@ -1013,7 +1022,7 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                     decimal = Integer.parseInt(paso1, 2);
                     xb = Integer.toHexString(decimal);
                     cambio = actual.getForma().replace("xb", xb);
-                    actual.setForma(cambio);
+                    actual.setPostByte(cambio);
                 
                 }else if(valor.matches("[Bb]")){
                 
@@ -1022,7 +1031,7 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                     decimal = Integer.parseInt(paso1, 2);
                     xb = Integer.toHexString(decimal);
                     cambio = actual.getForma().replace("xb", xb);
-                    actual.setForma(cambio);
+                    actual.setPostByte(cambio);
                 
                 }else if(valor.matches("[Dd]")){
                     
@@ -1031,7 +1040,7 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                     decimal = Integer.parseInt(paso1, 2);
                     xb = Integer.toHexString(decimal);
                     cambio = actual.getForma().replace("xb", xb);
-                    actual.setForma(cambio);
+                    actual.setPostByte(cambio);
                 
                 }else{
                     System.out.println("ERROR");
@@ -1046,7 +1055,7 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                 decimal = Integer.parseInt(paso1, 2);
                 xb = Integer.toHexString(decimal);
                 cambio = actual.getForma().replace("xb", xb);
-                actual.setForma(cambio);
+                actual.setPostByte(cambio);
                 
                 break;
                 
@@ -1058,6 +1067,9 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                 xb = Integer.toHexString(decimal);
                 cambio = actual.getForma().replace("xb", xb);
                 actual.setForma(cambio);
+                
+                llave="idx16";
+                calcPostByte(llave, actual, entero);
                 
                 break;
                 
