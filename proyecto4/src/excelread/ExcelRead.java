@@ -161,7 +161,7 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
         String regexOpri="^#[@%\\$?][0-9A-F]+$|^#[0-9]+$";
         String regexOpra="^[@%\\$?][0-9A-F]+$|^[0-9]+$"; // \\$?
         String regexRel="^[a-zA-Z0-9]+$|^[ABDXY],[a-zA-Z0-9]+$|^[SP],[a-zA-Z0-9]+$";
-        String regexOprx="^[-]*[@%\\$?$]*[0-9A-F]+,(X|Y|SP|PC)$|^[@%\\$?$]*[0-9A-F]+,[+-]*(X|Y|SP|PC)[+-]*$|^[ABD]+,(X|Y|SP|PC)$|^(\\[?[@%\\$?]*[0-9A-F]+,(X|Y|SP|PC))\\]?$|^(\\[?[Dd],(X|Y|SP|PC))\\]?|^,(X|Y|SP|PC)$";
+        String regexOprx="^[-][@%\\$?$][0-9A-F]+,(X|Y|SP|PC)$|^[@%\\$?$][0-9A-F]+,[+-](X|Y|SP|PC)[+-]$|^[ABD]+,(X|Y|SP|PC)$|^(\\[?[@%\\$?][0-9A-F]+,(X|Y|SP|PC))\\]?$|^(\\[?[Dd],(X|Y|SP|PC))\\]?|^,(X|Y|SP|PC)$";
         String regexDirectiva=" ^DC.B$ | ^DC.W$ | ^DS.B$ | ^DS.W$ ";
         
          Pattern patOpri = Pattern.compile(regexOpri);
@@ -176,7 +176,60 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
          Matcher matcherOprx = patOprx.matcher(notacion);
          Matcher matcherDirectiva = patDirectiva.matcher(codop);
          
-         if(matcherOpri.matches()){
+         if(matcherDirectiva.matches()){
+             comparador = "esDirectiva";
+                char tem = notacion.charAt(0);//crea un caracter temporal para comparar
+
+                if(codop.equals("DC.B")){//compara que el codop sea DC.B
+                    if(Character.toString(tem).equals("\"")){//en caso de que inicie con comillas
+                        String aux = notacion.replace("\"", ""); //elimina las comillas
+
+                        int pesoBytes = aux.length(); //Saca la longitud del conjunto de elementos y le asigna un byte
+                        double pesoDouble = (double) pesoBytes;
+                        instruccion.get(contador).peso = pesoDouble; //atencion aqui *************
+
+                        System.out.print(pesoBytes + "  "); //imprimir para confirmar
+                    }else{//Si no inicia con comillas
+                        String[] elementos = notacion.split(",");//separa los elementos por comillas y los guarda en un arreglo
+                        int pesoBytes = elementos.length;//el peso en bytes es igual al tamaño del arreglo
+
+                        System.out.print(pesoBytes + "  ");//imprimir para confirmar
+                    }
+                }else if(codop.equals("DC.W")){//En todo caso confirma si el codop es un DC.W
+
+                    if(Character.toString(tem).equals("\"")){//en caso de que inicie con comillas
+                        String aux = notacion.replace("\"", "");//elimina las comillas
+
+                        int pesoBytes = (aux.length()*2);//el peso es igual al doble del numero de elementos
+                        double pesoDouble = (double) pesoBytes;
+                        instruccion.get(contador).peso = pesoDouble;
+
+                        System.out.print(pesoBytes + "  ");//imprimir para confirmar
+                    }else{//si no inicia con comillas
+                        String[] elementos = notacion.split(",");//separa los elementos por comillas y los guarda en un arreglo
+                        int pesoBytes = (elementos.length*2);//el peso es igual a 2 veces la longitud del arreglo
+                        double pesoDouble = (double) pesoBytes;
+                        instruccion.get(contador).peso = pesoDouble;
+
+                        System.out.print(pesoBytes + "  ");//imprimir para confirmar
+                    }
+                }else if(codop.equals("DS.B") && Character.toString(tem).matches("[1-9]")){//En todo caso confirma si el codop es un DS.B
+                    int pesoBytes = Integer.parseInt(notacion);//el peso será igual al número específico del operando
+                    double pesoDouble = (double) pesoBytes;
+                    instruccion.get(contador).peso = pesoDouble;
+
+                    System.out.print(pesoBytes + "  ");//imprimir para confirmar
+                }else if(codop.equals("DS.W") && Character.toString(tem).matches("[1-9]")){//En todo caso confirma si el codop es un DS.W
+                    int pesoBytes = (Integer.parseInt(notacion)*2);//el peso será igual a 2 veces el operando especificado
+                    double pesoDouble = (double) pesoBytes;
+                    instruccion.get(contador).peso = pesoDouble;
+
+                    System.out.print(pesoBytes + "  ");//imprimir para confirmar
+                }else{//caso de error
+                    System.out.println("Directiva no valida");//mensaje de error
+                }
+         }else{
+             if(matcherOpri.matches()){
              char tem = notacion.charAt(1);//Crea un caracter para comparar
              if(Character.toString(tem).matches("%")){
                  String binario = notacion.substring(2);//Elimina caracteres no deseados
@@ -350,10 +403,19 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                 comparador = "esIndexado";
                 char tem = notacion.charAt(0);
                 char temp2 = notacion.charAt(1);
-                if(Character.toString(tem).matches(", | [ABD]")){
+                if(Character.toString(tem).matches("[ABD]")){
                     String key = "oprx0_xysp";
                     System.out.print(key + "  ");
                     comparadorExcel(instruccion.get(contador).getCodop(), key);
+                }else if(Character.toString(tem).equals(",")){
+                    String opr1= "0";
+                    String opr2 = notacion.substring(1);
+                    String key = "oprx0_xysp";
+                    String comparador2 =  "5b";
+                    System.out.print(key + "  ");
+                    comparadorExcel(instruccion.get(contador).getCodop(), key);
+                    calcularXB(comparador2, actual, opr1, opr2);
+                    
                 }else if(Character.toString(tem).matches("\\[?")){
                     if(Character.toString(temp2).matches("D")){
                         String key = "[D,xysp]";
@@ -363,67 +425,11 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                         String key = "[oprx16,xysp]";
                         System.out.print(key + "  ");
                         comparadorExcel(instruccion.get(contador).getCodop(), key);
-                    } //atencion aqui ****************************************************************************************
-                }else if(Character.toString(tem).equals("-")){
-                    separarOperandos(notacion, comparador);
-                }else if(Character.toString(tem).matches("[0-9]")){
-                    separarOperandos(notacion, comparador);
-                }else if(Character.toString(tem).matches("[@%\\$?]")){
+                    } //atencion aqui ******************************
+                }else if(Character.toString(tem).equals("-") || Character.toString(tem).matches("[0-9]") || Character.toString(tem).matches("[@%\\$?]")){
                     separarOperandos(notacion, comparador);
                 }else{
                     System.out.println("Instruccion no valida");
-                }
-            }else if(matcherDirectiva.matches()){ //Si hace match con directiva
-                comparador = "esDirectiva";
-                char tem = notacion.charAt(0);//crea un caracter temporal para comparar
-
-                if(codop.equals("DC.B")){//compara que el codop sea DC.B
-                    if(Character.toString(tem).equals("\"")){//en caso de que inicie con comillas
-                        String aux = notacion.replace("\"", ""); //elimina las comillas
-
-                        int pesoBytes = aux.length(); //Saca la longitud del conjunto de elementos y le asigna un byte
-                        double pesoDouble = (double) pesoBytes;
-                        instruccion.get(contador).peso = pesoDouble; //atencion aqui ***************************************
-
-                        System.out.print(pesoBytes + "  "); //imprimir para confirmar
-                    }else{//Si no inicia con comillas
-                        String[] elementos = notacion.split(",");//separa los elementos por comillas y los guarda en un arreglo
-                        int pesoBytes = elementos.length;//el peso en bytes es igual al tamaño del arreglo
-
-                        System.out.print(pesoBytes + "  ");//imprimir para confirmar
-                    }
-                }else if(codop.equals("DC.W")){//En todo caso confirma si el codop es un DC.W
-
-                    if(Character.toString(tem).equals("\"")){//en caso de que inicie con comillas
-                        String aux = notacion.replace("\"", "");//elimina las comillas
-
-                        int pesoBytes = (aux.length()*2);//el peso es igual al doble del numero de elementos
-                        double pesoDouble = (double) pesoBytes;
-                        instruccion.get(contador).peso = pesoDouble;
-
-                        System.out.print(pesoBytes + "  ");//imprimir para confirmar
-                    }else{//si no inicia con comillas
-                        String[] elementos = notacion.split(",");//separa los elementos por comillas y los guarda en un arreglo
-                        int pesoBytes = (elementos.length*2);//el peso es igual a 2 veces la longitud del arreglo
-                        double pesoDouble = (double) pesoBytes;
-                        instruccion.get(contador).peso = pesoDouble;
-
-                        System.out.print(pesoBytes + "  ");//imprimir para confirmar
-                    }
-                }else if(codop.equals("DS.B") && Character.toString(tem).matches("[1-9]")){//En todo caso confirma si el codop es un DS.B
-                    int pesoBytes = Integer.parseInt(notacion);//el peso será igual al número específico del operando
-                    double pesoDouble = (double) pesoBytes;
-                    instruccion.get(contador).peso = pesoDouble;
-
-                    System.out.print(pesoBytes + "  ");//imprimir para confirmar
-                }else if(codop.equals("DS.W") && Character.toString(tem).matches("[1-9]")){//En todo caso confirma si el codop es un DS.W
-                    int pesoBytes = (Integer.parseInt(notacion)*2);//el peso será igual a 2 veces el operando especificado
-                    double pesoDouble = (double) pesoBytes;
-                    instruccion.get(contador).peso = pesoDouble;
-
-                    System.out.print(pesoBytes + "  ");//imprimir para confirmar
-                }else{//caso de error
-                    System.out.println("Directiva no valida");//mensaje de error
                 }
             }else{
                 comparador = "esInherente";
@@ -437,7 +443,8 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                     System.out.print(key + "  ");
                     }
             }
-    }
+         }
+    }//fin de notación
     
     static void separarOperandos(String operandos, String comparador){
         //String operandosOriginal = operandos;
