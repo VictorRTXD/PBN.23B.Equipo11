@@ -90,11 +90,3 @@ public void setForma(String forma) {
         this.postByte = postByte;
     }
 }
-
-/*
-
-
-
-*/
-
-

@@ -798,7 +798,7 @@ public class ExcelRead extends JFrame{
             for (int i = 2; i < instruccion.size(); i++) {
                 contador = i;
                 
-                if (instruccion.get(i).key != null && (instruccion.get(i).key.contains("rel8") || instruccion.get(i).key.contains("rel16") || instruccion.get(i).key.contains("abdxys,rel9")))
+                if (instruccion.get(i).key != null && (instruccion.get(i).key.contains("rel8") || instruccion.get(i).key.contains("rel16") || instruccion.get(i).key.contains("abdxys, rel9")))
                     origenRel.add(new LineaInstruccion("", "", instruccion.get(i).operando, null, 0, instruccion.get(1+i).contloc, "0", "0"));
                 
                 // Verifica si la etiqueta ya existe en el HashMap
@@ -1319,10 +1319,7 @@ public class ExcelRead extends JFrame{
         }
     }
 
-    static void calcularLb(String temp1, String temp2, String valor, LineaInstruccion actual) {
-        String operando = temp1 + ',' + temp2;
-        Integer validador = Integer.parseInt(temp1);
-        String size = "";
+    static String calcularLb(String registro, int indexOrigen, String desplazamiento) { // recuerda modificarla porque inicialmente era para xb
         try {
             // Ruta del archivo Excel
             String archivoExcel = "Salvation.Tabop.xlsx";
@@ -1334,45 +1331,27 @@ public class ExcelRead extends JFrame{
             Workbook workbook = WorkbookFactory.create(fis);
 
             // Obtener la hoja de Excel (supongamos que es la primera hoja)
-            Sheet sheet = workbook.getSheetAt(2);
+            Sheet sheet = workbook.getSheetAt(4);
             
             // Recorrer las filas de la hoja
             for (Row row : sheet) {
-                Cell operandoCell = row.getCell(0);
-                Cell sizeExcel = row.getCell(1);
-                Cell xb = row.getCell(2);
+                Cell codopCell = row.getCell(0);
+                Cell registroExcel = row.getCell(1);
+                Cell desplazamientoExcel = row.getCell(2);
 
-                String operandoEnFila = operandoCell.getStringCellValue();
-                String sizeEnFila = sizeExcel.getStringCellValue();
-                String xbEnFila = xb.getStringCellValue();
+                String codopEnFila = codopCell.getStringCellValue();
+                String registroEnFila = registroExcel.getStringCellValue();
+                String desplazamientoEnFila = desplazamientoExcel.getStringCellValue();
 
-                // Compara codop y key con los valores deseados
-                if (validador < -16 || validador > 15) { // verificar si es n
-                    if (temp1.contains("-")) //compara signo
-                        operando = "-n" + ',' + temp2;
-                    else
-                        operando = "n" + ',' + temp2;
-
-                    if (actual.key.contains("oprx9,xysp")) //compara tamano
-                        size = "9b const";
-                    else if (actual.key.contains("oprx16,xysp"))
-                        size = "16b const";
-
-                    if (operandoEnFila.equals(operando) && sizeEnFila.equals(size)){ // compara con excel con tamano y operando
-                        System.out.print(xbEnFila + "  ");
-                        System.out.println(Integer.toHexString(Integer.parseInt(temp1)));
-                        System.out.println("");
-                        break; 
-                    }
-                } else if (operandoEnFila.equals(operando)){ // compara con operando
-                    System.out.println(xbEnFila);
-                    System.out.println(Integer.toHexString(Integer.parseInt(temp1)));
-                    break; 
-                } 
+                if (codopEnFila.equals(origenRel.get(indexOrigen).codop) && registroEnFila.equals(registro) && desplazamientoEnFila.equals(desplazamiento)){ // compara con excel con tamano y operando
+                    Cell lbCell = row.getCell(3);
+                    return lbCell.toString();
+                }
             } 
-            } catch (IOException e) {
+          } catch (IOException e) {
             e.printStackTrace();
         }
+        return "";
     }
     
     public static int complementoDos(int destino, int origen) {
@@ -1386,6 +1365,15 @@ public class ExcelRead extends JFrame{
                 int valorOri = Integer.parseInt(origenRel.get(i).contloc, 16);
                 int valorDes = Integer.parseInt(destinoRel.get(j).contloc, 16);
                 String resultadoHex = "";
+                String registro = "";
+                String operando = "";
+                
+                // Divide el el operando de origen con registro y etiqueta
+                if (origenRel.get(i).operando.contains(",")) {
+                    String[] partes = origenRel.get(i).operando.split(",");
+                    registro = partes[0];
+                    operando = partes[1];
+                }
                 
                 if (origenRel.get(i).operando.equals(destinoRel.get(j).etiqueta)) { // si el operando origen y la etiqueta destino son iguales 
                     if (valorOri < valorDes) { // si Destino es mayor que el oRIGEN
@@ -1400,13 +1388,33 @@ public class ExcelRead extends JFrame{
                         resultadoHex = "0000";
                     }
                     
-                    colocarPostByteRelativo(i, resultadoHex); //se va a la funcion para usarlo con su postbyte
+                    colocarPostByteRelativo(i, resultadoHex, ""); //se va a la funcion para usarlo con su postbyte
+                } else if (destinoRel.get(j).etiqueta.equals(operando)){ // si tiene coma y el operando origen y la etiqueta de destino son iguales
+                    String desplazamiento = "";
+                    String lb = "";
+                    
+                    if (valorOri < valorDes) { // si Destino es mayor que el oRIGEN
+                        desplazamiento = "Positivo";
+                        lb = calcularLb(registro, i, desplazamiento);
+                        
+                        resultadoHex = Integer.toHexString(valorDes - valorOri);
+                    } else if (valorOri > valorDes) { // origen es mayor que el destino
+                        desplazamiento = "Negativo";
+                        lb = calcularLb(registro, i, desplazamiento);
+                        
+                        int resultadoDecimal = complementoDos(valorDes, valorOri);
+                        resultadoHex = Integer.toHexString(resultadoDecimal);
+                    } else { // si son iguales
+                        resultadoHex = "0000";
+                    }
+                    
+                    colocarPostByteRelativo(i, resultadoHex, lb); //se va a la funcion para usarlo con su postbyte
                 }
             }
         } 
     }
     
-    static void colocarPostByteRelativo(int indiceOrigen, String resultado) {
+    static void colocarPostByteRelativo(int indiceOrigen, String resultado, String lb) {
         int i;
         for (i = 1; i < instruccion.size(); i++) {
             if (instruccion.get(i-1).contloc.equals(origenRel.get(indiceOrigen).contloc)) { // se planea recorrer instruccion donde coincide con contloc origen
@@ -1414,24 +1422,35 @@ public class ExcelRead extends JFrame{
                 
                 if (auxiliarPeso == 2) { // es de 8 bits //******************************************************************** aqui es dependiente de la existencia de la forma posbyte
                     resultado = resultado.substring(2, 4);
-                    funcionCortadora(i, resultado, auxiliarPeso);
+                    funcionCortadora(i, resultado, auxiliarPeso, lb);
                 } else if (auxiliarPeso == 4) { // es de 16 bits
-                    funcionCortadora(i, resultado, auxiliarPeso);
+                    funcionCortadora(i, resultado, auxiliarPeso, lb);
+                } else if (auxiliarPeso == 3) {
+                    resultado = resultado.substring(2, 4);
+                    funcionCortadora(i, resultado, auxiliarPeso, lb);
                 }
                 break; // Puedes detener el bucle una vez que encuentres el elemento.
             }
         }
     }
     
-    static void funcionCortadora(int i, String resultado, int auxiliarPeso) {
+    static void funcionCortadora(int i, String resultado, int auxiliarPeso, String lb) {
         String firstThreeCharacters = "";
-        if (auxiliarPeso == 4)
+        if (auxiliarPeso == 4) {
             firstThreeCharacters = instruccion.get(i-2).forma.substring(0, 6);
-        else if (auxiliarPeso == 2)
+            String modifiedString = firstThreeCharacters.concat(resultado);
+            System.out.println("es " + modifiedString);
+            instruccion.get(i-2).postByte =  modifiedString;
+        } else if (auxiliarPeso == 2) {
             firstThreeCharacters = instruccion.get(i-2).forma.substring(0, 3);
-        
-        String modifiedString = firstThreeCharacters.concat(resultado);
-        System.out.println("es " + modifiedString);
-        instruccion.get(i-2).postByte =  modifiedString;
+            String modifiedString = firstThreeCharacters.concat(resultado);
+            System.out.println("es " + modifiedString);
+            instruccion.get(i-2).postByte =  modifiedString;
+        } else if (auxiliarPeso == 3) {
+            firstThreeCharacters = instruccion.get(i-2).forma.substring(0, 3);
+            String modifiedString = firstThreeCharacters + lb + resultado;
+            System.out.println("es " + modifiedString);
+            instruccion.get(i-2).postByte =  modifiedString;
+        }
     }
 }
