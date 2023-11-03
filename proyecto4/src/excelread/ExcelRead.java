@@ -967,6 +967,7 @@ public class ExcelRead extends JFrame{
     }
 
     static void calcularXB(String comparador, LineaInstruccion actual, String valor, String opr2){
+       int entero = Integer.valueOf(valor);
        String registro="";
        int n = 5, n2= 4;
        
@@ -998,7 +999,7 @@ public class ExcelRead extends JFrame{
                 int decimal = Integer.parseInt(paso2, 2);
                 String xb = Integer.toHexString(decimal);
                 String cambio = actual.getForma().replace("xb", xb);
-                actual.setForma(cambio);
+                actual.setPostByte(cambio);
                 
                 }else{
                 
@@ -1008,7 +1009,7 @@ public class ExcelRead extends JFrame{
                 int decimal = Integer.parseInt(paso2, 2);
                 String xb = "0"+Integer.toHexString(decimal);
                 String cambio = actual.getForma().replace("xb", xb);
-                actual.setForma(cambio);
+                actual.setPostByte(cambio);
                 
                 }
                 
@@ -1026,6 +1027,9 @@ public class ExcelRead extends JFrame{
                     String cambio = actual.getForma().replace("xb", xb);
                     actual.setForma(cambio);
                     
+                    String llave="idx9";
+                    calcPostByte(llave, actual, entero);
+                    
                 }else{
                     
                     base= "111rr001";
@@ -1034,7 +1038,9 @@ public class ExcelRead extends JFrame{
                     String xb = Integer.toHexString(decimal);
                     String cambio = actual.getForma().replace("xb", xb);
                     actual.setForma(cambio);
-                
+                    
+                    String llave="idx9";
+                    calcPostByte(llave, actual, entero);
                 }
                 
                 break;
@@ -1047,6 +1053,9 @@ public class ExcelRead extends JFrame{
                 String xb = Integer.toHexString(decimal);
                 String cambio = actual.getForma().replace("xb", xb);
                 actual.setForma(cambio);
+                
+                String llave="idx16";
+                calcPostByte(llave, actual, entero);
                 
                 break;
             
@@ -1066,7 +1075,7 @@ public class ExcelRead extends JFrame{
                 decimal = Integer.parseInt(paso2, 2);
                 xb = Integer.toHexString(decimal);
                 cambio = actual.getForma().replace("xb", xb);
-                actual.setForma(cambio);
+                actual.setPostByte(cambio);
                 
                 }else{
                 
@@ -1076,7 +1085,7 @@ public class ExcelRead extends JFrame{
                 decimal = Integer.parseInt(paso2, 2);
                 xb = Integer.toHexString(decimal);
                 cambio = actual.getForma().replace("xb", xb);
-                actual.setForma(cambio);
+                actual.setPostByte(cambio);
                 
                 }
                 
@@ -1098,7 +1107,7 @@ public class ExcelRead extends JFrame{
                 decimal = Integer.parseInt(paso2, 2);
                 xb = Integer.toHexString(decimal);
                 cambio = actual.getForma().replace("xb", xb);
-                actual.setForma(cambio);
+                actual.setPostByte(cambio);
                 
                 }else{
                 
@@ -1108,7 +1117,7 @@ public class ExcelRead extends JFrame{
                 decimal = Integer.parseInt(paso2, 2);
                 xb = Integer.toHexString(decimal);
                 cambio = actual.getForma().replace("xb", xb);
-                actual.setForma(cambio);
+                actual.setPostByte(cambio);
                 
                 }
                 
@@ -1123,7 +1132,7 @@ public class ExcelRead extends JFrame{
                     decimal = Integer.parseInt(paso1, 2);
                     xb = Integer.toHexString(decimal);
                     cambio = actual.getForma().replace("xb", xb);
-                    actual.setForma(cambio);
+                    actual.setPostByte(cambio);
                 
                 }else if(valor.matches("[Bb]")){
                 
@@ -1132,7 +1141,7 @@ public class ExcelRead extends JFrame{
                     decimal = Integer.parseInt(paso1, 2);
                     xb = Integer.toHexString(decimal);
                     cambio = actual.getForma().replace("xb", xb);
-                    actual.setForma(cambio);
+                    actual.setPostByte(cambio);
                 
                 }else if(valor.matches("[Dd]")){
                     
@@ -1141,7 +1150,7 @@ public class ExcelRead extends JFrame{
                     decimal = Integer.parseInt(paso1, 2);
                     xb = Integer.toHexString(decimal);
                     cambio = actual.getForma().replace("xb", xb);
-                    actual.setForma(cambio);
+                    actual.setPostByte(cambio);
                 
                 }else{
                     System.out.println("ERROR");
@@ -1156,7 +1165,7 @@ public class ExcelRead extends JFrame{
                 decimal = Integer.parseInt(paso1, 2);
                 xb = Integer.toHexString(decimal);
                 cambio = actual.getForma().replace("xb", xb);
-                actual.setForma(cambio);
+                actual.setPostByte(cambio);
                 
                 break;
                 
@@ -1168,6 +1177,9 @@ public class ExcelRead extends JFrame{
                 xb = Integer.toHexString(decimal);
                 cambio = actual.getForma().replace("xb", xb);
                 actual.setForma(cambio);
+                
+                llave="idx16";
+                calcPostByte(llave, actual, entero);
                 
                 break;
                 
