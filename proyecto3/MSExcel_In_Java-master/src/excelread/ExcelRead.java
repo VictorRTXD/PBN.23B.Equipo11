@@ -163,7 +163,7 @@ static void mostrarArray(){
          Matcher matcherOprx = patOprx.matcher(notacion);
          Matcher matcherDirectiva = patDirectiva.matcher(codop);
          
-         if(matcherOpri.matches()){
+         if(matcherOpri.matches()){//caso inmediatos
              char tem = notacion.charAt(1);//Crea un caracter para comparar
              if(Character.toString(tem).matches("%")){
                  String binario = notacion.substring(2);//Elimina caracteres no deseados
@@ -226,7 +226,7 @@ static void mostrarArray(){
                      System.out.print(key + "  ");
                  }
                 }
-            }else if(matcherOpra.matches()){
+            }else if(matcherOpra.matches()){//directos o extendido
             char tem = notacion.charAt(0);//Crea un caracter para comparar
              if(Character.toString(tem).matches("%")){
                  String binario = notacion.substring(1);//Elimina caracteres no deseados
@@ -301,14 +301,14 @@ static void mostrarArray(){
                    System.out.print(key + "  ");
                    comparadorExcel(instruccion.get(contador).getCodop(), key);
                }else if(Character.toString(temp2).matches("[A | B | D | X | Y | SP]")){
-                   String key = "abdxys,rel9";
+                   String key = "abdxys,rel9";//si el operando es un registro es de 9
                    System.out.print(key + "  ");
                    comparadorExcel(instruccion.get(contador).getCodop(), key);
                }else{
                    String key = "Error";
                    System.out.print(key + "  ");
                }
-            }else if(matcherOprx.matches()){
+            }else if(matcherOprx.matches()){//indexados
                 char tem = notacion.charAt(0);
                 char temp2 = notacion.charAt(1);
                 if(Character.toString(tem).matches(", | [ABD]")){
