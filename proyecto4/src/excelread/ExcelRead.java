@@ -208,7 +208,9 @@ public class ExcelRead extends JFrame{
         System.out.println("");
         }
     }
-      
+    
+    
+    
     static void notacion(String codop, String notacion){
         LineaInstruccion actual = instruccion.get(contador);
         String comparador;
@@ -231,60 +233,7 @@ public class ExcelRead extends JFrame{
          Matcher matcherOprx = patOprx.matcher(notacion);
          Matcher matcherDirectiva = patDirectiva.matcher(codop);
          
-         if(matcherDirectiva.matches()){
-             comparador = "esDirectiva";
-                char tem = notacion.charAt(0);//crea un caracter temporal para comparar
-
-                if(codop.equals("DC.B")){//compara que el codop sea DC.B
-                    if(Character.toString(tem).equals("\"")){//en caso de que inicie con comillas
-                        String aux = notacion.replace("\"", ""); //elimina las comillas
-
-                        int pesoBytes = aux.length(); //Saca la longitud del conjunto de elementos y le asigna un byte
-                        double pesoDouble = (double) pesoBytes;
-                        instruccion.get(contador).peso = pesoDouble; //atencion aqui ***************************************
-
-                        System.out.print(pesoBytes + "  "); //imprimir para confirmar
-                    }else{//Si no inicia con comillas
-                        String[] elementos = notacion.split(",");//separa los elementos por comillas y los guarda en un arreglo
-                        int pesoBytes = elementos.length;//el peso en bytes es igual al tamaño del arreglo
-
-                        System.out.print(pesoBytes + "  ");//imprimir para confirmar
-                    }
-                }else if(codop.equals("DC.W")){//En todo caso confirma si el codop es un DC.W
-
-                    if(Character.toString(tem).equals("\"")){//en caso de que inicie con comillas
-                        String aux = notacion.replace("\"", "");//elimina las comillas
-
-                        int pesoBytes = (aux.length()*2);//el peso es igual al doble del numero de elementos
-                        double pesoDouble = (double) pesoBytes;
-                        instruccion.get(contador).peso = pesoDouble;
-
-                        System.out.print(pesoBytes + "  ");//imprimir para confirmar
-                    }else{//si no inicia con comillas
-                        String[] elementos = notacion.split(",");//separa los elementos por comillas y los guarda en un arreglo
-                        int pesoBytes = (elementos.length*2);//el peso es igual a 2 veces la longitud del arreglo
-                        double pesoDouble = (double) pesoBytes;
-                        instruccion.get(contador).peso = pesoDouble;
-
-                        System.out.print(pesoBytes + "  ");//imprimir para confirmar
-                    }
-                }else if(codop.equals("DS.B") && Character.toString(tem).matches("[1-9]")){//En todo caso confirma si el codop es un DS.B
-                    int pesoBytes = Integer.parseInt(notacion);//el peso será igual al número específico del operando
-                    double pesoDouble = (double) pesoBytes;
-                    instruccion.get(contador).peso = pesoDouble;
-
-                    System.out.print(pesoBytes + "  ");//imprimir para confirmar
-                }else if(codop.equals("DS.W") && Character.toString(tem).matches("[1-9]")){//En todo caso confirma si el codop es un DS.W
-                    int pesoBytes = (Integer.parseInt(notacion)*2);//el peso será igual a 2 veces el operando especificado
-                    double pesoDouble = (double) pesoBytes;
-                    instruccion.get(contador).peso = pesoDouble;
-
-                    System.out.print(pesoBytes + "  ");//imprimir para confirmar
-                }else{//caso de error
-                    System.out.println("Directiva no valida");//mensaje de error
-                }
-         }else{
-             if(matcherOpri.matches()){
+         if(matcherOpri.matches()){
              char tem = notacion.charAt(1);//Crea un caracter para comparar
              if(Character.toString(tem).matches("%")){
                  String binario = notacion.substring(2);//Elimina caracteres no deseados
@@ -455,58 +404,22 @@ public class ExcelRead extends JFrame{
                    System.out.print(key + "  ");
                }
             }else if(matcherOprx.matches()){
+                comparador = "esIndexado";
                 char tem = notacion.charAt(0);
                 char temp2 = notacion.charAt(1);
-                if(Character.toString(tem).matches("[ABD]")){
-                    String[] aOperandos = notacion.split(",");
-                    String operando1 = aOperandos[0];
-                    String operando2 = aOperandos[1];
-                    
+                if(Character.toString(tem).matches(", | [ABD]")){
                     String key = "oprx0_xysp";
-                    String llave = "ABD";
                     System.out.print(key + "  ");
                     comparadorExcel(instruccion.get(contador).getCodop(), key);
-                    calcularXB(llave, actual, operando1, operando2);
-                    
-                }else if(Character.toString(tem).equals(",")){
-                    String opr1= "0";
-                    String opr2 = notacion.substring(1);
-                    
-                    String key = "oprx0_xysp";
-                    String comparador2 =  "5b";
-                    System.out.print(key + "  ");
-                    comparadorExcel(instruccion.get(contador).getCodop(), key);
-                    calcularXB(comparador2, actual, opr1, opr2);
-                    
                 }else if(Character.toString(tem).matches("\\[?")){
                     if(Character.toString(temp2).matches("D")){
-                        String[] aOperandos = notacion.split(",");
-                        String operando2 = aOperandos[1].replace("]", "");
-                        
                         String key = "[D,xysp]";
-                        String comparador2 = "DIDX";
                         System.out.print(key + "  ");
-                        
                         comparadorExcel(instruccion.get(contador).getCodop(), key);
-                        calcularXB(comparador2, actual, "D", operando2);
                     }else{
-                        String[] aOperandos = notacion.split(",");
-                        String operando1= aOperandos[0].replace("[", "");
-                        String operando2 = aOperandos[1].replace("]", "");
-                        
                         String key = "[oprx16,xysp]";
-                        String llave = "16IDX";
                         System.out.print(key + "  ");
                         comparadorExcel(instruccion.get(contador).getCodop(), key);
-
-                        calcularXB(llave, actual, operando1, operando2);
-                        
-                    } //atencion aqui ****************************************************************************************
-                }else if(Character.toString(tem).equals("-") || Character.toString(tem).matches("[0-9]") || Character.toString(tem).matches("[@%\\$?]")){
-                    separarOperandos(notacion);
-                }else{
-                    System.out.println("Instruccion no valida");
-                }
                     }
                 }else if(Character.toString(tem).equals("-")){
                     separarOperandos(notacion, comparador);
@@ -575,18 +488,15 @@ public class ExcelRead extends JFrame{
                 if(notacion.length() == 1 && Character.toString(tem).equals("-")){
                     String key = "-";
                     comparadorExcel(instruccion.get(contador).getCodop(), key);
-                    calcPostByte(comparador, actual, 0);
                     System.out.print(key + "  ");
                 }else{
                     String key = "Error";
                     System.out.print(key + "  ");
                     }
             }
-         }
-    }//fin de notación
+    }
     
-    static void separarOperandos(String operandos){
-        LineaInstruccion actual = instruccion.get(contador);
+    static void separarOperandos(String operandos, String comparador){
         //String operandosOriginal = operandos;
         String[] aOperandos = operandos.split(",");
         String operando1 = aOperandos[0];
@@ -598,32 +508,79 @@ public class ExcelRead extends JFrame{
         char temp3 = operando2.charAt(0);
         char temp4 = operando2.charAt(idx);
         
-        if(Character.toString(tem).equals("-")){
+        if(Character.toString(tem).equals("-")||Character.toString(temp3).equals("-")||Character.toString(temp4).equals("-")){
               char temp2 = operando1.charAt(1);
-             if(Character.toString(temp2).matches("[0-9]")){
-                String paso = operando1.substring(1);
-                int tamaño = Integer.parseInt(paso);
+             if(Character.toString(temp2).matches("%")){
+                 String binario = operando1.substring(2);//Elimina caracteres no deseados
+                 int tamaño = Integer.parseInt(binario, 2);
                  if(tamaño<=16){
                      String key = "oprx0_xysp";
-                     String comparador = "5b";
                      System.out.print(key + "  ");
-
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
-                     calcularXB(comparador, actual, operando1, operando2);
                  }else if(tamaño<=256){
                      String key = "oprx9,xysp";
-                     String comparador = "9b";
                      System.out.print(key + "  ");
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
-                     calcularXB(comparador, actual, operando1, operando2);
-                     
                 }else if(tamaño<=32768){
                     String key = "oprx16,xysp";
-                    String comparador= "16b";
                     System.out.print(key + "  ");
-                    
                     comparadorExcel(instruccion.get(contador).getCodop(), key);
-                    calcularXB(comparador, actual, operando1, operando2);
+                }else{//Valor no valido
+                     String key = "Error";
+                     System.out.print(key + "  ");
+                 }
+            }else if(Character.toString(temp2).matches("@")){
+                 String octal = operando1.substring(2);//Elimina caracteres no deseados
+                 int tamaño = Integer.parseInt(octal, 8);
+                 if(tamaño<=16){
+                     String key = "oprx0_xysp";
+                     System.out.print(key + "  ");
+                     comparadorExcel(instruccion.get(contador).getCodop(), key);
+                 }else if(tamaño<=256){
+                     String key = "oprx9,xysp";
+                     System.out.print(key + "  ");
+                     comparadorExcel(instruccion.get(contador).getCodop(), key);
+                }else if(tamaño<=32768){
+                    String key = "oprx16,xysp";
+                    System.out.print(key + "  ");
+                    comparadorExcel(instruccion.get(contador).getCodop(), key);
+                }else{//Valor no valido
+                     String key = "Error";
+                System.out.print(key + "  ");
+                }
+            }else if(Character.toString(temp2).equals("$")){
+                 String hexa = operando1.substring(2);//Elimina caracteres no deseados
+                 int tamaño = Integer.parseInt(hexa, 16);
+                 if(tamaño<=16){
+                     String key = "oprx0_xysp";
+                     System.out.print(key + "  ");
+                     comparadorExcel(instruccion.get(contador).getCodop(), key);
+                 }else if(tamaño<=256){
+                     String key = "oprx9,xysp";
+                     System.out.print(key + "  ");
+                     comparadorExcel(instruccion.get(contador).getCodop(), key);
+                }else if(tamaño<=32768){
+                    String key = "oprx16,xysp";
+                    System.out.print(key + "  ");
+                    comparadorExcel(instruccion.get(contador).getCodop(), key);
+                }else{//Valor no valido
+                     String key = "Error";
+                System.out.print(key + "  ");
+                }
+            }else if(Character.toString(temp2).matches("[0-9]")){
+                int tamaño = Integer.parseInt(operando1);
+                 if(tamaño<=16){
+                     String key = "oprx0_xysp";
+                     System.out.print(key + "  ");
+                     comparadorExcel(instruccion.get(contador).getCodop(), key);
+                 }else if(tamaño<=256){
+                     String key = "oprx9,xysp";
+                     System.out.print(key + "  ");
+                     comparadorExcel(instruccion.get(contador).getCodop(), key);
+                }else if(tamaño<=32768){
+                    String key = "oprx16,xysp";
+                    System.out.print(key + "  ");
+                    comparadorExcel(instruccion.get(contador).getCodop(), key);
                 }else{//Valor no valido
                      String key = "Error";
                     System.out.print(key + "  ");                
@@ -632,279 +589,22 @@ public class ExcelRead extends JFrame{
                     String key = "Error";
                     System.out.print(key + "  ");
                 }
-        }else if(Character.toString(temp3).equals("-")){
-            char temp2 = operando1.charAt(0);
-             if(Character.toString(temp2).matches("%")){
-                 String binario = operando1.substring(1);//Elimina caracteres no deseados
-                 int tamaño = Integer.parseInt(binario, 2);
-                 if(tamaño<=8 && tamaño>= 1){
-                     String key = "oprx0_xysp";
-                     String comparador = "pre";
-                     System.out.print(key + "  ");
-                     String opr1 = "-"+tamaño;
-                     comparadorExcel(instruccion.get(contador).getCodop(), key);
-                     calcularXB(comparador, actual, opr1, operando2);
-                 }else{//Valor no valido
-                     String key = "Error";
-                     System.out.print(key + "  ");
-                 }
-            }else if(Character.toString(temp2).matches("@")){
-                 String octal = operando1.substring(1);//Elimina caracteres no deseados
-                 int tamaño = Integer.parseInt(octal, 8);
-                 if(tamaño<=8 && tamaño>= 1){
-                     String key = "oprx0_xysp";
-                     String comparador = "pre";
-                     System.out.print(key + "  ");
-                     String opr1 = "-"+tamaño;
-                     comparadorExcel(instruccion.get(contador).getCodop(), key);
-                     calcularXB(comparador, actual, opr1, operando2);
-                 }else{//Valor no valido
-                     String key = "Error";
-                     System.out.print(key + "  ");
-                 }
-            }else if(Character.toString(temp2).equals("$")){
-                 String hexa = operando1.substring(1);//Elimina caracteres no deseados
-                 int tamaño = Integer.parseInt(hexa, 16);
-                 if(tamaño<=8 && tamaño>= 1){
-                     String key = "oprx0_xysp";
-                     String comparador = "pre";
-                     System.out.print(key + "  ");
-                     String opr1 = "-"+tamaño;
-                     comparadorExcel(instruccion.get(contador).getCodop(), key);
-                     calcularXB(comparador, actual, opr1, operando2);
-                 }else{//Valor no valido
-                     String key = "Error";
-                     System.out.print(key + "  ");
-                 }
-            }else if(Character.toString(temp2).matches("[0-9]")){
-                int tamaño = Integer.parseInt(operando1);
-                 if(tamaño<=8 && tamaño>= 1){
-                     String key = "oprx0_xysp";
-                     String comparador = "pre";
-                     System.out.print(key + "  ");
-                     String opr1 = "-"+tamaño;
-                     comparadorExcel(instruccion.get(contador).getCodop(), key);
-                     calcularXB(comparador, actual, opr1, operando2);
-                 }else{//Valor no valido
-                     String key = "Error";
-                     System.out.print(key + "  ");
-                 }
-                }else{
-                    String key = "Error";
-                    System.out.print(key + "  ");
-                }
-        }else if(Character.toString(temp4).equals("-")){
-            char temp2 = operando1.charAt(0);
-             if(Character.toString(temp2).matches("%")){
-                 String binario = operando1.substring(1);//Elimina caracteres no deseados
-                 int tamaño = Integer.parseInt(binario, 2);
-                 if(tamaño<=8 && tamaño>= 1){
-                     String key = "oprx0_xysp";
-                     String comparador = "post";
-                     System.out.print(key + "  ");
-                     String opr1 = "-"+tamaño;
-                     comparadorExcel(instruccion.get(contador).getCodop(), key);
-                     calcularXB(comparador, actual, opr1, operando2);
-                 }else{//Valor no valido
-                     String key = "Error";
-                     System.out.print(key + "  ");
-                 }
-            }else if(Character.toString(temp2).matches("@")){
-                 String octal = operando1.substring(1);//Elimina caracteres no deseados
-                 int tamaño = Integer.parseInt(octal, 8);
-                 if(tamaño<=8 && tamaño>= 1){
-                     String key = "oprx0_xysp";
-                     String comparador = "post";
-                     System.out.print(key + "  ");
-                     String opr1 = "-"+tamaño;
-                     comparadorExcel(instruccion.get(contador).getCodop(), key);
-                     calcularXB(comparador, actual, opr1, operando2);
-                 }else{//Valor no valido
-                     String key = "Error";
-                     System.out.print(key + "  ");
-                 }
-            }else if(Character.toString(temp2).equals("$")){
-                 String hexa = operando1.substring(1);//Elimina caracteres no deseados
-                 int tamaño = Integer.parseInt(hexa, 16);
-                 if(tamaño<=8 && tamaño>= 1){
-                     String key = "oprx0_xysp";
-                     String comparador = "post";
-                     System.out.print(key + "  ");
-                     String opr1 = "-"+tamaño;
-                     comparadorExcel(instruccion.get(contador).getCodop(), key);
-                     calcularXB(comparador, actual, opr1, operando2);
-                 }else{//Valor no valido
-                     String key = "Error";
-                     System.out.print(key + "  ");
-                 }
-            }else if(Character.toString(temp2).matches("[0-9]")){
-                int tamaño = Integer.parseInt(operando1);
-                 if(tamaño<=8 && tamaño>= 1){
-                     String key = "oprx0_xysp";
-                     String comparador = "post";
-                     System.out.print(key + "  ");
-                     String opr1 = "-"+tamaño;
-                     comparadorExcel(instruccion.get(contador).getCodop(), key);
-                     calcularXB(comparador, actual, opr1, operando2);
-                 }else{//Valor no valido
-                     String key = "Error";
-                     System.out.print(key + "  ");
-                 }
-                }else{
-                    String key = "Error";
-                    System.out.print(key + "  ");
-                } 
-        }else if(Character.toString(temp3).equals("+")){
-              char temp2 = operando1.charAt(0);
-             if(Character.toString(temp2).matches("%")){
-                 String binario = operando1.substring(1);//Elimina caracteres no deseados
-                 int tamaño = Integer.parseInt(binario, 2);
-                 if(tamaño<=8 && tamaño>= 1){
-                     String key = "oprx0_xysp";
-                     String comparador = "pre";
-                     System.out.print(key + "  ");
-                     String opr1 = "-"+(tamaño-1);
-                     comparadorExcel(instruccion.get(contador).getCodop(), key);
-                     calcularXB(comparador, actual, opr1, operando2);
-                 }else{//Valor no valido
-                     String key = "Error";
-                     System.out.print(key + "  ");
-                 }
-            }else if(Character.toString(temp2).matches("@")){
-                 String octal = operando1.substring(1);//Elimina caracteres no deseados
-                 int tamaño = Integer.parseInt(octal, 8);
-                 if(tamaño<=8 && tamaño>= 1){
-                     String key = "oprx0_xysp";
-                     String comparador = "pre";
-                     System.out.print(key + "  ");
-                     String opr1 = "-"+(tamaño-1);
-                     comparadorExcel(instruccion.get(contador).getCodop(), key);
-                     calcularXB(comparador, actual, opr1, operando2);
-                 }else{//Valor no valido
-                     String key = "Error";
-                     System.out.print(key + "  ");
-                 }
-            }else if(Character.toString(temp2).equals("$")){
-                 String hexa = operando1.substring(1);//Elimina caracteres no deseados
-                 int tamaño = Integer.parseInt(hexa, 16);
-                 if(tamaño<=8 && tamaño>= 1){
-                     String key = "oprx0_xysp";
-                     String comparador = "pre";
-                     System.out.print(key + "  ");
-                     String opr1 = "-"+(tamaño-1);
-                     comparadorExcel(instruccion.get(contador).getCodop(), key);
-                     calcularXB(comparador, actual, opr1, operando2);
-                 }else{//Valor no valido
-                     String key = "Error";
-                     System.out.print(key + "  ");
-                 }
-            }else if(Character.toString(temp2).matches("[0-9]")){
-                int tamaño = Integer.parseInt(operando1);
-                 if(tamaño<=8 && tamaño>= 1){
-                     String key = "oprx0_xysp";
-                     String comparador = "pre";
-                     System.out.print(key + "  ");
-                     String opr1 = "-"+(tamaño-1);
-                     comparadorExcel(instruccion.get(contador).getCodop(), key);
-                     calcularXB(comparador, actual, opr1, operando2);
-                 }else{//Valor no valido
-                     String key = "Error";
-                     System.out.print(key + "  ");
-                 }
-                }else{
-                    String key = "Error";
-                    System.out.print(key + "  ");
-                }
-        }else if(Character.toString(temp4).equals("+")){
-            char temp2 = operando1.charAt(0);
-             if(Character.toString(temp2).matches("%")){
-                 String binario = operando1.substring(1);//Elimina caracteres no deseados
-                 int tamaño = Integer.parseInt(binario, 2);
-                 if(tamaño<=8 && tamaño>= 1){
-                     String key = "oprx0_xysp";
-                     String comparador = "post";
-                     System.out.print(key + "  ");
-                     String opr1 = "-"+(tamaño-1);
-                     comparadorExcel(instruccion.get(contador).getCodop(), key);
-                     calcularXB(comparador, actual, opr1, operando2);
-                 }else{//Valor no valido
-                     String key = "Error";
-                     System.out.print(key + "  ");
-                 }
-            }else if(Character.toString(temp2).matches("@")){
-                 String octal = operando1.substring(1);//Elimina caracteres no deseados
-                 int tamaño = Integer.parseInt(octal, 8);
-                 if(tamaño<=8 && tamaño>= 1){
-                     String key = "oprx0_xysp";
-                     String comparador = "post";
-                     System.out.print(key + "  ");
-                     String opr1 = "-"+(tamaño-1);
-                     comparadorExcel(instruccion.get(contador).getCodop(), key);
-                     calcularXB(comparador, actual, opr1, operando2);
-                 }else{//Valor no valido
-                     String key = "Error";
-                     System.out.print(key + "  ");
-                 }
-            }else if(Character.toString(temp2).equals("$")){
-                 String hexa = operando1.substring(1);//Elimina caracteres no deseados
-                 int tamaño = Integer.parseInt(hexa, 16);
-                 if(tamaño<=8 && tamaño>= 1){
-                     String key = "oprx0_xysp";
-                     String comparador = "post";
-                     System.out.print(key + "  ");
-                     String opr1 = "-"+(tamaño-1);
-                     comparadorExcel(instruccion.get(contador).getCodop(), key);
-                     calcularXB(comparador, actual, opr1, operando2);
-                 }else{//Valor no valido
-                     String key = "Error";
-                     System.out.print(key + "  ");
-                 }
-            }else if(Character.toString(temp2).matches("[0-9]")){
-                int tamaño = Integer.parseInt(operando1);
-                 if(tamaño<=8 && tamaño>= 1){
-                     String key = "oprx0_xysp";
-                     String comparador = "post";
-                     System.out.print(key + "  ");
-                     String opr1 = "-"+(tamaño-1);
-                     comparadorExcel(instruccion.get(contador).getCodop(), key);
-                     calcularXB(comparador, actual, opr1, operando2);
-                 }else{//Valor no valido
-                     String key = "Error";
-                     System.out.print(key + "  ");
-                 }
-                }else{
-                    String key = "Error";
-                    System.out.print(key + "  ");
-                } 
-        
         }else{
            if(Character.toString(tem).matches("%")){
                  String binario = operando1.substring(1);//Elimina caracteres no deseados
                  int tamaño = Integer.parseInt(binario, 2);
                  if(tamaño<=15){
                      String key = "oprx0_xysp";
-                     String comparador= "5b";
-                     String opr1 = ""+tamaño;
                      System.out.print(key + "  ");
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
-                     calcularXB(comparador, actual, opr1, operando2);
                  }else if(tamaño<=255){
                      String key = "oprx9,xysp";
                      System.out.print(key + "  ");
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
-                     
-                     String opr1 = ""+tamaño;
-                     String comparador= "9b";
-                     calcularXB(comparador, actual, opr1, operando2);
-                     
                 }else if(tamaño<=65535){
                     String key = "oprx16,xysp";
                     System.out.print(key + "  ");
                     comparadorExcel(instruccion.get(contador).getCodop(), key);
-                    
-                    String opr1 = ""+tamaño;
-                     String comparador= "16b";
-                     calcularXB(comparador, actual, opr1, operando2);
                 }else{//Valor no valido
                      String key = "Error";
                      System.out.print(key + "  ");
@@ -916,24 +616,14 @@ public class ExcelRead extends JFrame{
                      String key = "oprx0_xysp";
                      System.out.print(key + "  ");
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
-                     
-                     String opr1 = ""+tamaño;
-                     String comparador= "5b";
-                     calcularXB(comparador, actual, opr1, operando2);
                  }else if(tamaño<=255){
                      String key = "oprx9,xysp";
                      System.out.print(key + "  ");
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
-                     String opr1 = ""+tamaño;
-                     String comparador= "9b";
-                     calcularXB(comparador, actual, opr1, operando2);
                 }else if(tamaño<=65535){
                     String key = "oprx16,xysp";
                     System.out.print(key + "  ");
                     comparadorExcel(instruccion.get(contador).getCodop(), key);
-                    String opr1 = ""+tamaño;
-                     String comparador= "16b";
-                     calcularXB(comparador, actual, opr1, operando2);
                 }else{//Valor no valido
                      String key = "Error";}
             }else if(Character.toString(tem).equals("$")){
@@ -943,23 +633,14 @@ public class ExcelRead extends JFrame{
                      String key = "oprx0_xysp";
                      System.out.print(key + "  ");
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
-                     String opr1 = ""+tamaño;
-                     String comparador= "5b";
-                     calcularXB(comparador, actual, opr1, operando2);
                  }else if(tamaño<=255){
                      String key = "oprx9,xysp";
                      System.out.print(key + "  ");
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
-                     String opr1 = ""+tamaño;
-                     String comparador= "9b";
-                     calcularXB(comparador, actual, opr1, operando2);
                 }else if(tamaño<=65535){
                     String key = "oprx16,xysp";
                     System.out.print(key + "  ");
                     comparadorExcel(instruccion.get(contador).getCodop(), key);
-                    String opr1 = ""+tamaño;
-                     String comparador= "16b";
-                     calcularXB(comparador, actual, opr1, operando2);
                 }else{//Valor no valido
                      String key = "Error";
                 System.out.print(key + "  ");}
@@ -970,23 +651,14 @@ public class ExcelRead extends JFrame{
                      String key = "oprx0_xysp";
                      System.out.print(key + "  ");
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
-                     String opr1 = ""+tamaño;
-                     String comparador= "5b";
-                     calcularXB(comparador, actual, opr1, operando2);
                  }else if(tamaño<=255){
                      String key = "oprx9,xysp";
                      System.out.print(key + "  ");
                      comparadorExcel(instruccion.get(contador).getCodop(), key);
-                     String opr1 = ""+tamaño;
-                     String comparador= "9b";
-                     calcularXB(comparador, actual, opr1, operando2);
                 }else if(tamaño<=65535){
                     String key = "oprx16,xysp";
                     System.out.print(key + "  ");
                     comparadorExcel(instruccion.get(contador).getCodop(), key);
-                    String opr1 = ""+tamaño;
-                     String comparador= "16b";
-                     calcularXB(comparador, actual, opr1, operando2);
                 }else{//Valor no valido
                      String key = "Error";
                 System.out.print(key + "  ");}
@@ -1294,7 +966,7 @@ public class ExcelRead extends JFrame{
      }
     }
 
-   static void calcularXB(String comparador, LineaInstruccion actual, String valor, String opr2){
+    static void calcularXB(String comparador, LineaInstruccion actual, String valor, String opr2){
        int entero = Integer.valueOf(valor);
        String registro="";
        int n = 5, n2= 4;
@@ -1516,7 +1188,6 @@ public class ExcelRead extends JFrame{
    }//fin de calcular xb
 
    static void calcPostByte(String comparador, LineaInstruccion actual, int valor){
-        String valorS = Integer.toString(valor);
         String hexa = Integer.toHexString(valor);
         switch(comparador){
             case "esInherente":// Si es inherente
@@ -1602,69 +1273,63 @@ public class ExcelRead extends JFrame{
                     actual.setPostByte(cambio2);
                 }
                 
-                break;//fin de los extendidos 
-                
-            case "idx9":
-                char signo = valorS.charAt(0);
-                
-                if(Character.toString(signo).equals("-")){
-                String hexa2 = hexa.substring(hexa.length()-2);
-                
-                String ff = hexa2;
-                String cambio = actual.getForma().replace("ff", ff);
-                
-                actual.setPostByte(cambio);
-                
-                }else{
-                    
-                    String ff = hexa;
-                    String cambio = actual.getForma().replace("ff", ff);
-                
+                break;//fin de los extendidos  
+
+            case "esIndexado5Bits":
+                if (hexa.length() == 1) {
+                    String nuevo = "0" + hexa;
+                    String cambio = actual.getForma().replace("xb", nuevo);
+                    actual.setPostByte(cambio);
+                } else {
+                    String cambio = actual.getForma().replace("xb", hexa);
                     actual.setPostByte(cambio);
                 }
-
                 break;
-                
-            case "idx16":
-                
-                signo = valorS.charAt(0);
-                
-                if(Character.toString(signo).equals("-")){
-                    String hexa2 = hexa.substring(hexa.length()-4);
-                    
-                    String ee = hexa2.substring(2, 4);
-                    String ff = hexa2.substring(0, 2);
-                
-                    String cambio = actual.getForma().replace("ee", ee);
+
+            case "esIndexado9Bits":
+                if (hexa.length() == 3) {
+                    String nuevo = "0" + hexa;
+                    String xb = nuevo.substring(2, 4);
+                    String ff = nuevo.substring(0, 2);
+                    String cambio = actual.getForma().replace("xb", xb);
                     String cambio2 = cambio.replace("ff", ff);
-                
                     actual.setPostByte(cambio2);
-                }else{
-                    if(hexa.length()==3){
-                        String hexa2 = "0"+hexa;
-                    
-                        String ee = hexa2.substring(2, 4);
-                        String ff = hexa2.substring(0, 2);
-                
-                        String cambio = actual.getForma().replace("ee", ee);
-                        String cambio2 = cambio.replace("ff", ff);
-                
-                        actual.setPostByte(cambio2);
-                    }else{
-                        String ee = hexa.substring(2, 4);
-                        String ff = hexa.substring(0, 2);
-                
-                        String cambio = actual.getForma().replace("ee", ee);
-                        String cambio2 = cambio.replace("ff", ff);
-                
-                        actual.setPostByte(cambio2);
-                    }
-
+                } else {
+                    String xb = hexa.substring(2, 4);
+                    String ff = hexa.substring(0, 2);
+                    String cambio = actual.getForma().replace("xb", xb);
+                    String cambio2 = cambio.replace("ff", ff);
+                    actual.setPostByte(cambio2);
                 }
-
                 break;
-        }//fin del switch
-    }//fin de calcular postbyte 
+                
+            case "esIndexado16Bits":
+                if (hexa.length() == 5) {
+                    String nuevo = "0" + hexa;
+                    String xb = nuevo.substring(4, 6);
+                    String ee = nuevo.substring(2, 4);
+                    String ff = nuevo.substring(0, 2);
+                    String cambio = actual.getForma().replace("xb", xb);
+                    String cambio2 = cambio.replace("ee", ee);
+                    String cambio3 = cambio.replace("ff", ff);
+                    actual.setPostByte(cambio3);
+            } else {
+                    String xb = hexa.substring(4, 6);
+                    String ee = hexa.substring(2, 4);
+                    String ff = hexa.substring(0, 2);
+                    String cambio = actual.getForma().replace("xb", xb);
+                    String cambio2 = cambio.replace("ee", ee);
+                    String cambio3 = cambio.replace("ff", ff);
+                    actual.setPostByte(cambio3);
+                }
+                break;
+            /*case "esRelativo":
+                System.out.println("aaaaaaaaaaaaaaaaaaaaaaaa");
+                calcularRel();
+            break;
+            */
+        }
+    }
 
     static String calcularLb(String registro, int indexOrigen, String desplazamiento) { // recuerda modificarla porque inicialmente era para xb
         try {
