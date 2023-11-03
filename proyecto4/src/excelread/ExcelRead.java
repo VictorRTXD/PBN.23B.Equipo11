@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package excelread;
 
 import org.apache.poi.ss.usermodel.*;
@@ -18,143 +13,203 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
-public class ExcelRead {
-static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>();
+public class ExcelRead extends JFrame{
+    static private JTable table;
+    static private DefaultTableModel tableModel;
+
+    public ExcelRead() {
+        JFrame frame = new JFrame("Ejemplo JTable");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // Crear el modelo de la tabla con columnas
+        String[] columnNames = {"Etiqueta", "codop", "operando", "key", "peso", "direccionamiento", "postbyte", "contloc"};
+        tableModel = new DefaultTableModel(columnNames, 0);
+
+        // Crear la tabla con el modelo
+        table = new JTable(tableModel);
+
+        // Agregar la tabla a un JScrollPane para hacerla desplazable
+        JScrollPane scrollPane = new JScrollPane(table);
+        frame.add(scrollPane);
+
+        frame.setSize(500, 300);
+        frame.setVisible(true);
+    }
+    
+    static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>();
+    static ArrayList<LineaInstruccion> origenRel = new ArrayList<LineaInstruccion>();
+    static ArrayList<LineaInstruccion> destinoRel = new ArrayList<LineaInstruccion>();
+    
     static int contador = 0;
     public static void main(String[] args) throws IOException {
-        String fileName = "P1ASM.asm";
+        String flag = "y";
 
-        // ** Expresiones regulares
+        while (flag.equals("y")) {
+            System.out.println("oprime 0 para default o escribe el nombre del archivo");
+            Scanner sc = new Scanner(System.in);
+            flag = sc.next();
+            String fileName;
 
-        String regexComentario = "^\\s*;.*$";
+            if (flag.equals("0"))
+                fileName = "P1ASM.asm";
+            else
+                fileName = flag;
 
-        // Expresión regular para identificar código de operación y operando
-        String regexCodigoOperacionOperando = "^\\s*([Aa.-Zz]+)\\s+(.*?)$";
+            // ** Expresiones regulares
 
-        // Expresión regular para identificar etiquetas, códigos de operación y operandos
-        String regexCodigo = "^\\s*([a-zA-Z0-9]+):\\s*([Aa.-Zz]+)\\s+(.*?)$"; 
+            String regexComentario = "^\\s*;.*$";
 
-        //Expresión regular para identificar solo etiqueta y código de operación
-        String regexEtiquetaCodigoOperacion = "^\\s*([a-zA-Z0-9]+):\\s*([Aa.-Zz]+)";
+            // Expresión regular para identificar código de operación y operando
+            String regexCodigoOperacionOperando = "^\\s*([Aa.-Zz]+)\\s+(.*?)$";
 
-        //Un solo codigo de operacion
-        String regexCodigoOperacion = "^\\s*([Aa.-Zz]+)";
+            // Expresión regular para identificar etiquetas, códigos de operación y operandos
+            String regexCodigo = "^\\s*([a-zA-Z0-9]+):\\s*([Aa.-Zz]+)\\s+(.*?)$"; 
 
-        // Compilar las expresiones regulares
-        Pattern patComentario = Pattern.compile(regexComentario);
-        Pattern patCodigo = Pattern.compile(regexCodigo);
-        Pattern patCodigoOperacionOperando = Pattern.compile(regexCodigoOperacionOperando);
-        Pattern patCodigoOperacion = Pattern.compile(regexCodigoOperacion);
-        Pattern patEtiquetaCodigoOperacion = Pattern.compile(regexEtiquetaCodigoOperacion);
+            //Expresión regular para identificar solo etiqueta y código de operación
+            String regexEtiquetaCodigoOperacion = "^\\s*([a-zA-Z0-9]+):\\s*([Aa.-Zz]+)";
 
-        /*
-        br sirve para leer el contenido del archivo y el while es para leerlo todo usando br.readLIne() y almacenamos cada linea en la variable linea */
-        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-            String linea;
-            System.out.println("Contenido original del archivo:");
-            while ((linea = br.readLine()) != null){
-                Matcher matcherComentario = patComentario.matcher(linea);
-                Matcher matcherCodigo = patCodigo.matcher(linea);
-                Matcher matcherCodigoOperacionOperando = patCodigoOperacionOperando.matcher(linea);
-                Matcher matcherCodigoOperacion= patCodigoOperacion.matcher(linea);
-                Matcher matcherEtiquetaCodigoOperacion = patEtiquetaCodigoOperacion.matcher(linea);
-                
-                //String etiqueta=null, codigoOperacion=null, operando=null;
-    
-                if (matcherComentario.matches()) {
-                    if (linea.length () > 80){
-                        System.out.println("Exceso de caracteres en: "+linea);
-                    } else {
-                    // Es un comentario
-                        System.out.println("Comentario: " + linea);
-                        System.out.println("");}
-                } else if (matcherCodigo.matches()) {
-                    // Es una línea de código con etiqueta, código de operación y operando
-                    String etiqueta = matcherCodigo.group(1);
-                    String codigoOperacion = matcherCodigo.group(2);
-                    String operando = matcherCodigo.group(3);
-                    //instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, null));
+            //Un solo codigo de operacion
+            String regexCodigoOperacion = "^\\s*([Aa.-Zz]+)";
+
+            // Compilar las expresiones regulares
+            Pattern patComentario = Pattern.compile(regexComentario);
+            Pattern patCodigo = Pattern.compile(regexCodigo);
+            Pattern patCodigoOperacionOperando = Pattern.compile(regexCodigoOperacionOperando);
+            Pattern patCodigoOperacion = Pattern.compile(regexCodigoOperacion);
+            Pattern patEtiquetaCodigoOperacion = Pattern.compile(regexEtiquetaCodigoOperacion);
+
+            /*
+            br sirve para leer el contenido del archivo y el while es para leerlo todo usando br.readLIne() y almacenamos cada linea en la variable linea */
+            try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+                String linea;
+                System.out.println("Contenido original del archivo:");
+                while ((linea = br.readLine()) != null){
+                    Matcher matcherComentario = patComentario.matcher(linea);
+                    Matcher matcherCodigo = patCodigo.matcher(linea);
+                    Matcher matcherCodigoOperacionOperando = patCodigoOperacionOperando.matcher(linea);
+                    Matcher matcherCodigoOperacion= patCodigoOperacion.matcher(linea);
+                    Matcher matcherEtiquetaCodigoOperacion = patEtiquetaCodigoOperacion.matcher(linea);
+                    
+                    //String etiqueta=null, codigoOperacion=null, operando=null;
+        
+                    if (matcherComentario.matches()) {
+                        if (linea.length () > 80){
+                            System.out.println("Exceso de caracteres en: "+linea);
+                        } else {
+                        // Es un comentario
+                            System.out.println("Comentario: " + linea);
+                            System.out.println("");}
+                    } else if (matcherCodigo.matches()) {
+                        // Es una línea de código con etiqueta, código de operación y operando
+                        String etiqueta = matcherCodigo.group(1);
+                        String codigoOperacion = matcherCodigo.group(2);
+                        String operando = matcherCodigo.group(3);
+                        //instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, null));
+                            if(etiqueta.length()>8 || codigoOperacion.length()>5){
+                                System.out.println("Exceso de caracteres en: "+linea);
+                            }else{
+                                instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, 0, "0", "0", "0"));}
+                        
+                    } else if(matcherCodigoOperacionOperando.matches()) {
+                        // Es una línea con código de operación y operando
+                        String etiqueta = "-";
+                        String codigoOperacion = matcherCodigoOperacionOperando.group(1);
+                        String operando = matcherCodigoOperacionOperando.group(2);
+                        //instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, null));
+                        if(codigoOperacion.length()>5){
+                            System.out.println("Exceso de caracteres en: "+linea);
+                            System.out.println("");
+                        }else{
+                        instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, 0, "0", "0", "0"));}
+                        
+                    } else if(matcherCodigoOperacion.matches()) {
+                        // Es una línea con código de operación y operando
+                        String etiqueta = "-";
+                        String codigoOperacion = matcherCodigoOperacion.group(1);
+                        String operando = "-";
+                        //instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, null));
+                        if(codigoOperacion.length()>5){
+                            System.out.println("Exceso de caracteres en: "+linea);
+                            System.out.println("");
+                        }else{
+                        instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, 0, "0", "0", "0"));}
+                        
+                    }else if(matcherEtiquetaCodigoOperacion.matches()){
+                        String etiqueta = matcherEtiquetaCodigoOperacion.group(1);
+                        String codigoOperacion = matcherEtiquetaCodigoOperacion.group(2);
+                        String operando = "-";
+                        //instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, null));
                         if(etiqueta.length()>8 || codigoOperacion.length()>5){
                             System.out.println("Exceso de caracteres en: "+linea);
+                            System.out.println("");
                         }else{
                             instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, 0, "0", "0", "0"));}
-                    
-                } else if(matcherCodigoOperacionOperando.matches()) {
-                    // Es una línea con código de operación y operando
-                    String etiqueta = "-";
-                    String codigoOperacion = matcherCodigoOperacionOperando.group(1);
-                    String operando = matcherCodigoOperacionOperando.group(2);
-                    //instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, null));
-                    if(codigoOperacion.length()>5){
-                        System.out.println("Exceso de caracteres en: "+linea);
+                        } else {
+                        // No coincide con ninguna de las expresiones regulares
+                        System.out.println("Error de Sintaxis: " + linea);
                         System.out.println("");
-                    }else{
-                    instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, 0, "0", "0", "0"));}
-                    
-                } else if(matcherCodigoOperacion.matches()) {
-                    // Es una línea con código de operación y operando
-                    String etiqueta = "-";
-                    String codigoOperacion = matcherCodigoOperacion.group(1);
-                    String operando = "-";
-                    //instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, null));
-                    if(codigoOperacion.length()>5){
-                        System.out.println("Exceso de caracteres en: "+linea);
-                        System.out.println("");
-                    }else{
-                    instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, 0, "0", "0", "0"));}
-                    
-                }else if(matcherEtiquetaCodigoOperacion.matches()){
-                    String etiqueta = matcherEtiquetaCodigoOperacion.group(1);
-                    String codigoOperacion = matcherEtiquetaCodigoOperacion.group(2);
-                    String operando = "-";
-                    //instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, null));
-                    if(etiqueta.length()>8 || codigoOperacion.length()>5){
-                        System.out.println("Exceso de caracteres en: "+linea);
-                        System.out.println("");
-                    }else{
-                        instruccion.add(new LineaInstruccion(etiqueta, codigoOperacion, operando, null, 0, "0", "0", "0"));}
-                    } else {
-                    // No coincide con ninguna de las expresiones regulares
-                    System.out.println("Error de Sintaxis: " + linea);
-                    System.out.println("");
+                    }
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+            
+            System.out.println("ETIQUETA CODOP OPERANDO KEY PESO ADDRESS FORM_POSTBYTE");
+            
+            mostrarArray(); 
+            SwingUtilities.invokeLater(() -> {
+                ExcelRead ventana = new ExcelRead();
+                ventana.mostrarArray2();
+            });
+        
+            // proyecto 3
+            calcularContloc();
+            insertarDatosList();
+            insertarDatosTabism();
+            
+            //proyecto 4
+            calcularRel();
+
+            System.out.println("quieres continuar? y/n");
+            flag = sc.next();
         }
-        System.out.println("ETIQUETA CODOP OPERANDO KEY PESO ADDRESS FORM_POSTBYTE");
-       mostrarArray(); 
-       
-        // proyecto 3
-        calcularContloc();
+    }
+    
+    public void mostrarArray2() {
+        // Simulación de datos con un bucle for
+        for (int i=0; i<=instruccion.size()-1; i++) {
+            contador = i;
+            
+            Object[] rowData = {
+                instruccion.get(i).etiqueta,
+                instruccion.get(i).codop,
+                instruccion.get(i).operando,
+                instruccion.get(i).key,
+                String.valueOf(instruccion.get(i).peso),
+                instruccion.get(i).direc,
+                instruccion.get(i).postByte,
+                instruccion.get(i).contloc
+            };
 
-        // for (int i = 0; i < instruccion.size(); i++) {
-        //     System.out.println("soy el peso " + instruccion.get(i).peso);
-        //     System.out.println(" ");
-        //     System.out.println("soy el contloc " + instruccion.get(i).contloc);
-        //     System.out.println(" ");
-        // }
-        //archivo .lst
-        insertarDatosList();
-        //archivo TABSIM.txt
-        insertarDatosTabism();
-
-        //proyecto 4
-
+            tableModel.addRow(rowData);
+        }
     }
     
     static void mostrarArray(){
     for(int i=0; i<=instruccion.size()-1; i++){
         contador = i;
-        System.out.print(instruccion.get(i).getEtiqueta()+"  "+instruccion.get(i).getCodop()+"  "+instruccion.get(i).getOperando()+ "  ");
+        System.out.print(instruccion.get(i).getEtiqueta()+"  "+instruccion.get(i).getCodop()+"  "+instruccion.get(i).getOperando()+ "  " + " " + instruccion.get(i).contloc);
         notacion(instruccion.get(i).getCodop(), instruccion.get(i).getOperando());
         System.out.println("");
-        System.out.println("-------------------------------");
         }
     }
-    
-        static void notacion(String codop, String notacion){
+      
+    static void notacion(String codop, String notacion){
         LineaInstruccion actual = instruccion.get(contador);
         String comparador;
 
@@ -392,7 +447,7 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                    System.out.print(key + "  ");
                    comparadorExcel(instruccion.get(contador).getCodop(), key);
                }else if(Character.toString(temp2).matches("[A | B | D | X | Y | SP]")){
-                   String key = "abdxys,rel9";
+                   String key = "abdxys, rel9";
                    System.out.print(key + "  ");
                    comparadorExcel(instruccion.get(contador).getCodop(), key);
                }else{
@@ -443,6 +498,7 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                         String llave = "16IDX";
                         System.out.print(key + "  ");
                         comparadorExcel(instruccion.get(contador).getCodop(), key);
+
                         calcularXB(llave, actual, operando1, operando2);
                         
                     } //atencion aqui ****************************************************************************************
@@ -450,6 +506,68 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                     separarOperandos(notacion);
                 }else{
                     System.out.println("Instruccion no valida");
+                }
+                    }
+                }else if(Character.toString(tem).equals("-")){
+                    separarOperandos(notacion, comparador);
+                }else if(Character.toString(tem).matches("[0-9]")){
+                    separarOperandos(notacion, comparador);
+                }else if(Character.toString(tem).matches("[@%\\$?]")){
+                    separarOperandos(notacion, comparador);
+                }else{
+                    System.out.println("Instruccion no valida");
+                }
+            }else if(matcherDirectiva.matches()){ //Si hace match con directiva
+                comparador = "esDirectiva";
+                char tem = notacion.charAt(0);//crea un caracter temporal para comparar
+
+                if(codop.equals("DC.B")){//compara que el codop sea DC.B
+                    if(Character.toString(tem).equals("\"")){//en caso de que inicie con comillas
+                        String aux = notacion.replace("\"", ""); //elimina las comillas
+
+                        int pesoBytes = aux.length(); //Saca la longitud del conjunto de elementos y le asigna un byte
+                        double pesoDouble = (double) pesoBytes;
+                        instruccion.get(contador).peso = pesoDouble;
+
+                        System.out.print(pesoBytes + "  "); //imprimir para confirmar
+                    }else{//Si no inicia con comillas
+                        String[] elementos = notacion.split(",");//separa los elementos por comillas y los guarda en un arreglo
+                        int pesoBytes = elementos.length;//el peso en bytes es igual al tamaño del arreglo
+
+                        System.out.print(pesoBytes + "  ");//imprimir para confirmar
+                    }
+                }else if(codop.equals("DC.W")){//En todo caso confirma si el codop es un DC.W
+
+                    if(Character.toString(tem).equals("\"")){//en caso de que inicie con comillas
+                        String aux = notacion.replace("\"", "");//elimina las comillas
+
+                        int pesoBytes = (aux.length()*2);//el peso es igual al doble del numero de elementos
+                        double pesoDouble = (double) pesoBytes;
+                        instruccion.get(contador).peso = pesoDouble;
+
+                        System.out.print(pesoBytes + "  ");//imprimir para confirmar
+                    }else{//si no inicia con comillas
+                        String[] elementos = notacion.split(",");//separa los elementos por comillas y los guarda en un arreglo
+                        int pesoBytes = (elementos.length*2);//el peso es igual a 2 veces la longitud del arreglo
+                        double pesoDouble = (double) pesoBytes;
+                        instruccion.get(contador).peso = pesoDouble;
+
+                        System.out.print(pesoBytes + "  ");//imprimir para confirmar
+                    }
+                }else if(codop.equals("DS.B") && Character.toString(tem).matches("[1-9]")){//En todo caso confirma si el codop es un DS.B
+                    int pesoBytes = Integer.parseInt(notacion);//el peso será igual al número específico del operando
+                    double pesoDouble = (double) pesoBytes;
+                    instruccion.get(contador).peso = pesoDouble;
+
+                    System.out.print(pesoBytes + "  ");//imprimir para confirmar
+                }else if(codop.equals("DS.W") && Character.toString(tem).matches("[1-9]")){//En todo caso confirma si el codop es un DS.W
+                    int pesoBytes = (Integer.parseInt(notacion)*2);//el peso será igual a 2 veces el operando especificado
+                    double pesoDouble = (double) pesoBytes;
+                    instruccion.get(contador).peso = pesoDouble;
+
+                    System.out.print(pesoBytes + "  ");//imprimir para confirmar
+                }else{//caso de error
+                    System.out.println("Directiva no valida");//mensaje de error
                 }
             }else{
                 comparador = "esInherente";
@@ -916,6 +1034,7 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
 
                     instruccion.get(contador).peso = pesoTotal;
                     instruccion.get(contador).direc = addrCell.toString();
+                    instruccion.get(contador).key = key;
 
                     //cambios proyecto 4
 
@@ -993,11 +1112,10 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
    /**
     * Datos: esta funcion cera el archivo tabism
     */
-    static void insertarDatosTabism() {//¿Hace falta algo del Tabsim?
+    static void insertarDatosTabism() {
         FileOutputStream programTabsim;
         HashMap<String, Boolean> validadorSimbolo = new HashMap<>();
         String [] Tipo = {"Relativa", "Absoluta"};
-
 
         try {
             programTabsim = new FileOutputStream("TABSIM.txt");
@@ -1005,10 +1123,12 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
             tabsim.println("SI TIPO TI ");
             //String [] Tipo = {"Relativa", "Absoluta"};
     
-            for (int i = 0; i < instruccion.size(); i++) {
+            for (int i = 2; i < instruccion.size(); i++) {
                 contador = i;
-
-
+                
+                if (instruccion.get(i).key != null && (instruccion.get(i).key.contains("rel8") || instruccion.get(i).key.contains("rel16") || instruccion.get(i).key.contains("abdxys, rel9")))
+                    origenRel.add(new LineaInstruccion("", instruccion.get(i).codop, instruccion.get(i).operando, null, 0, instruccion.get(1+i).contloc, "0", "0"));
+                
                 // Verifica si la etiqueta ya existe en el HashMap
                 if (validadorSimbolo.containsKey(instruccion.get(contador).etiqueta)) {
                     // La etiqueta ya existe
@@ -1023,6 +1143,11 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                     }
 
                     tabsim.print(instruccion.get(i).contloc + " ");
+                    
+                    if (instruccion.get(i).etiqueta.contains("-")) {
+                    } else
+                        destinoRel.add(new LineaInstruccion(instruccion.get(i).etiqueta, "", "", null, 0, instruccion.get(i).contloc, "0", "0"));
+                    
                     tabsim.println("");
                     tabsim.println("-------------");
                 }
@@ -1032,6 +1157,7 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
             e.printStackTrace();
         }
     }
+    
     static void calcularContloc(){//inicio del método calcular contloc
         for(int i=0; i<=instruccion.size()-2; i++){//for para recorrer todo el arrayList
             
@@ -1083,26 +1209,78 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                }
                }
        }else if(instruccion.get(i).codop.equals("EQU")){//si la instruccion es un EQU
-           char tem = instruccion.get(i).operando.charAt(0);//variable temporal para comparar 
-           if(Character.toString(tem).matches("%")){
-                String binario = instruccion.get(i).operando.substring(1);//Elimina caracteres no deseados
-                int numero = Integer.parseInt(binario, 2);//convierte el binario a decimal
-                String contloc = Integer.toHexString(numero);//luego lo cambia a hexadecimal y lo guarda en un string
-                auxiliar2.setContloc(contloc);//guarda el contloc en la linea actual
-              }else if(Character.toString(tem).equals("@")){
-                String octal = instruccion.get(i).operando.substring(1);//Elimina caracteres no deseados
-                int numero = Integer.parseInt(octal, 8);//convierte el octal a decimal
-                String contloc = Integer.toHexString(numero);//luego lo cambia a hexadecimal y lo guarda en un string
-                auxiliar2.setContloc(contloc);//guarda el contloc en la linea actual
-              }else if(Character.toString(tem).equals("$")){
-                String hexa = instruccion.get(i).operando.substring(1);//Elimina caracteres no deseados
-                auxiliar2.setContloc(hexa);//guarda el contloc en la linea actual
-               }else{
-                String decimal = instruccion.get(i).operando;//Elimina caracteres no deseados
-                int numero = Integer.parseInt(decimal);//convierte el string a int decimal
-                String contloc = Integer.toHexString(numero);//luego lo cambia a hexadecimal y lo guarda en un string
-                auxiliar2.setContloc(contloc);//guarda el contloc en la linea actual
-               }
+        char tem = instruccion.get(i).operando.charAt(0);//variable temporal para comparar
+        if(Character.toString(tem).matches("#")){//si el primer digito es un #
+            char tem2 = instruccion.get(i).operando.charAt(1);//variable temporal para comparar
+            if(Character.toString(tem2).matches("%")){//si el segundodigito es un %
+         String binario = instruccion.get(i).operando.substring(2);//Elimina caracteres no deseados
+         int numero = Integer.parseInt(binario, 2); //convierte el binario a decimal
+         String contloc = Integer.toHexString(numero); //luego lo cambia a hexadecimal y lo guarda en un string
+         auxiliar.setContloc(contloc); //guarda el contloc en la siguiente linea
+       }else if(Character.toString(tem2).equals("@")){
+         String octal = instruccion.get(i).operando.substring(2);//Elimina caracteres no deseados
+         int numero = Integer.parseInt(octal, 8); //convierte el octal a decimal
+         String contloc = Integer.toHexString(numero);//luego lo cambia a hexadecimal y lo guarda en un string
+         auxiliar.setContloc(contloc);//guarda el contloc en la siguiente linea
+       }else if(Character.toString(tem2).equals("$")){
+         String hexa = instruccion.get(i).operando.substring(2);//Elimina caracteres no deseados
+         auxiliar.setContloc(hexa); //guarda el valor en la siguiente linea
+        }else{
+         String decimal = instruccion.get(i).operando.substring(1);//Elimina caracteres no deseados
+         int numero = Integer.parseInt(decimal); //convierte el valor a tipo int
+         String contloc = Integer.toHexString(numero); //luego lo convierte a hexadecimal y lo gurda en un string
+         auxiliar.setContloc(contloc);//guarda el contloc en la siguiente linea
+        }
+        }else{
+            if(Character.toString(tem).matches("%")){
+         String binario = instruccion.get(i).operando.substring(1);//Elimina caracteres no deseados
+         int numero = Integer.parseInt(binario, 2);//convierte el binario a decimal
+         String contloc = Integer.toHexString(numero);//luego lo cambia a hexadecimal y lo guarda en un string
+         auxiliar.setContloc(contloc);//guarda el contloc en la siguiente linea
+       }else if(Character.toString(tem).equals("@")){
+         String octal = instruccion.get(i).operando.substring(1);//Elimina caracteres no deseados
+         int numero = Integer.parseInt(octal, 8);//convierte el octal a decimal
+         String contloc = Integer.toHexString(numero);//luego lo cambia a hexadecimal y lo guarda en un string
+         auxiliar.setContloc(contloc);//guarda el contloc en la siguiente linea
+       }else if(Character.toString(tem).equals("$")){
+         String hexa = instruccion.get(i).operando.substring(1);//Elimina caracteres no deseados
+         auxiliar.setContloc(hexa);//guarda el contloc en la siguiente linea
+        }else{
+         String decimal = instruccion.get(i).operando;//Elimina caracteres no deseados
+         int numero = Integer.parseInt(decimal);//convierte el valor a tipo int
+         String contloc = Integer.toHexString(numero);//luego lo convierte a hexadecimal y lo gurda en un string
+         auxiliar.setContloc(contloc);//guarda el contloc en la siguiente linea
+        }
+        }
+}else if(instruccion.get(i).codop.equals("EQU")){//si la instruccion es un EQU
+    char tem = instruccion.get(i).operando.charAt(0);//variable temporal para comparar 
+    if(Character.toString(tem).matches("%")){
+         String nextCont = auxiliar2.getContloc(); //los convertimos a hexadecimal y los convertimos a string
+         auxiliar.setContloc(nextCont);
+         String binario = instruccion.get(i).operando.substring(1);//Elimina caracteres no deseados
+         int numero = Integer.parseInt(binario, 2);//convierte el binario a decimal
+         String contloc = Integer.toHexString(numero);//luego lo cambia a hexadecimal y lo guarda en un string
+         auxiliar2.setContloc(contloc);//guarda el contloc en la linea actual
+       }else if(Character.toString(tem).equals("@")){
+         String nextCont = auxiliar2.getContloc(); //los convertimos a hexadecimal y los convertimos a string
+         auxiliar.setContloc(nextCont);
+         String octal = instruccion.get(i).operando.substring(1);//Elimina caracteres no deseados
+         int numero = Integer.parseInt(octal, 8);//convierte el octal a decimal
+         String contloc = Integer.toHexString(numero);//luego lo cambia a hexadecimal y lo guarda en un string
+         auxiliar2.setContloc(contloc);//guarda el contloc en la linea actual
+       }else if(Character.toString(tem).equals("$")){
+         String nextCont = auxiliar2.getContloc(); //los convertimos a hexadecimal y los convertimos a string
+         auxiliar.setContloc(nextCont);
+         String hexa = instruccion.get(i).operando.substring(1);//Elimina caracteres no deseados
+         auxiliar2.setContloc(hexa);//guarda el contloc en la linea actual
+        }else{
+         String nextCont = auxiliar2.getContloc(); //los convertimos a hexadecimal y los convertimos a string
+         auxiliar.setContloc(nextCont);
+         String decimal = instruccion.get(i).operando;//Elimina caracteres no deseados
+         int numero = Integer.parseInt(decimal);//convierte el string a int decimal
+         String contloc = Integer.toHexString(numero);//luego lo cambia a hexadecimal y lo guarda en un string
+         auxiliar2.setContloc(contloc);//guarda el contloc en la linea actual
+        }
        }else if (instruccion.get(i).codop.equals("END")){
                System.out.println("no hacer nada");    
        }else{
@@ -1412,7 +1590,7 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
                     String cambio2 = cambio.replace("ll", ll); // ahora reemplaza el ll y lo guarda en cambio 2
                     
                     actual.setPostByte(cambio2); //cambio 2 es nuestro postByte asi que lo guardamos en el objeto
-                    
+
                 }else{
                     
                     String hh = hexa.substring(2, 4);
@@ -1486,5 +1664,137 @@ static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>
 
                 break;
         }//fin del switch
-    }//fin de calcular postbyte
+    }//fin de calcular postbyte 
+
+    static String calcularLb(String registro, int indexOrigen, String desplazamiento) { // recuerda modificarla porque inicialmente era para xb
+        try {
+            // Ruta del archivo Excel
+            String archivoExcel = "Salvation.Tabop.xlsx";
+
+            // Crear un flujo de entrada para el archivo Excel
+            FileInputStream fis = new FileInputStream(new File(archivoExcel));
+
+            // Crear un libro de trabajo (workbook) a partir del archivo Excel
+            Workbook workbook = WorkbookFactory.create(fis);
+
+            // Obtener la hoja de Excel (supongamos que es la primera hoja)
+            Sheet sheet = workbook.getSheetAt(4);
+            
+            // Recorrer las filas de la hoja
+            for (Row row : sheet) {
+                Cell codopCell = row.getCell(0);
+                Cell registroExcel = row.getCell(1);
+                Cell desplazamientoExcel = row.getCell(2);
+
+                String codopEnFila = codopCell.getStringCellValue();
+                String registroEnFila = registroExcel.getStringCellValue();
+                String desplazamientoEnFila = desplazamientoExcel.getStringCellValue();
+                
+                if (codopEnFila.equals(origenRel.get(indexOrigen).codop) && registroEnFila.equals(registro) && desplazamientoEnFila.equals(desplazamiento)){ // compara con excel con tamano y operando
+                    Cell lbCell = row.getCell(3);
+                    return lbCell.toString();
+                }
+            } 
+          } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+    
+    public static int complementoDos(int destino, int origen) {
+        int suma = destino + (~origen + 1); // Realizar la resta en complemento a dos
+        return suma & 0xFFFF; // Aplicar la máscara para asegurar que el resultado sea de 4 bytes
+    }
+    
+    static void calcularRel() {
+        for (int i = 0; i < origenRel.size(); i++) {
+            for (int j = 0; j < destinoRel.size(); j++) { //fors para comparar el contloc origen y destino
+                int valorOri = Integer.parseInt(origenRel.get(i).contloc, 16);
+                int valorDes = Integer.parseInt(destinoRel.get(j).contloc, 16);
+                String resultadoHex = "";
+                String registro = "";
+                String operando = "";
+                
+                // Divide el el operando de origen con registro y etiqueta
+                if (origenRel.get(i).operando.contains(",")) {
+                    String[] partes = origenRel.get(i).operando.split(",");
+                    registro = partes[0];
+                    operando = partes[1];
+                }
+                
+                if (origenRel.get(i).operando.equals(destinoRel.get(j).etiqueta)) { // si el operando origen y la etiqueta destino son iguales 
+                    if (valorOri < valorDes) { // si Destino es mayor que el oRIGEN
+                        resultadoHex = Integer.toHexString(valorDes - valorOri);
+                    } else if (valorOri > valorDes) { // origen es mayor que el destino
+                        int resultadoDecimal = complementoDos(valorDes, valorOri);
+
+                        resultadoHex = Integer.toHexString(resultadoDecimal);
+
+                        System.out.println("Resultado en hexadecimal: " + resultadoHex);
+                    } else { // si son iguales
+                        resultadoHex = "0000";
+                    }
+                    
+                    colocarPostByteRelativo(i, resultadoHex, ""); //se va a la funcion para usarlo con su postbyte
+                } else if (destinoRel.get(j).etiqueta.equals(operando)){ // si tiene coma y el operando origen y la etiqueta de destino son iguales
+                    String desplazamiento = "";
+                    String lb = "";
+                    
+                    if (valorOri < valorDes) { // si Destino es mayor que el oRIGEN
+                        desplazamiento = "Positivo";
+                        lb = calcularLb(registro, i, desplazamiento);
+                        
+                        resultadoHex = Integer.toHexString(valorDes - valorOri);
+                    } else if (valorOri > valorDes) { // origen es mayor que el destino
+                        desplazamiento = "Negativo";
+                        lb = calcularLb(registro, i, desplazamiento);
+                        
+                        int resultadoDecimal = complementoDos(valorDes, valorOri);
+                        resultadoHex = Integer.toHexString(resultadoDecimal);
+                    } else { // si son iguales
+                        resultadoHex = "0000";
+                    }
+                    
+                    colocarPostByteRelativo(i, resultadoHex, lb); //se va a la funcion para usarlo con su postbyte
+                }
+            }
+        } 
+    }
+    
+    static void colocarPostByteRelativo(int indiceOrigen, String resultado, String lb) {
+        int i;
+        for (i = 1; i < instruccion.size(); i++) {
+            if (instruccion.get(i-1).contloc.equals(origenRel.get(indiceOrigen).contloc)) { // se planea recorrer instruccion donde coincide con contloc origen
+                int auxiliarPeso = (int) instruccion.get(i-2).peso; // Actualiza el atributo del elemento encontrado.
+                
+                if (auxiliarPeso == 2) { // es de 8 bits //******************************************************************** aqui es dependiente de la existencia de la forma posbyte
+                    resultado = resultado.substring(2, 4);
+                    funcionCortadora(i, resultado, auxiliarPeso, lb);
+                } else if (auxiliarPeso == 4) { // es de 16 bits
+                    funcionCortadora(i, resultado, auxiliarPeso, lb);
+                } else if (auxiliarPeso == 3) {
+                    resultado = resultado.substring(2, 4);
+                    funcionCortadora(i, resultado, auxiliarPeso, lb);
+                }
+                break; // Puedes detener el bucle una vez que encuentres el elemento.
+            }
+        }
+    }
+    
+    static void funcionCortadora(int i, String resultado, int auxiliarPeso, String lb) {
+        String firstThreeCharacters = "";
+        if (auxiliarPeso == 4) {
+            firstThreeCharacters = instruccion.get(i-2).forma.substring(0, 6);
+            String modifiedString = firstThreeCharacters.concat(resultado);
+            instruccion.get(i-2).postByte =  modifiedString;
+        } else if (auxiliarPeso == 2) {
+            firstThreeCharacters = instruccion.get(i-2).forma.substring(0, 3);
+            String modifiedString = firstThreeCharacters.concat(resultado);
+            instruccion.get(i-2).postByte =  modifiedString;
+        } else if (auxiliarPeso == 3) {
+            firstThreeCharacters = instruccion.get(i-2).forma.substring(0, 3);
+            String modifiedString = firstThreeCharacters + " " + lb + " " + resultado;
+            instruccion.get(i-2).postByte =  modifiedString;
+        }
+    }
 }

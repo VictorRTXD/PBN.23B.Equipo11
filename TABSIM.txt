@@ -1,5 +1,9 @@
-si: -
-Tipo: Relativa
-ti: 4040
-
-si: Et1
+SI TIPO TI 
+- Relativa 4040 
+-------------
+Et1 Relativa 4040 
+-------------
+dos Relativa 4041 
+-------------
+Uno Relativa 4052 
+-------------

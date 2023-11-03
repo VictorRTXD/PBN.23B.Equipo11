@@ -1,53 +1,51 @@
 ETIQUETA CODOP OPERANDO REGISTRO CONTLOC
 -  ORG  $4040  DIR_INIC $4040 
 ----------------
-Et1  SWI  -  CONTLOC 4040  
+-  EORA  @5  CONTLOC 4040  
 ----------------
-dos  EORA  5  CONTLOC 4041  
+-  EORA  %111  CONTLOC 4042  
 ----------------
--  EORA  @5  CONTLOC 4043  
+-  EORA  $6  CONTLOC 4042  
 ----------------
--  EORA  %111  CONTLOC 4045  
+-  EORA  300  CONTLOC 4044  
 ----------------
--  EORA  $6  CONTLOC 4045  
+-  EORA  $F  CONTLOC 4047  
 ----------------
--  EORA  300  CONTLOC 4047  
+-  EORA  #5  CONTLOC 4049  
 ----------------
--  EORA  $F  CONTLOC 404a  
+dos  LDAA  5,Y  CONTLOC 404b  
 ----------------
--  EORA  #5  CONTLOC 404c  
+-  EORA  #@5  CONTLOC 404d  
 ----------------
--  EORA  #@5  CONTLOC 404e  
+-  EORA  #1500  CONTLOC 404f  
 ----------------
--  EORA  #1500  CONTLOC 4050  
+-  EORA  1,X  CONTLOC 404f  
 ----------------
--  EORA  1,X  CONTLOC 4050  
+-  IBNE  A,dos  CONTLOC 4051  
 ----------------
-Uno  EORA  255,X  CONTLOC 4052  
+Uno  EORA  255,X  CONTLOC 4054  
 ----------------
--  EORA  32768,X  CONTLOC 4055  
+-  EORA  32768,X  CONTLOC 4057  
 ----------------
--  EORA  $1,+PC  CONTLOC 4059  
+-  EORA  $1,+PC  CONTLOC 405b  
 ----------------
--  EORA  A,X  CONTLOC 405b  
+-  EORA  A,X  CONTLOC 405d  
 ----------------
--  EORA  254,X  CONTLOC 405b  
+-  EORA  254,X  CONTLOC 405d  
 ----------------
--  EORA  6444,X  CONTLOC 405e  
+-  EORA  6444,X  CONTLOC 4060  
 ----------------
--  EORA  [1,X]  CONTLOC 4062  
+-  EORA  [1,X]  CONTLOC 4064  
 ----------------
--  EORA  [6444,X]  CONTLOC 4066  
+-  EORA  [6444,X]  CONTLOC 4068  
 ----------------
--  EORA  [D,X]  CONTLOC 406a  
+-  EORA  [D,X]  CONTLOC 406c  
 ----------------
--  BLT  UNO  CONTLOC 406c  
+-  BLT  Uno  CONTLOC 406e  
 ----------------
--  LBLT  UNO  CONTLOC 406e  
+-  LBLT  Uno  CONTLOC 4070  
 ----------------
--  IBNE  A,UNO  CONTLOC 4072  
+-  DS.B  %001101010010101011  CONTLOC 4074  
 ----------------
--  DS.B  %001101010010101011  CONTLOC 4072  
-----------------
--  END  -  CONTLOC 4072  
+-  END  -  CONTLOC 4074  
 ----------------
