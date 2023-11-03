@@ -799,7 +799,7 @@ public class ExcelRead extends JFrame{
                 contador = i;
                 
                 if (instruccion.get(i).key != null && (instruccion.get(i).key.contains("rel8") || instruccion.get(i).key.contains("rel16") || instruccion.get(i).key.contains("abdxys, rel9")))
-                    origenRel.add(new LineaInstruccion("", "", instruccion.get(i).operando, null, 0, instruccion.get(1+i).contloc, "0", "0"));
+                    origenRel.add(new LineaInstruccion("", instruccion.get(i).codop, instruccion.get(i).operando, null, 0, instruccion.get(1+i).contloc, "0", "0"));
                 
                 // Verifica si la etiqueta ya existe en el HashMap
                 if (validadorSimbolo.containsKey(instruccion.get(contador).etiqueta)) {
@@ -1354,7 +1354,7 @@ public class ExcelRead extends JFrame{
                 String codopEnFila = codopCell.getStringCellValue();
                 String registroEnFila = registroExcel.getStringCellValue();
                 String desplazamientoEnFila = desplazamientoExcel.getStringCellValue();
-
+                
                 if (codopEnFila.equals(origenRel.get(indexOrigen).codop) && registroEnFila.equals(registro) && desplazamientoEnFila.equals(desplazamiento)){ // compara con excel con tamano y operando
                     Cell lbCell = row.getCell(3);
                     return lbCell.toString();
@@ -1451,17 +1451,14 @@ public class ExcelRead extends JFrame{
         if (auxiliarPeso == 4) {
             firstThreeCharacters = instruccion.get(i-2).forma.substring(0, 6);
             String modifiedString = firstThreeCharacters.concat(resultado);
-            System.out.println("es " + modifiedString);
             instruccion.get(i-2).postByte =  modifiedString;
         } else if (auxiliarPeso == 2) {
             firstThreeCharacters = instruccion.get(i-2).forma.substring(0, 3);
             String modifiedString = firstThreeCharacters.concat(resultado);
-            System.out.println("es " + modifiedString);
             instruccion.get(i-2).postByte =  modifiedString;
         } else if (auxiliarPeso == 3) {
             firstThreeCharacters = instruccion.get(i-2).forma.substring(0, 3);
-            String modifiedString = firstThreeCharacters + lb + resultado;
-            System.out.println("es " + modifiedString);
+            String modifiedString = firstThreeCharacters + " " + lb + " " + resultado;
             instruccion.get(i-2).postByte =  modifiedString;
         }
     }
