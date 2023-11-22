@@ -1,8 +1,6 @@
--  Relativa  4040  
+Et1  Relativa  fe0  
 -----------------
-Et1  Relativa  4040  
+dos  Relativa  fe1  
 -----------------
-dos  Relativa  4041  
------------------
-Uno  Relativa  4054  
+Uno  Relativa  ff6  
 -----------------
