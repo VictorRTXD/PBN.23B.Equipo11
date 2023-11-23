@@ -239,21 +239,501 @@ static void notacion(String codop, String notacion){
                 if(codop.equals("DC.B")){//compara que el codop sea DC.B
                     if(Character.toString(tem).equals("\"")){//en caso de que inicie con comillas
                         String aux = notacion.replace("\"", ""); //elimina las comillas
-
+                        String apoyo = "";
+                        String formaDir="";
+                        
                         int pesoBytes = aux.length(); //Saca la longitud del conjunto de elementos y le asigna un byte
                         double pesoDouble = (double) pesoBytes;
-                        actual.setPeso(pesoDouble); 
+                        actual.setPeso(pesoDouble);
+                        
+                        for(int i=0; i< aux.length(); i++){
+                        char help = aux.charAt(i);
+                        
+                        int ascii = (int) help;
+                        String enHexa = Integer.toHexString(ascii);
+
+                        apoyo= apoyo+" "+enHexa;
+                        formaDir= formaDir+" "+"00";
+                        }
+                        
+                        String apoyo2= apoyo.substring(1);
+                        String formaDir2 = formaDir.substring(1);
+                        actual.setForma(formaDir2);
+                        actual.setPostByte(apoyo2);
 
                         System.out.print(pesoBytes + "  "); //imprimir para confirmar
                     }else{//Si no inicia con comillas
+                        String apoyo = "";
+                        String formaDir="";
+                        if(notacion.contains(",")){
                         String[] elementos = notacion.split(",");//separa los elementos por comillas y los guarda en un arreglo
                         int pesoBytes = elementos.length;//el peso en bytes es igual al tamaño del arreglo
                         double pesoDouble = (double) pesoBytes;
                         actual.setPeso(pesoDouble); 
 
                         System.out.print(pesoBytes + "  ");//imprimir para confirmar
+                        
+                        for(int i=0; i<elementos.length; i++){
+                            char comp = elementos[i].charAt(0);//Crea un caracter para comparar
+                            
+                            if(Character.toString(comp).equals("%")){
+                                String binario = elementos[i].substring(1);//Elimina caracteres no deseados
+                                int tamaño = Integer.parseInt(binario, 2);
+                                if(tamaño < 16){
+                                    String enHexa = "0"+Integer.toHexString(tamaño);
+                                    apoyo=apoyo+" "+enHexa;
+                                    
+                                }else if(tamaño < 256 && tamaño >= 16){
+                                    
+                                    String enHexa = Integer.toHexString(tamaño);
+                                    apoyo=apoyo+" "+enHexa;
+                                    
+                               }else{//Valor no valido
+                                    String key = "Error";
+                                    System.out.print(key + "  ");
+                                }//Fin del binario
+                            }else if(Character.toString(comp).equals("@")){
+                                String octal = elementos[i].substring(1);
+                                int tamaño = Integer.parseInt(octal, 8);
+                                
+                                if(tamaño < 16){
+                                    String enHexa = "0"+Integer.toHexString(tamaño);
+                                    apoyo=apoyo+" "+enHexa;
+                                    
+                                }else if(tamaño < 256 && tamaño >= 16){
+                                    
+                                    String enHexa = Integer.toHexString(tamaño);
+                                    apoyo=apoyo+" "+enHexa;
+                                    
+                               }else{//Valor no valido
+                                    String key = "Error";
+                                    System.out.print(key + "  ");
+                                }//in del octal
+                            }else if(Character.toString(comp).equals("$")){
+                                String hexa = elementos[i].substring(1);
+                                int tamaño = Integer.parseInt(hexa, 16);
+                                if(tamaño < 16){
+                                    String enHexa = "0"+Integer.toHexString(tamaño);
+                                    apoyo=apoyo+" "+enHexa;
+                                    
+                                }else if(tamaño < 256 && tamaño >= 16){
+                                    
+                                    String enHexa = Integer.toHexString(tamaño);
+                                    apoyo=apoyo+" "+enHexa;
+                                    
+                               }else{//Valor no valido
+                                    String key = "Error";
+                                    System.out.print(key + "  ");
+                                }//Fin del hexadecimal
+                               }else{
+                                
+                                int tamaño = Integer.parseInt(elementos[i]);
+                                if(tamaño < 16){
+                                    String enHexa = "0"+Integer.toHexString(tamaño);
+                                    apoyo=apoyo+" "+enHexa;
+                                    
+                                }else if(tamaño < 256 && tamaño >= 16){
+                                    
+                                    String enHexa = Integer.toHexString(tamaño);
+                                    apoyo=apoyo+" "+enHexa;
+                               }else{//Valor no valido
+                                    String key = "Error";
+                                    System.out.print(key + "  ");
+                                }
+                               }
+                            formaDir= formaDir+" "+"00";
+                        }
+                        
+                        String apoyo2= apoyo.substring(1);
+                        String formaDir2 = formaDir.substring(1);
+                        actual.setForma(formaDir2);
+                        actual.setPostByte(apoyo2);
+                        
+                        }else{
+                           int pesoBytes = 1;
+                           double pesoDouble = (double) pesoBytes;
+                           actual.setPeso(pesoDouble); 
+                           actual.setForma("00");
+                           
+                           char comp = notacion.charAt(0);//Crea un caracter para comparar
+                            
+                            if(Character.toString(comp).equals("%")){
+                                String binario = notacion.substring(1);//Elimina caracteres no deseados
+                                int tamaño = Integer.parseInt(binario, 2);
+                                if(tamaño < 16){
+                                    String enHexa = "0"+Integer.toHexString(tamaño);
+                                    apoyo=apoyo+" "+enHexa;
+                                    
+                                }else if(tamaño < 256 && tamaño >= 16){
+                                    
+                                    String enHexa = Integer.toHexString(tamaño);
+                                    apoyo=apoyo+" "+enHexa;
+                                    
+                               }else{//Valor no valido
+                                    String key = "Error";
+                                    System.out.print(key + "  ");
+                                }//Fin del binario
+                            }else if(Character.toString(comp).equals("@")){
+                                String octal = notacion.substring(1);
+                                int tamaño = Integer.parseInt(octal, 8);
+                                
+                                if(tamaño < 16){
+                                    String enHexa = "0"+Integer.toHexString(tamaño);
+                                    apoyo=apoyo+" "+enHexa;
+                                    
+                                }else if(tamaño < 256 && tamaño >= 16){
+                                    
+                                    String enHexa = Integer.toHexString(tamaño);
+                                    apoyo=apoyo+" "+enHexa;
+                                    
+                               }else{//Valor no valido
+                                    String key = "Error";
+                                    System.out.print(key + "  ");
+                                }//in del octal
+                            }else if(Character.toString(comp).equals("$")){
+                                String hexa = notacion.substring(1);
+                                int tamaño = Integer.parseInt(hexa, 16);
+                                if(tamaño < 16){
+                                    String enHexa = "0"+Integer.toHexString(tamaño);
+                                    apoyo=apoyo+" "+enHexa;
+                                    
+                                }else if(tamaño < 256 && tamaño >= 16){
+                                    
+                                    String enHexa = Integer.toHexString(tamaño);
+                                    apoyo=apoyo+" "+enHexa;
+                                    
+                               }else{//Valor no valido
+                                    String key = "Error";
+                                    System.out.print(key + "  ");
+                                }//Fin del hexadecimal
+                               }else{
+                                
+                                int tamaño = Integer.parseInt(notacion);
+                                if(tamaño < 16){
+                                    String enHexa = "0"+Integer.toHexString(tamaño);
+                                    apoyo=apoyo+" "+enHexa;
+                                    
+                                }else if(tamaño < 256 && tamaño >= 16){
+                                    
+                                    String enHexa = Integer.toHexString(tamaño);
+                                    apoyo=apoyo+" "+enHexa;
+                               }else{//Valor no valido
+                                    String key = "Error";
+                                    System.out.print(key + "  ");
+                                }
+                               }
+                            String apoyo2 = apoyo.substring(1);
+                            actual.setPostByte(apoyo2);
+  
+                        }
+                        
                     }
                 }else if(codop.equals("DC.W")){//En todo caso confirma si el codop es un DC.W
+
+                    if(Character.toString(tem).equals("\"")){//en caso de que inicie con comillas
+                        String aux = notacion.replace("\"", "");//elimina las comillas
+                        String apoyo = "";
+                        String formaDir="";
+
+                        int pesoBytes = (aux.length()*2);//el peso es igual al doble del numero de elementos
+                        double pesoDouble = (double) pesoBytes;
+                        actual.setPeso(pesoDouble);
+                        
+                        for(int i=0; i< aux.length(); i++){
+                        char help = aux.charAt(i);
+                        
+                        int ascii = (int) help;
+                        String enHexa = Integer.toHexString(ascii);
+
+                        apoyo= apoyo+" "+"00 "+enHexa;
+                        formaDir= formaDir+" "+"00 00";
+                        }
+                        
+                        String apoyo2= apoyo.substring(1);
+                        String formaDir2 = formaDir.substring(1);
+                        actual.setForma(formaDir2);
+                        actual.setPostByte(apoyo2);
+
+                        System.out.print(pesoBytes + "  ");//imprimir para confirmar
+                                
+                    }else{//si no inicia con comillas
+                        if(notacion.contains(",")){
+                            String apoyo = "";
+                            String formaDir="";
+                            String[] elementos = notacion.split(",");//separa los elementos por comillas y los guarda en un arreglo
+                            int pesoBytes = (elementos.length*2);//el peso es igual a 2 veces la longitud del arreglo
+                            double pesoDouble = (double) pesoBytes;
+                            actual.setPeso(pesoDouble);
+
+                            System.out.print(pesoBytes + "  ");//imprimir para confirmar
+                            
+                            for(int i=0; i<elementos.length; i++){
+                            char comp = elementos[i].charAt(0);//Crea un caracter para comparar
+                            
+                            if(Character.toString(comp).equals("%")){
+                                String binario = elementos[i].substring(1);//Elimina caracteres no deseados
+                                int tamaño = Integer.parseInt(binario, 2);
+                                if(tamaño < 16){
+                                    String enHexa = "00 0"+Integer.toHexString(tamaño);
+                                    apoyo=apoyo+" "+enHexa;
+                                    
+                                }else if(tamaño < 256 && tamaño > 16){
+                                    
+                                    String enHexa = "00 "+Integer.toHexString(tamaño);
+                                    apoyo=apoyo+" "+enHexa;
+                                    
+                               }else if(tamaño <= 4095 && tamaño > 255){
+                                   
+                                   String enHexa = "0"+Integer.toHexString(tamaño);
+                                   apoyo=apoyo+" "+enHexa;
+                               
+                               }else if(tamaño <= 65535){
+                                   
+                                   String enHexa = Integer.toHexString(tamaño);
+                                   apoyo=apoyo+" "+enHexa;
+                               
+                               }else{//Valor no valido
+                                    String key = "Error";
+                                    System.out.print(key + "  ");
+                                }//Fin del binario
+                            }else if(Character.toString(comp).equals("@")){
+                                String octal = elementos[i].substring(1);
+                                int tamaño = Integer.parseInt(octal, 8);
+                                
+                                if(tamaño < 16){
+                                    String enHexa = "00 0"+Integer.toHexString(tamaño);
+                                    apoyo=apoyo+" "+enHexa;
+                                    
+                                }else if(tamaño < 256 && tamaño > 16){
+                                    
+                                    String enHexa = "00 "+Integer.toHexString(tamaño);
+                                    apoyo=apoyo+" "+enHexa;
+                                    
+                               }else if(tamaño <= 4095 && tamaño > 255){
+                                   
+                                   String enHexa = "0"+Integer.toHexString(tamaño);
+                                   apoyo=apoyo+" "+enHexa;
+                               
+                               }else if(tamaño <= 65535){
+                                   
+                                   String enHexa = Integer.toHexString(tamaño);
+                                   apoyo=apoyo+" "+enHexa;
+                               
+                               }else{//Valor no valido
+                                    String key = "Error";
+                                    System.out.print(key + "  ");
+                                }
+                            }else if(Character.toString(comp).equals("$")){
+                                String hexa = elementos[i].substring(1);
+                                int tamaño = Integer.parseInt(hexa, 16);
+                                if(tamaño < 16){
+                                    String enHexa = "00 0"+Integer.toHexString(tamaño);
+                                    apoyo=apoyo+" "+enHexa;
+                                    
+                                }else if(tamaño < 256 && tamaño > 16){
+                                    
+                                    String enHexa = "00 "+Integer.toHexString(tamaño);
+                                    apoyo=apoyo+" "+enHexa;
+                                    
+                               }else if(tamaño <= 4095 && tamaño > 255){
+                                   
+                                   String enHexa = "0"+Integer.toHexString(tamaño);
+                                   apoyo=apoyo+" "+enHexa;
+                               
+                               }else if(tamaño <= 65535){
+                                   
+                                   String enHexa = Integer.toHexString(tamaño);
+                                   apoyo=apoyo+" "+enHexa;
+                               
+                               }else{//Valor no valido
+                                    String key = "Error";
+                                    System.out.print(key + "  ");
+                                }
+                               }else{
+                                
+                                int tamaño = Integer.parseInt(elementos[i]);
+                                if(tamaño < 16){
+                                    String enHexa = "00 0"+Integer.toHexString(tamaño);
+                                    apoyo=apoyo+" "+enHexa;
+                                    
+                                }else if(tamaño < 256 && tamaño > 16){
+                                    
+                                    String enHexa = "00 "+Integer.toHexString(tamaño);
+                                    apoyo=apoyo+" "+enHexa;
+                                    
+                               }else if(tamaño <= 4095 && tamaño > 255){
+                                   
+                                   String enHexa = "0"+Integer.toHexString(tamaño);
+                                   apoyo=apoyo+" "+enHexa;
+                               
+                               }else if(tamaño <= 65535){
+                                   
+                                   String enHexa = Integer.toHexString(tamaño);
+                                   apoyo=apoyo+" "+enHexa;
+                               
+                               }else{//Valor no valido
+                                    String key = "Error";
+                                    System.out.print(key + "  ");
+                                }
+                               }
+                            formaDir= formaDir+" "+"00 00";
+                        }
+                        
+                        String apoyo2= apoyo.substring(1);
+                        String formaDir2 = formaDir.substring(1);
+                        actual.setForma(formaDir2);
+                        actual.setPostByte(apoyo2);
+                        
+                        }else{
+                            String apoyo = "";
+                            char comp = notacion.charAt(0);//Crea un caracter para comparar
+                            
+                            if(Character.toString(comp).equals("%")){
+                                String binario = notacion.substring(1);//Elimina caracteres no deseados
+                                int tamaño = Integer.parseInt(binario, 2);
+                                if(tamaño < 16){
+                                    String enHexa = "00 0"+Integer.toHexString(tamaño);
+                                    apoyo=apoyo+" "+enHexa;
+                                    
+                                }else if(tamaño < 256 && tamaño > 16){
+                                    
+                                    String enHexa = "00 "+Integer.toHexString(tamaño);
+                                    apoyo=apoyo+" "+enHexa;
+                                    
+                               }else if(tamaño <= 4095 && tamaño > 255){
+                                   
+                                   String enHexa = "0"+Integer.toHexString(tamaño);
+                                   apoyo=apoyo+" "+enHexa;
+                               
+                               }else if(tamaño <= 65535){
+                                   
+                                   String enHexa = Integer.toHexString(tamaño);
+                                   apoyo=apoyo+" "+enHexa;
+                               
+                               }else{//Valor no valido
+                                    String key = "Error";
+                                    System.out.print(key + "  ");
+                                }//Fin del binario
+                            }else if(Character.toString(comp).equals("@")){
+                                String octal = notacion.substring(1);
+                                int tamaño = Integer.parseInt(octal, 8);
+                                
+                                if(tamaño < 16){
+                                    String enHexa = "00 0"+Integer.toHexString(tamaño);
+                                    apoyo=apoyo+" "+enHexa;
+                                    
+                                }else if(tamaño < 256 && tamaño > 16){
+                                    
+                                    String enHexa = "00 "+Integer.toHexString(tamaño);
+                                    apoyo=apoyo+" "+enHexa;
+                                    
+                               }else if(tamaño <= 4095 && tamaño > 255){
+                                   
+                                   String enHexa = "0"+Integer.toHexString(tamaño);
+                                   apoyo=apoyo+" "+enHexa;
+                               
+                               }else if(tamaño <= 65535){
+                                   
+                                   String enHexa = Integer.toHexString(tamaño);
+                                   apoyo=apoyo+" "+enHexa;
+                               
+                               }else{//Valor no valido
+                                    String key = "Error";
+                                    System.out.print(key + "  ");
+                                }
+                            }else if(Character.toString(comp).equals("$")){
+                                String hexa = notacion.substring(1);
+                                int tamaño = Integer.parseInt(hexa, 16);
+                                if(tamaño < 16){
+                                    String enHexa = "00 0"+Integer.toHexString(tamaño);
+                                    apoyo=apoyo+" "+enHexa;
+                                    
+                                }else if(tamaño < 256 && tamaño > 16){
+                                    
+                                    String enHexa = "00 "+Integer.toHexString(tamaño);
+                                    apoyo=apoyo+" "+enHexa;
+                                    
+                               }else if(tamaño <= 4095 && tamaño > 255){
+                                   
+                                   String enHexa = "0"+Integer.toHexString(tamaño);
+                                   apoyo=apoyo+" "+enHexa;
+                               
+                               }else if(tamaño <= 65535){
+                                   
+                                   String enHexa = Integer.toHexString(tamaño);
+                                   apoyo=apoyo+" "+enHexa;
+                               
+                               }else{//Valor no valido
+                                    String key = "Error";
+                                    System.out.print(key + "  ");
+                                }
+                               }else{
+                                
+                                int tamaño = Integer.parseInt(notacion);
+                                if(tamaño < 16){
+                                    String enHexa = "00 0"+Integer.toHexString(tamaño);
+                                    apoyo=apoyo+" "+enHexa;
+                                    
+                                }else if(tamaño < 256 && tamaño > 16){
+                                    
+                                    String enHexa = "00 "+Integer.toHexString(tamaño);
+                                    apoyo=apoyo+" "+enHexa;
+                                    
+                               }else if(tamaño <= 4095 && tamaño > 255){
+                                   
+                                   String enHexa = "0"+Integer.toHexString(tamaño);
+                                   apoyo=apoyo+" "+enHexa;
+                               
+                               }else if(tamaño <= 65535){
+                                   
+                                   String enHexa = Integer.toHexString(tamaño);
+                                   apoyo=apoyo+" "+enHexa;
+                               
+                               }else{//Valor no valido
+                                    String key = "Error";
+                                    System.out.print(key + "  ");
+                                }
+                               }
+                            
+                            String apoyo2 = apoyo.substring(1);
+                            actual.setForma("00 00");
+                            actual.setPostByte(apoyo2);
+                        
+                        }
+                        
+                    }
+                }else if(codop.equals("DS.B") && Character.toString(tem).matches("[1-9]")){//En todo caso confirma si el codop es un DS.B
+                    int pesoBytes = Integer.parseInt(notacion);//el peso será igual al número específico del operando
+                    double pesoDouble = (double) pesoBytes;
+                    actual.setPeso(pesoDouble);
+                    
+                    String formaDir="";
+                    for(int i=0; i<pesoBytes; i++){
+                    formaDir= formaDir+" "+"00";
+                    }
+                    String dir=formaDir.substring(1);
+                    actual.setForma(dir);
+                    actual.setPostByte(dir);
+
+                    System.out.print(pesoBytes + "  ");//imprimir para confirmar
+                }else if(codop.equals("DS.W") && Character.toString(tem).matches("[1-9]")){//En todo caso confirma si el codop es un DS.W
+                    int pesoBytes = (Integer.parseInt(notacion)*2);//el peso será igual a 2 veces el operando especificado
+                    double pesoDouble = (double) pesoBytes;
+                    actual.setPeso(pesoDouble);
+                    
+                    String formaDir="";
+                    for(int i=0; i<pesoBytes; i++){
+                    formaDir= formaDir+" "+"00 00";
+                    }
+                    String dir=formaDir.substring(1);
+                    actual.setForma(dir);
+                    actual.setPostByte(dir);
+
+                    System.out.print(pesoBytes + "  ");//imprimir para confirmar
+                }else{//caso de error
+                    System.out.println("Directiva no valida");//mensaje de error
+                }
+         }else if(codop.equals("DC.W")){//En todo caso confirma si el codop es un DC.W
 
                     if(Character.toString(tem).equals("\"")){//en caso de que inicie con comillas
                         String aux = notacion.replace("\"", "");//elimina las comillas
