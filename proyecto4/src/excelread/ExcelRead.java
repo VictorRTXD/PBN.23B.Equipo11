@@ -48,6 +48,7 @@ public class ExcelRead extends JFrame{
     static ArrayList<LineaInstruccion> instruccion = new ArrayList<LineaInstruccion>();
     static ArrayList<LineaInstruccion> origenRel = new ArrayList<LineaInstruccion>();
     static ArrayList<LineaInstruccion> destinoRel = new ArrayList<LineaInstruccion>();
+    static Srecord srecord = new Srecord("so", "00", "00 00", "00", null);
     
     private static String fileName = "";
     
@@ -730,10 +731,7 @@ static void notacion(String codop, String notacion){
                     actual.setPostByte(dir);
 
                     System.out.print(pesoBytes + "  ");//imprimir para confirmar
-                }else{//caso de error
-                    System.out.println("Directiva no valida");//mensaje de error
-                }
-         }else if(codop.equals("DC.W")){//En todo caso confirma si el codop es un DC.W
+                }else if(codop.equals("DC.W")){//En todo caso confirma si el codop es un DC.W
 
                     if(Character.toString(tem).equals("\"")){//en caso de que inicie con comillas
                         String aux = notacion.replace("\"", "");//elimina las comillas
@@ -766,7 +764,7 @@ static void notacion(String codop, String notacion){
                 }else{//caso de error
                     System.out.println("Directiva no valida");//mensaje de error
                 }
-         }else{
+             }else{
              if(matcherOpri.matches()){
              char tem = notacion.charAt(1);//Crea un caracter para comparar
              if(Character.toString(tem).matches("%")){
