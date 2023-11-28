@@ -8,15 +8,27 @@ package excelread;
  *
  * @author victorrtxd
  */
+import java.util.ArrayList;
+
+
 public class Srecord {
 
-    public Srecord(String tipo, String conteo, String addr, String checksum, String[] data) {
+    public ArrayList<String> getData() {
+        return data;
+    }
+
+    public void setData(ArrayList<String> data) {
+        this.data = data;
+    }
+
+    public Srecord(String tipo, String conteo, String addr, String checksum, ArrayList<String> data) {
         this.tipo = tipo;
         this.conteo = conteo;
         this.addr = addr;
         this.checksum = checksum;
         this.data = data;
     }
+
 
     public String getTipo() {
         return tipo;
@@ -50,16 +62,9 @@ public class Srecord {
         this.checksum = checksum;
     }
 
-    public String[] getData() {
-        return data;
-    }
-
-    public void setData(String[] data) {
-        this.data = data;
-    }
     
     String tipo, conteo, addr, checksum;
-    String[] data;
+    ArrayList<String> data;
     
     
 }
