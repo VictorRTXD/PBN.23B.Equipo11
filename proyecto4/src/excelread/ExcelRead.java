@@ -49,6 +49,7 @@ public class ExcelRead extends JFrame{
     static ArrayList<LineaInstruccion> origenRel = new ArrayList<LineaInstruccion>();
     static ArrayList<LineaInstruccion> destinoRel = new ArrayList<LineaInstruccion>();
     static Srecord srecord = new Srecord("so", "00", "00 00", "00", null);
+    static ArrayList<Srecord> s19 = new ArrayList<Srecord>();
     
     private static String fileName = "";
     
@@ -2345,5 +2346,35 @@ static void obtenerAsm() {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    public void calcularS0(){
+        ArrayList<String> data = new ArrayList<String>();
+        int c1 = 255;
+        Srecord primero = s19.get(0);
+        primero.setTipo("S0");
+        primero.setAddr("00 00");
+        int cc = fileName.length()+3;
+        String conteo = Integer.toHexString(cc);
+        primero.setConteo(conteo);
+        
+        for(int i=0; i<fileName.length(); i++){
+        char conversor = fileName.charAt(i);
+        String ascii = Integer.toHexString((int) conversor);
+        data.add(ascii);
+        }
+        primero.setData(data);
+        
+        int suma=0;
+        for(String aux : data){
+        int num1 = Integer.parseInt(aux, 16);
+        suma = suma+num1;
+    }
+        String resultado = Integer.toHexString(suma);
+        String res2 = resultado.substring(resultado.length()-2);
+        int num2 = Integer.parseInt(res2, 16);
+        int resta = c1-num2;
+        String complemento = Integer.toHexString(resta);
+        primero.setChecksum(complemento);
     }
 }
