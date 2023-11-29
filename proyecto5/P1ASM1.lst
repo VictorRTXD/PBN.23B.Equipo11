@@ -1,0 +1,41 @@
+ETIQUETA CODOP OPERANDO REGISTRO CONTLOC
+-  ORG  $4040  DIR_INIC $4040 
+----------------
+-  EORA  @5  CONTLOC 4040  
+----------------
+-  EORA  %111  CONTLOC 4042  
+----------------
+-  EORA  $6  CONTLOC 4044  
+----------------
+-  EORA  300  CONTLOC 4046  
+----------------
+-  EORA  $F  CONTLOC 4049  
+----------------
+-  EORA  #5  CONTLOC 404b  
+----------------
+-  EORA  #@5  CONTLOC 404d  
+----------------
+-  EORA  #1500  CONTLOC 404f  
+----------------
+-  EORA  1,X  CONTLOC 404f  
+----------------
+patito  EORA  235,X  CONTLOC 4051  
+----------------
+Uno  EORA  255,X  CONTLOC 4054  
+----------------
+-  EORA  32768,X  CONTLOC 4057  
+----------------
+-  EORA  A,X  CONTLOC 405b  
+----------------
+-  EORA  254,X  CONTLOC 405d  
+----------------
+-  EORA  6444,X  CONTLOC 4060  
+----------------
+-  EORA  [1,X]  CONTLOC 4064  
+----------------
+-  EORA  [6444,X]  CONTLOC 4068  
+----------------
+-  EORA  [D,X]  CONTLOC 406c  
+----------------
+-  END  -  CONTLOC 406e  
+----------------
