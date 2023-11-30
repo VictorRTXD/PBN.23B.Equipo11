@@ -2610,11 +2610,11 @@ public static void calcularS0(){
             // Escribir datos del ArrayList en el archivo
             for (int i = 0; i < s19.size(); i++) {
                 if (s19.get(i).data != null) {
-                    memes = s19.get(i).tipo+" "+s19.get(i).addr+" "+s19.get(i).conteo+" "+s19.get(i).checksum+" "+s19.get(i).data;
+                    memes = s19.get(i).tipo+" "+s19.get(i).conteo+" "+s19.get(i).addr+" "+s19.get(i).data+" "+s19.get(i).checksum;
                     memes = memes.replace(",", "").replace("[", "").replace("]", "");
                     bw.write(memes + "\n");
                 } else {
-                    bw.write(s19.get(i).tipo+" "+s19.get(i).addr+" "+s19.get(i).conteo+" "+s19.get(i).checksum+" "+"" + "\n");
+                    bw.write(s19.get(i).tipo+" "+s19.get(i).conteo+" "+s19.get(i).addr+" "+s19.get(i).checksum+" "+"" + "\n");
                 }
             }
 
