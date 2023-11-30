@@ -2374,21 +2374,40 @@ public static void calcularS0(){
         primero.setTipo("S0");
         primero.setAddr("00 00");
         int cc = fileName.length()+3;
-        String conteo = Integer.toHexString(cc);
-        primero.setConteo(conteo);
         
-        for(int i=0; i<fileName.length(); i++){
-        char conversor = fileName.charAt(i);
-        String ascii = Integer.toHexString((int) conversor);
-        data.add(ascii);
+        
+        if(cc > 19){
+            String nombre = fileName.substring(fileName.length()-16);
+            primero.setConteo("13");
+            
+            for(int i=0; i<nombre.length(); i++){
+            char conversor = nombre.charAt(i);
+            String ascii = Integer.toHexString((int) conversor);
+            data.add(ascii);
+            }
+            primero.setData(data);
+        }else{
+            String conteo = Integer.toHexString(cc);
+            if(conteo.length()==1){
+                primero.setConteo("0"+conteo);
+            }else{
+                primero.setConteo(conteo);
+            }
+            
+            for(int i=0; i<fileName.length(); i++){
+            char conversor = fileName.charAt(i);
+            String ascii = Integer.toHexString((int) conversor);
+            data.add(ascii);
+            }
+            primero.setData(data);
         }
-        primero.setData(data);
-        
+
         int suma=0;
         for(String aux : data){
         int num1 = Integer.parseInt(aux, 16);
         suma = suma+num1;
-    }
+        }
+        
         String resultado = Integer.toHexString(suma);
         String res2 = resultado.substring(resultado.length()-2);
         int num2 = Integer.parseInt(res2, 16);
@@ -2558,8 +2577,12 @@ public static void calcularS0(){
                 int ultimo = instruccion.size()-1;
                 String contloc = instruccion.get(ultimo).getContloc();
                 int cc = 3;
-                int num1 = Integer.parseInt( contloc.substring(0, 2), 16);
-                int num2 = Integer.parseInt(contloc.substring(2), 16);
+                String e1=contloc.substring(0, 2);
+                String e2=contloc.substring(2);
+                String ad = e1+" "+e2;
+                actual.setAddr(ad);
+                int num1 = Integer.parseInt(e1, 16);
+                int num2 = Integer.parseInt(e2, 16);
                 int suma=num1+num2+cc;
                 
                 String resultado = Integer.toHexString(suma);
