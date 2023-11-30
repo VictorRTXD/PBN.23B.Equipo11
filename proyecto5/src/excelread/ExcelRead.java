@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.apache.poi.ss.usermodel.*;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,9 +14,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.concurrent.CountDownLatch;
@@ -2376,10 +2377,6 @@ public static void calcularS0(){
         String conteo = Integer.toHexString(cc);
         primero.setConteo(conteo);
         
-        System.out.println("tamano nombre: "+fileName.length());
-        System.out.println("valor del cc "+cc);
-        System.out.println("conteo "+conteo);
-        
         for(int i=0; i<fileName.length(); i++){
         char conversor = fileName.charAt(i);
         String ascii = Integer.toHexString((int) conversor);
@@ -2399,16 +2396,12 @@ public static void calcularS0(){
         String complemento = Integer.toHexString(resta);
         primero.setChecksum(complemento);
         
-        for(int j=0; j<s19.size(); j++){
-            System.out.println(s19.get(j).tipo+" "+s19.get(j).addr+" "+s19.get(j).conteo+" "+s19.get(j).checksum+" "+s19.get(j).data);
-        }
-        
         s1Calcular();
     }
 
     static void s1Calcular() {
         String recoleccion = "";
-        double mini = 0;
+        String mini = instruccion.get(2).contloc;
         ArrayList<String> direcciones = new ArrayList<>();
         ArrayList<String> paresHex = new ArrayList<>();
         ArrayList<ArrayList<String>> segmentoHex = new ArrayList<>();
@@ -2419,24 +2412,11 @@ public static void calcularS0(){
         String ckTemp = "";
         
         for (int i = 2; i < instruccion.size(); i++) {
-            recoleccion += instruccion.get(i).postByte + " ";
-            
-            // direcciones (agregar manualmente la inicial)
-            
-            if (instruccion.get(i).peso == 0)
-                mini = mini + 1;
-            else
-                mini = mini + instruccion.get(i).peso;
-            
-            if (mini >= 16) {
-                direcciones.add(instruccion.get(i).contloc);
-                System.out.println("jaja " + instruccion.get(i).contloc);
-                mini = mini - 16;
-            }
+            if (instruccion.get(i).peso != 0) 
+                recoleccion += instruccion.get(i).postByte + " ";
         }
         
-        recoleccion = recoleccion.replaceAll("\\s", ""); 
-        
+        recoleccion = recoleccion.replaceAll("\\s", "");
         
         // Obtener pares de caracteres hexadecimales
         for (int i = 0; i < recoleccion.length() - 1; i += 2) {
@@ -2449,11 +2429,14 @@ public static void calcularS0(){
             ArrayList<String> segment = new ArrayList<>(paresHex.subList(i, finalIndex));
             segmentoHex.add(segment);
         }
+        
+        direcciones.add(mini);
         // Mostrar los segmentos obtenidos
         for (int i = 0; i < segmentoHex.size(); i++) {
-            System.out.println("Segment " + i + ": " + segmentoHex.get(i));
+            mini = Integer.toHexString(Integer.parseInt(mini, 16) + segmentoHex.get(i).size());
+            direcciones.add(mini);
+            
             cc.add(Integer.toHexString((3 + segmentoHex.get(i).size())));
-            System.out.println("cc " + cc.get(i));
         }
         
         //sumatorias locas
@@ -2466,40 +2449,35 @@ public static void calcularS0(){
                 // Convertir el par hexadecimal a su valor numérico y sumarlo
                 suma += Integer.parseInt(hex, 16);
             }
-            System.out.println("Suma de la sección " + i + ": " + suma);
             sumitas.add(Integer.toHexString((suma))); 
         }
         
-        System.out.println("Segmento de numeros: "+segmentoHex.size());
-        
         // ck
-        ckTemp = Integer.toHexString(Integer.parseInt(instruccion.get(2).contloc, 16) + Integer.parseInt(cc.get(0), 16) + Integer.parseInt(sumitas.get(0), 16));
-        System.out.println("ck te" + ckTemp);
-        ckTemp = ckTemp.substring(ckTemp.length() - 2);
-        System.out.println("ck tfdde " + ckTemp);
-        complemento = ~Integer.parseInt(ckTemp, 16) & 0xFF;
-        ckTemp = Integer.toHexString(complemento);
-        System.out.println("ckTemp " + ckTemp);
-        ck.add("0");
-        ck.add("0");
-        ck.add("0");
-        ck.add("0");
+        for (int i = 0; i < segmentoHex.size(); i++) {
+            ckTemp = Integer.toHexString(Integer.parseInt(direcciones.get(i), 16) + Integer.parseInt(cc.get(i), 16) + Integer.parseInt(sumitas.get(i), 16));
+            ckTemp = ckTemp.substring(ckTemp.length() - 2);
+            complemento = ~Integer.parseInt(ckTemp, 16) & 0xFF;
+            ckTemp = Integer.toHexString(complemento);
+            ck.add(ckTemp);
+        }
         
         for (int i = 0; i < segmentoHex.size(); i++) {
             String count = cc.get(i);
             String direcc = direcciones.get(i);
+            direcc = direcc.substring(0, 2) + " " + direcc.substring(2);
             String chekSum = ck.get(i);
             
-            s19.add(new Srecord("S1", count, direcc, chekSum, segmentoHex.get(i)));
-            
+            s19.add(new Srecord("S1", count, direcc, chekSum, segmentoHex.get(i)));  
         }
         
-        for(int j=0; j<s19.size(); j++){
-            System.out.println(s19.get(j).tipo+" "+s19.get(j).addr+" "+s19.get(j).conteo+" "+s19.get(j).checksum+" "+s19.get(j).data);
-        }
+        //for(int j=0; j<s19.size(); j++){
+        //   System.out.println(s19.get(j).tipo+" "+s19.get(j).addr+" "+s19.get(j).conteo+" "+s19.get(j).checksum+" "+s19.get(j).data);
+        //}
+        
+        calcularS5(segmentoHex.size());
     }
 
-    public void calcularS5(int contador){
+    public static void calcularS5(int contador){
         int c1 = 255;
         s19.add(new Srecord("S5", "03", "00 00", "00", null));
         Srecord actual = s19.get(contador+1);
@@ -2522,10 +2500,53 @@ public static void calcularS0(){
         calcularS9(contador2);
     }
     
+    private static int estadoActual = 0;
     
-    public void calcularS9(int contador){
-        int respuesta=0;
-        switch(respuesta){
+    private static void placeButtons(JPanel panel, CountDownLatch latch) {
+        JButton button0 = new JButton("Seleccionar caso 0");
+        JButton button1 = new JButton("Seleccionar caso 1");
+
+        button0.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                estadoActual = 0;
+                latch.countDown(); // Señal para liberar el await() en el otro hilo
+            }
+        });
+
+        button1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                estadoActual = 1;
+                latch.countDown(); // Señal para liberar el await() en el otro hilo
+            }
+        });
+
+        panel.add(button0);
+        panel.add(button1);
+    }
+    
+    public static void calcularS9(int contador){
+        CountDownLatch latch = new CountDownLatch(1);
+
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Switch");
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            frame.setSize(300, 200);
+
+            JPanel panel = new JPanel();
+            frame.add(panel);
+            placeButtons(panel, latch);
+
+            frame.setVisible(true);
+        });
+
+        try {
+            latch.await(); // Esperar hasta que se haga clic en algún botón
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println(estadoActual);
+        
+        switch(estadoActual){
             case 0:
                 s19.add(new Srecord("S9", "03", "00 00", "FC", null));
                 break;
@@ -2537,9 +2558,8 @@ public static void calcularS0(){
                 int ultimo = instruccion.size()-1;
                 String contloc = instruccion.get(ultimo).getContloc();
                 int cc = 3;
-                String[] partes = contloc.split(" ");
-                int num1 = Integer.parseInt(partes[0], 16);
-                int num2 = Integer.parseInt(partes[1], 16);
+                int num1 = Integer.parseInt( contloc.substring(0, 2), 16);
+                int num2 = Integer.parseInt(contloc.substring(2), 16);
                 int suma=num1+num2+cc;
                 
                 String resultado = Integer.toHexString(suma);
@@ -2550,44 +2570,36 @@ public static void calcularS0(){
                 actual.setChecksum(complemento);
                 break;        
         }//end switch
-    }//end s9
-    
-}
+        
+        try {
+            File archivo = new File("srecord.s19");
 
-/*
-for (int i = 0; i < segmentoHex.size(); i++) {
-            
-            System.out.println("sumado " + Integer.toHexString(hex1Int));
-            
-            for (int j = 0; j < instruccion.size(); j++) {
-                if (Integer.toHexString(hex1Int).equals(instruccion.get(j).contloc)) {
-                    System.out.println(Integer.toHexString(hex1Int) + "oidfj");
+            // Crea el archivo si no existe
+            if (!archivo.exists()) {
+                archivo.createNewFile();
+            }
+
+            // Escribe en el archivo
+            FileWriter fw = new FileWriter(archivo.getAbsoluteFile());
+            BufferedWriter bw = new BufferedWriter(fw);
+            String memes = "";
+
+            // Escribir datos del ArrayList en el archivo
+            for (int i = 0; i < s19.size(); i++) {
+                if (s19.get(i).data != null) {
+                    memes = s19.get(i).tipo+" "+s19.get(i).addr+" "+s19.get(i).conteo+" "+s19.get(i).checksum+" "+s19.get(i).data;
+                    memes = memes.replace(",", "").replace("[", "").replace("]", "");
+                    bw.write(memes + "\n");
                 } else {
-                    tempHex = hex1Int;
-                    while(flag) {
-                        if (Integer.toHexString(tempHex).equals(instruccion.get(j).contloc)) {
-                            flag = false;
-                            System.out.println(Integer.toHexString(tempHex) + "mmm");
-                        } else {
-                            System.out.println(Integer.toHexString(tempHex) + "sooy aux");
-                            System.out.println(instruccion.get(j).contloc + "soy contloc");
-                            tempHex = tempHex - 1;
-                        }
-                    }
+                    bw.write(s19.get(i).tipo+" "+s19.get(i).addr+" "+s19.get(i).conteo+" "+s19.get(i).checksum+" "+"" + "\n");
                 }
             }
-            hex1Int += segmentoHex.get(i).size();
-        }
 
+            bw.close();
+            System.out.println("Se ha creado el archivo srecord.s19 con los datos del ArrayList.");
 
-for (int i = 0; i < segmentoHex.size(); i++) {
-            hex1Int += segmentoHex.get(i).size();
-            System.out.println("sumado " + Integer.toHexString(hex1Int));
-            
-            if (true) {
-                
-            } else {
-                
-            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-*/
+    }//end s9
+}
