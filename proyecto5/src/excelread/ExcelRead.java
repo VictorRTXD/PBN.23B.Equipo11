@@ -2498,7 +2498,28 @@ public static void calcularS0(){
             System.out.println(s19.get(j).tipo+" "+s19.get(j).addr+" "+s19.get(j).conteo+" "+s19.get(j).checksum+" "+s19.get(j).data);
         }
     }
-    
+
+    public void calcularS5(int contador){
+        int c1 = 255;
+        s19.add(new Srecord("S5", "03", "00 00", "00", null));
+        Srecord actual = s19.get(contador+1);
+        String cont = Integer.toHexString(contador);
+        int cc = 3;
+        
+        if(cont.length()==1){
+            String addr = "00 0"+cont;
+            actual.setAddr(addr);
+        }else if(cont.length()==2){
+            String addr = "00 "+cont;
+            actual.setAddr(addr);
+        }
+        
+        int suma=cc+contador;
+        int resta= c1-suma;
+        String complemento = Integer.toHexString(resta);
+        actual.setChecksum(complemento);
+        
+    }
     
 }
 
