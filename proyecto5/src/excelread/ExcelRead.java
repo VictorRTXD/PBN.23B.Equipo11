@@ -2518,8 +2518,39 @@ public static void calcularS0(){
         int resta= c1-suma;
         String complemento = Integer.toHexString(resta);
         actual.setChecksum(complemento);
-        
+        int contador2=contador+1;
+        calcularS9(contador2);
     }
+    
+    
+    public void calcularS9(int contador){
+        int respuesta=0;
+        switch(respuesta){
+            case 0:
+                s19.add(new Srecord("S9", "03", "00 00", "FC", null));
+                break;
+            
+            case 1:
+                int c1 = 255;
+                s19.add(new Srecord("S9", "03", "00 00", "00", null));
+                Srecord actual = s19.get(contador+1);
+                int ultimo = instruccion.size()-1;
+                String contloc = instruccion.get(ultimo).getContloc();
+                int cc = 3;
+                String[] partes = contloc.split(" ");
+                int num1 = Integer.parseInt(partes[0], 16);
+                int num2 = Integer.parseInt(partes[1], 16);
+                int suma=num1+num2+cc;
+                
+                String resultado = Integer.toHexString(suma);
+                String res2 = resultado.substring(resultado.length()-2);
+                int aux = Integer.parseInt(res2, 16);
+                int resta = c1-aux;
+                String complemento = Integer.toHexString(resta);
+                actual.setChecksum(complemento);
+                break;        
+        }//end switch
+    }//end s9
     
 }
 
